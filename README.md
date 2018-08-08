@@ -20,7 +20,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
     
-    CNGui::Button button("start#001", sf::Vector2f(100, 50), buttonStyle);
+    CNGui::Button buttonStart("start#001", sf::Vector2f(100, 50), buttonStyle); 
     
     while(window.isOpen())
     {
