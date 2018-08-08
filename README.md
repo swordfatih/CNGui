@@ -1,2 +1,3 @@
 # CNGui
-GUI Library using SFML by Les Chats Noirs du Clair de Lune
+**CNGui**
+GUI Library using SFML from Les Chats Noirs du Clair de Lune
