@@ -13,7 +13,7 @@ It is actually in development by Fatih#6810 from *Les Chats Noirs du Clair de Lu
 
 struct Style
 {
-    sf::Color hoverColor;
+    sf::Color hoverColor = sf::Color(200, 200, 200);
 } buttonStyle;
 
 int main()
