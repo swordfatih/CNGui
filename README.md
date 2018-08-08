@@ -11,8 +11,9 @@ It is actually in development by Fatih#6810 from *Les Chats Noirs du Clair de Lu
 #include <SFML/Graphics.hpp>
 #include <CNGui.hpp>
 
-struct Style
+struct ButtonStyle
 {
+    CNGui::Type type = CNGui::Type::Circle;
     sf::Color hoverColor = sf::Color(200, 200, 200);
 } buttonStyle;
 
