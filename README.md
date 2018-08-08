@@ -40,7 +40,6 @@ int main()
         window.clear();
         window.draw(button);
         window.display();
-        }
     }
 }
 ```
