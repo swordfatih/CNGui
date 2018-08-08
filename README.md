@@ -20,6 +20,8 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
     
+    CNGui::Button button("start#001", sf::Vector2f(100, 50), buttonStyle);
+    
     while(window.isOpen())
     {
         sf::Event event;
@@ -29,7 +31,13 @@ int main()
                 window.close();
         }
 
+        if(button)
+        {
+            //Action
+        }
+
         window.clear();
+        window.draw(button);
         window.display();
         }
     }
