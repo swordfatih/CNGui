@@ -16,11 +16,11 @@ int main()
     sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
     
     CNGui::Style style;
-    style.type = CNGui::Style::Circle;
+    style.type = CNGui::Style::Rectangle;
     style.hovercolor = sf::Color(200, 200, 200);
     style.rounded = true;
     
-    CNGui::Button buttonStart("start#001", sf::Vector2f(100, 50), style); 
+    CNGui::Button buttonStart("Start#001", sf::Vector2f(100, 50), style); 
     
     while(window.isOpen())
     {
