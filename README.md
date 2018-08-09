@@ -39,7 +39,9 @@ int main()
 
         if(button)
         {
-            std::cout << input << std::endl;
+            //Text objects returns output string
+            // <<operator sets label of the object
+            button << input; 
         }
 
         window.clear();
