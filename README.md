@@ -11,17 +11,16 @@ It is actually in development by Fatih#6810 from *Les Chats Noirs du Clair de Lu
 #include <SFML/Graphics.hpp>
 #include <CNGui.hpp>
 
-struct ButtonStyle
-{
-    CNGui::Type type = CNGui::Type::Circle;
-    sf::Color hoverColor = sf::Color(200, 200, 200);
-} buttonStyle;
-
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
     
-    CNGui::Button buttonStart("start#001", sf::Vector2f(100, 50), buttonStyle); 
+    CNGui::Style style;
+    style.type = CNGui::Style::Circle;
+    style.hovercolor = sf::Color(200, 200, 200);
+    style.rounded = true;
+    
+    CNGui::Button buttonStart("start#001", sf::Vector2f(100, 50), style); 
     
     while(window.isOpen())
     {
