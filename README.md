@@ -22,9 +22,9 @@ int main()
     style.hovercolor = sf::Color(200, 200, 200);
     style.rounded = true;
     
-    CNGui::Button button("Start#001", eventHandler, sf::Vector2f(100, 50), style); 
+    CNGui::Button button("Start#001", sf::Vector2f(100, 50), eventHandler, style); 
     
-    CNGui::InputText input("Nickname#001", eventHandler, sf::Vector2f(100, 25), CNGui::Style::Default);
+    CNGui::InputText input("Nickname#001", sf::Vector2f(100, 25), eventHandler, CNGui::Style::Default);
     
     while(window.isOpen())
     {
