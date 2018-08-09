@@ -15,12 +15,16 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
     
+    CNGui::EventHandler eventHandler;
+    
     CNGui::Style style;
     style.type = CNGui::Style::Rectangle;
     style.hovercolor = sf::Color(200, 200, 200);
     style.rounded = true;
     
-    CNGui::Button buttonStart("Start#001", sf::Vector2f(100, 50), style); 
+    CNGui::Button button("Start#001", eventHandler, sf::Vector2f(100, 50), style); 
+    
+    CNGui::InputText input("Nickname#001", eventHandler, sf::Vector2f(100, 25), CNGui::Style::Default);
     
     while(window.isOpen())
     {
@@ -29,14 +33,17 @@ int main()
         {
             if(event.type == sf::Event::Closed)
                 window.close();
+                
+            eventHandler.push(eventHandler);
         }
 
         if(button)
         {
-            //Action
+            std::cout << input << std::endl;
         }
 
         window.clear();
+        window.draw(input);
         window.draw(button);
         window.display();
     }
