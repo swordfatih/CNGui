@@ -34,7 +34,7 @@ int main()
             if(event.type == sf::Event::Closed)
                 window.close();
                 
-            eventHandler.push(event);
+            handleEvent.push(event);
         }
 
         if(button)
