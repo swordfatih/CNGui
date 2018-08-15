@@ -23,7 +23,7 @@ int main()
     style.rounded = true;
    
     
-    CNGui::Button button("Start#001", sf::Vector2f(100, 50), handleEvent, style{type: CNGui::Style::Rectangle, hovercolor: sf::Color(200, 200, 200), rounded: true});
+    CNGui::Button button("Start#001", sf::Vector2f(100, 50), handleEvent, CNGui::Style{type: CNGui::Style::Rectangle, hovercolor: sf::Color(200, 200, 200), rounded: true});
     
     CNGui::InputText input("Nickname#001", sf::Vector2f(100, 25), handleEvent, CNGui::Style::Default);
     
