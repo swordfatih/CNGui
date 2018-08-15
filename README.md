@@ -28,6 +28,8 @@ int main()
     
     while(window.isOpen())
     {
+        handleEvent.clear();
+    
         sf::Event event;
         while(window.pollEvent(event))
         {
