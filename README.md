@@ -19,7 +19,8 @@ int main()
     
     CNGui::Style style;
     style.shape = CNGui::Style::Rectangle;
-    style.hovercolor = sf::Color(200, 200, 200);
+    style.fillcolor = sf::Color(200, 200, 200);
+    style.hovercolor = sf::Color(100, 100, 100);
     style.rounded = true;
     
     CNGui::Button button("Start#001", sf::Vector2f(100, 50), handleEvent, style);
