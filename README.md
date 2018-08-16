@@ -100,9 +100,10 @@ private:
     {
         states.transform *= getTransform();
 
+        //Draw your members here
         target.draw(mShape, states);
     }
 
-    Shape mShape; // Background shape
+    Shape mShape; //Background shape
 };
 ```
