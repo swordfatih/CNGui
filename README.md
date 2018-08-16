@@ -6,7 +6,7 @@ It is actually in development by Fatih#6810 from *Les Chats Noirs du Clair de Lu
 ***
 **Prototype example code**
 
-An example code showing how CNGui is user-friendly. Objects are SFML-like objects that can be drawn and transformed.
+An example code showing how CNGui is user-friendly! 
 
 ```cpp
 #include <SFML/Graphics.hpp>
