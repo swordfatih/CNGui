@@ -6,6 +6,7 @@ It is actually in development by Fatih#6810 from *Les Chats Noirs du Clair de Lu
 ***
 **Prototype example code**
 
+An example code showing how CNGui is user-friendly. Objects are SFML-like objects that can be drawn and transformed.
 
 ```cpp
 #include <SFML/Graphics.hpp>
@@ -58,6 +59,8 @@ int main()
 ***
 ### Creating a new object made easy
 
+You can easily create a new object by inheriting from the Object class, your class has to contain an uptade() function and an SFML draw() function.
+
 ```cpp
 class Button : public Object
 {
@@ -75,7 +78,7 @@ private:
             mUpdate = false;
         }
         
-                if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
+         if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
         {
             if(mHandleEvent.isActive(sf::Event::MouseButtonPressed))
             {
