@@ -57,8 +57,11 @@ int main()
 **Explanations**
 
 `CNGui::EventHolder` class that holds SFML events that you can use further in the code to update your objects.
+
 `CNGui::Style` struct that holds style parameters that the user can modify and apply to an object.
+
 `CNGui::Object` base parent for every objects.
+
 `CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with a type of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 
 ***
