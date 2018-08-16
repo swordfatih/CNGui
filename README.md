@@ -51,7 +51,7 @@ int main()
     }
 }
 ```
-![output](https://preview.ibb.co/m7L92e/cngui_button.gif)
+![output](https://media.giphy.com/media/2wW4AwwxbnhMR9AMKP/giphy.gif)
 
 ***
 **Explanations**
