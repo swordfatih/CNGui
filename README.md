@@ -51,7 +51,7 @@ int main()
     }
 }
 ```
-![output](https://ibb.co/h4XxNe)
+![output](https://image.ibb.co/kuH8TK/CNGui_button.png)
 
 ***
 **Creating a new object made easy**
