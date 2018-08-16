@@ -64,6 +64,8 @@ int main()
 
 `CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with a type of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 
+`CNGui::Font` class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
+
 ***
 **Creating a new object made easy**
 
