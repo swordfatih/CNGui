@@ -10,46 +10,42 @@ An example code showing how CNGui is user-friendly. Objects are SFML-like object
 
 ```cpp
 #include <SFML/Graphics.hpp>
-#include <CNGui.hpp>
+#include "CNGui.hpp"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(960, 480), "Example");
-    
+    sf::RenderWindow window(sf::VideoMode(960, 480), "CNGui Example");
+    window.setFramerateLimit(60);
+
     CNGui::EventHandler handleEvent;
-    
+
     CNGui::Style style;
-    style.shape = CNGui::Style::Rectangle;
+    style.shape = CNGui::Shape::RoundedRectangle;
     style.fillcolor = sf::Color(200, 200, 200);
     style.hovercolor = sf::Color(100, 100, 100);
-    style.rounded = true;
-    
-    CNGui::Button button("Start#001", sf::Vector2f(100, 50), handleEvent, style);
-    
-    CNGui::InputText input("Nickname#001", sf::Vector2f(100, 25), handleEvent, CNGui::Style);
-    
+    style.selectable = false;
+    style.outline = true;
+
+    CNGui::Button button("Button#001", sf::Vector3f(200, 100, 25), handleEvent, style);
+    button.setPosition(50, 50);
+
     while(window.isOpen())
     {
         handleEvent.clear();
-    
+
         sf::Event event;
         while(window.pollEvent(event))
         {
             if(event.type == sf::Event::Closed)
                 window.close();
-                
+
             handleEvent.push(event);
         }
 
         if(button(sf::Mouse::getPosition(window)))
-        {
-            //Text objects returns output string
-            // <<operator sets label of the object
-            button << input; 
-        }
+            button << "I think thats too long hahahahha";
 
         window.clear();
-        window.draw(input);
         window.draw(button);
         window.display();
     }
