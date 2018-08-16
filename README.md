@@ -55,3 +55,52 @@ int main()
 }
 ```
 
+***
+## Creating a new object made easy
+
+```cpp
+class Button : public Object
+{
+public:
+    using Object::Object;
+
+private:
+    void update()
+    {
+        if(mUpdate)
+        {
+            mShape.setType(mStyle.shape);
+            mShape.setSize(mSize);
+            mShape.setFillColor(mStyle.fillcolor);
+            mUpdate = false;
+        }
+        
+                if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
+        {
+            if(mHandleEvent.isActive(sf::Event::MouseButtonPressed))
+            {
+                mShape.setFillColor(mStyle.clickedcolor);
+                mReturn = true;
+            }
+            else
+            {
+                mShape.setFillColor(mStyle.hovercolor);
+                mReturn = false;
+            }
+        }
+        else
+        {
+            mShape.setFillColor(mStyle.fillcolor);
+        }
+    }
+    
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    {
+        states.transform *= getTransform();
+
+        target.draw(mShape, states);
+    }
+
+    Shape mShape; // Background shape
+};
+```
