@@ -51,7 +51,7 @@ int main()
     }
 }
 ```
-![output](https://image.ibb.co/kuH8TK/CNGui_button.png)
+![output](https://preview.ibb.co/m7L92e/cngui_button.gif)
 
 ***
 **Explanations**
