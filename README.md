@@ -109,5 +109,4 @@ private:
 ```
 
 Check
-`<addr>`CNGui::Object*
-'s protected members to see what you can use for your object. 
+`CNGui::Object`'s protected members to see what you can use for your object. 
