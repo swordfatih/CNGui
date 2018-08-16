@@ -40,7 +40,7 @@ int main()
             handleEvent.push(event);
         }
 
-        if(button)
+        if(button(sf::Mouse::getPosition(window)))
         {
             //Text objects returns output string
             // <<operator sets label of the object
