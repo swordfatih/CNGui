@@ -56,7 +56,7 @@ int main()
 ```
 
 ***
-## Creating a new object made easy
+### Creating a new object made easy
 
 ```cpp
 class Button : public Object
