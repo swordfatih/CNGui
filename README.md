@@ -51,6 +51,7 @@ int main()
     }
 }
 ```
+![output](https://ibb.co/h4XxNe)
 
 ***
 **Creating a new object made easy**
