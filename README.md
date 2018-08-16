@@ -54,6 +54,14 @@ int main()
 ![output](https://image.ibb.co/kuH8TK/CNGui_button.png)
 
 ***
+**Explanations**
+
+`CNGui::EventHolder` class that holds SFML events that you can use further in the code to update your objects.
+`CNGui::Style` struct that holds style parameters that the user can modify and apply to an object.
+`CNGui::Object` base parent for every objects.
+`CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with a type of shape as Rectangle, Triangle, Circle or RoundedRectangle.
+
+***
 **Creating a new object made easy**
 
 You can easily create a new object by inheriting from the Object class, your class has to contain an uptade() function and a SFML draw() function.
