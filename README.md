@@ -109,4 +109,4 @@ private:
 ```
 
 Check
-`CNGui::Object`'s protected members to see what you can use for your object. 
+`CNGui::Object`'s members to see what you can use for your object. 
