@@ -69,7 +69,7 @@ int main()
 ***
 **Creating a new object made easy**
 
-You can easily create a new object by inheriting from the Object class, your class has to contain an uptade() function and a SFML draw() function.
+You can easily create a new object by inheriting from the Object class, your class has to contain an `uptade()` function and a SFML `draw()` function.
 
 ```cpp
 class Button : public Object
