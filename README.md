@@ -70,20 +70,22 @@ public:
 private:
     void update()
     {
-        if(mUpdate)
+        if(mUpdate) 
         {
+            //Update object's style here
             mShape.setType(mStyle.shape);
             mShape.setSize(mSize);
             mShape.setFillColor(mStyle.fillcolor);
             mUpdate = false;
         }
         
-         if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
+        //Update the object here
+        if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
         {
             if(mHandleEvent.isActive(sf::Event::MouseButtonPressed))
             {
                 mShape.setFillColor(mStyle.clickedcolor);
-                mReturn = true;
+                mReturn = true; 
             }
             else
             {
