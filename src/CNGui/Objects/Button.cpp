@@ -1,3 +1,28 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+// CNGui - Chats Noirs Graphical User Interface
+// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 #include "CNGui/Objects/Button.hpp"
 
 namespace CNGui
@@ -44,11 +69,8 @@ void Button::update()
         mHover = true;
 
         //If the mouse click on the boutton we throw an event by a bool
-        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed))
-        {
-            if(mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
-                mClicked = true;
-        }
+        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
+            mClicked = true;
         else
             mClicked = false;
 
@@ -61,21 +83,11 @@ void Button::update()
             mReturn = true;
         }
         //If mouse only hovers
-        else
+        else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
         {
-            if(!mStyle.selectable)
-            {
-                mShape.setFillColor(mStyle.hovercolor);
-                mLabel.setFillColor(mStyle.labelhovercolor);
-                mShape.setOutlineColor(mStyle.outlinehovercolor);
-                mReturn = false;
-            }
-            else if(!mReturn)
-            {
-                mShape.setFillColor(mStyle.hovercolor);
-                mLabel.setFillColor(mStyle.labelhovercolor);
-                mShape.setOutlineColor(mStyle.outlinehovercolor);
-            }
+            mShape.setFillColor(mStyle.hovercolor);
+            mLabel.setFillColor(mStyle.labelhovercolor);
+            mShape.setOutlineColor(mStyle.outlinehovercolor);
         }
     }
     //If mouse doesn't hover the button
@@ -84,19 +96,13 @@ void Button::update()
         mHover = false;
 
         //If mouse isn't selected
-        if(!mReturn)
+        if(!mReturn || (mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
         {
             mShape.setFillColor(mStyle.fillcolor);
             mLabel.setFillColor(mStyle.labelcolor);
             mShape.setOutlineColor(mStyle.outlinecolor);
-        }
-        //If button is selected and mouse left is clicked
-        else if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
-        {
-            mShape.setFillColor(mStyle.fillcolor);
-            mLabel.setFillColor(mStyle.labelcolor);
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            mReturn = false;
+            if(mReturn)
+                mReturn = false;
         }
     }
 }
