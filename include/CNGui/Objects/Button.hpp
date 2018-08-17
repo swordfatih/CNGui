@@ -23,97 +23,68 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Objects/Button.hpp"
+#ifndef BUTTON_HPP
+#define BUTTON_HPP
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include "CNGui/Objects/Object.hpp"
+#include "CNGui/Utilities/Shape.hpp"
+#include <SFML/Graphics/Text.hpp>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-bool Button::onClick()
-{
-    return mClicked;
-}
-
+/// \brief Class that creates a graphical button
+///
 ////////////////////////////////////////////////////////////
-bool Button::onHover()
+class Button : public Object
 {
-    return mHover;
+public:
+    using Object::Object;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Click event
+    ///
+    /// \return Returns true on button click
+    ///
+    ////////////////////////////////////////////////////////////
+    bool onClick();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Hover event
+    ///
+    /// \return Returns true when button hovered
+    ///
+    ////////////////////////////////////////////////////////////
+    bool onHover();
+
+private:
+    ////////////////////////////////////////////////////////////
+    /// \brief Updates the object
+    ///
+    ////////////////////////////////////////////////////////////
+    void update();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Draw the object to a render target
+    ///
+    /// \param target Render target to draw to
+    /// \param states Current render states
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+    ////////////////////////////////////////////////////////////
+    // Member data
+    ////////////////////////////////////////////////////////////
+    Shape       mShape;             ///< Shape of the button
+    sf::Text    mLabel;             ///< Label of the button
+    bool        mClicked = false;   ///< Button clicked
+    bool        mHover = false;     ///< Hovering the button
+};
+
 }
 
-////////////////////////////////////////////////////////////
-void Button::update()
-{
-    //Updating the style of the button
-    if(mUpdate)
-    {
-        mShape.setType(mStyle.shape);
-        mShape.setSize(mSize);
-        mShape.setFillColor(mStyle.fillcolor);
-        if(mStyle.outline)
-        {
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            mShape.setOutlineThickness(mStyle.outlinethickness);
-        }
-        mLabel.setFont(mStyle.font);
-        mLabel.setFillColor(mStyle.labelcolor);
-        mLabel.setCharacterSize(mStyle.charactersize);
-        mLabel.setString(mName);
-        while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
-            mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
-        mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 1.95, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
-        mUpdate = false;
-    }
-
-    //If the mouse hovers the button
-    if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
-    {
-        mHover = true;
-
-        //If the mouse click on the boutton we throw an event by a bool
-        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
-            mClicked = true;
-        else
-            mClicked = false;
-
-        //If mouse pressed
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            mShape.setFillColor(mStyle.clickedcolor);
-            mLabel.setFillColor(mStyle.labelclickedcolor);
-            mShape.setOutlineColor(mStyle.outlineclickedcolor);
-            mReturn = true;
-        }
-        //If mouse only hovers
-        else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
-        {
-            mShape.setFillColor(mStyle.hovercolor);
-            mLabel.setFillColor(mStyle.labelhovercolor);
-            mShape.setOutlineColor(mStyle.outlinehovercolor);
-        }
-    }
-    //If mouse doesn't hover the button
-    else
-    {
-        mHover = false;
-
-        //If mouse isn't selected
-        if(!mReturn || (mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
-        {
-            mShape.setFillColor(mStyle.fillcolor);
-            mLabel.setFillColor(mStyle.labelcolor);
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            if(mReturn)
-                mReturn = false;
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////
-void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    states.transform *= getTransform();
-
-    target.draw(mShape, states);
-    target.draw(mLabel, states);
-}
-
-} // namespace CNGui
+#endif // BUTTON_HPP
