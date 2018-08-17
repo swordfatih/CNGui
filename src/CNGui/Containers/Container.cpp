@@ -43,6 +43,7 @@ Container::~Container()
 Container& Container::operator <<(Object& content)
 {
     mContents.emplace_back(content, content);
+    update();
     return *this;
 }
 
@@ -50,7 +51,20 @@ Container& Container::operator <<(Object& content)
 Container& Container::operator <<(Container& content)
 {
     mContents.emplace_back(content, content);
+    update();
     return *this;
+}
+
+////////////////////////////////////////////////////////////
+void Container::clear()
+{
+    mContents.clear();
+}
+
+////////////////////////////////////////////////////////////
+void Container::update()
+{
+
 }
 
 ////////////////////////////////////////////////////////////
