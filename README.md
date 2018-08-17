@@ -60,7 +60,9 @@ int main()
 
 `CNGui::Style` struct that holds style parameters that the user can modify and apply to an object.
 
-`CNGui::Object` base parent for every objects.
+`CNGui::Object` base class for every objects.
+
+`CNGui::Container` base class for every containers. They can hold objects and other containers.
 
 `CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with a type of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 
