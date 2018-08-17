@@ -11,6 +11,9 @@
 #include "CNGui/Utilities/Style.hpp"
 #include "CNGui/Utilities/Shape.hpp"
 
+//Containers
+#include "CNGui/Containers/Container.hpp"
+
 //Objects
 #include "CNGui/Objects/Object.hpp"
 #include "CNGui/Objects/Button.hpp"
