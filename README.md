@@ -62,7 +62,7 @@ int main()
     return 0;
 }
 ```
-![output](https://media.giphy.com/media/2wW4AwwxbnhMR9AMKP/giphy.gif)
+![output](https://media.giphy.com/media/orTDrM9QZH4H9P7QCJ/giphy.gif)
 
 ***
 **Explanations**
