@@ -97,7 +97,7 @@ private:
     {
         if(mUpdate) 
         {
-            //Update object's style here
+            //Update object's appearance here
             mShape.setType(mStyle.shape);
             mShape.setSize(mSize);
             mShape.setFillColor(mStyle.fillcolor);
