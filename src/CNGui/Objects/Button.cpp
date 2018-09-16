@@ -63,18 +63,18 @@ void Button::update()
         mUpdate = false;
     }
 
-    //If the mouse hovers the button
+    //If the button is hovered
     if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
     {
         mHover = true;
 
-        //If the mouse click on the boutton we throw an event by a bool
+        //Throwing event as button clicked
         if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
             mClicked = true;
         else
             mClicked = false;
 
-        //If mouse pressed
+        //Button is pressed
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             mShape.setFillColor(mStyle.clickedcolor);
@@ -82,7 +82,6 @@ void Button::update()
             mShape.setOutlineColor(mStyle.outlineclickedcolor);
             mReturn = true;
         }
-        //If mouse only hovers
         else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
         {
             mShape.setFillColor(mStyle.hovercolor);
@@ -90,13 +89,11 @@ void Button::update()
             mShape.setOutlineColor(mStyle.outlinehovercolor);
         }
     }
-    //If mouse doesn't hover the button
     else
     {
         mHover = false;
 
-        //If mouse isn't selected
-        if(!mReturn || (mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
+        if((!mStyle.selectable) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
         {
             mShape.setFillColor(mStyle.fillcolor);
             mLabel.setFillColor(mStyle.labelcolor);
