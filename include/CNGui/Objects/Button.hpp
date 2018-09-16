@@ -68,7 +68,7 @@ private:
     void update();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
+    /// \brief Draw the button to a render target
     ///
     /// \param target Render target to draw to
     /// \param states Current render states
@@ -79,10 +79,10 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape       mShape;             ///< Shape of the button
-    sf::Text    mLabel;             ///< Label of the button
-    bool        mClicked = false;   ///< Button clicked
-    bool        mHover = false;     ///< Hovering the button
+    Shape           mShape;             ///< Shape of the button
+    sf::Text        mLabel;             ///< Label of the button
+    bool            mClicked = false;   ///< Button clicked
+    bool            mHover = false;     ///< Hovering the button
 };
 
 }
