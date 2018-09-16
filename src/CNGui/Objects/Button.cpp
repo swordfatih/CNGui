@@ -93,7 +93,7 @@ void Button::update()
     {
         mHover = false;
 
-        if((!mStyle.selectable) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
+        if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
         {
             mShape.setFillColor(mStyle.fillcolor);
             mLabel.setFillColor(mStyle.labelcolor);
