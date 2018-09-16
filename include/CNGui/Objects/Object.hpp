@@ -33,6 +33,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include "CNGui/Utilities/Style.hpp"
 #include "CNGui/Utilities/EventHandler.hpp"
 #include <assert.h>
@@ -58,25 +59,6 @@ public:
     ////////////////////////////////////////////////////////////
     virtual     ~Object();
 
-    ///////////////////////////////////////////////////////////
-    /// Overload of operator << to change the name of the object
-    ///
-    ////////////////////////////////////////////////////////////
-    Object&     operator <<(const std::string& name);
-
-    ///////////////////////////////////////////////////////////
-    /// Overload of operator () to get the mouse position
-    ///
-    ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::Vector2f& mouse);
-
-    ///////////////////////////////////////////////////////////
-    /// Overload of operator () to get the mouse position
-    ///
-    ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::Vector2i& mouse);
-
-protected:
     ////////////////////////////////////////////////////////////
     /// \brief Set the style of the shape
     ///
@@ -138,6 +120,39 @@ protected:
     sf::Vector3f    getSize();
 
     ////////////////////////////////////////////////////////////
+    /// \brief Set the container of the object
+    ///
+    /// \param position Position of the container
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setContainer(sf::Vector2f& position);
+
+    ///////////////////////////////////////////////////////////
+    /// Overload of operator << to change the name of the object
+    ///
+    ////////////////////////////////////////////////////////////
+    Object&     operator <<(const std::string& name);
+
+    ///////////////////////////////////////////////////////////
+    /// Overload of operator () to get the mouse position
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        operator()(const sf::Vector2f& mouse);
+
+    ///////////////////////////////////////////////////////////
+    /// Overload of operator () to get the mouse position
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        operator()(const sf::RenderWindow& window);
+
+    ///////////////////////////////////////////////////////////
+    /// Overload of operator () to get the mouse position
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        operator()(const sf::Vector2i& mouse);
+
+protected:
+    ////////////////////////////////////////////////////////////
     /// \brief Set the event handler of the shape
     ///
     /// \param handleEvent Event handler of the shape
@@ -168,6 +183,15 @@ protected:
     void            parse(const std::string& id, sf::Uint16& index, std::string& name);
 
     ////////////////////////////////////////////////////////////
+    /// \brief Draw the object to a render target
+    ///
+    /// \param target Render target to draw to
+    /// \param states Current render states
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+    ////////////////////////////////////////////////////////////
     /// \brief Updates the object
     ///
     ////////////////////////////////////////////////////////////
@@ -184,6 +208,7 @@ protected:
     bool            mUpdate;        ///< Needs update?
     bool            mReturn;        ///< Bool conversion value
     sf::Vector2f    mMouse;         ///< Mouse position
+    sf::Vector2f*   mContainer;     ///< Position of the container that contains it
 };
 
 } // namespace CNGui
