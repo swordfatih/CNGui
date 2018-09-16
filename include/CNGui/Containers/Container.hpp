@@ -35,6 +35,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "CNGui/Objects/Object.hpp"
 #include <vector>
+#include <memory>
 
 namespace CNGui
 {
@@ -42,38 +43,142 @@ namespace CNGui
 /// \brief Base class for containers
 ///
 ////////////////////////////////////////////////////////////
+template <class Content>
 class Container : public sf::Drawable, public sf::Transformable
 {
 public:
     ////////////////////////////////////////////////////////////
+    /// \brief Enumeration of the different container types
+    ///
+    ////////////////////////////////////////////////////////////
+    enum            Type
+    {
+        Free,
+        Vertical,
+        Horizontal
+    };
+
+    ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                Container();
+                    Container(const sf::Vector2f& size = sf::Vector2f(400, 400), Type type = Type::Free) : mSize(size), mType(type), mSpacing(10)
+    {
+        static_assert(std::is_base_of<sf::Drawable, Content>::value && std::is_base_of<sf::Transformable, Content>::value, "Invalid type, must be Drawable and Transformable");
+    }
 
     ////////////////////////////////////////////////////////////
     /// \brief Default destructor
     ///
     ////////////////////////////////////////////////////////////
-    virtual     ~Container();
+    virtual         ~Container()
+    {
+        //dtor
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the position of the container
+    ///
+    /// \param position New position
+    ///
+    /// \see getPosition
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setPosition(const sf::Vector2f& position)
+    {
+        mPosition = position;
+        Transformable::setPosition(position);
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the position of the container
+    ///
+    /// \param x X coordinate of the new position
+    /// \param y Y coordinate of the new position
+    ///
+    /// \see getPosition
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setPosition(float x, float y)
+    {
+        mPosition = sf::Vector2f{x, y};
+        Transformable::setPosition(x, y);
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the size of the container
+    ///
+    /// \param size New size
+    ///
+    /// \see getSize
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setSize(const sf::Vector2f& size)
+    {
+        mSize = size;
+        update();
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the size of the container
+    ///
+    /// \return Size of the new size
+    ///
+    /// \see setSize
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::Vector2f    getSize()
+    {
+        return mSize;
+    }
+
+        ////////////////////////////////////////////////////////////
+    /// \brief Set the space between the contents
+    ///
+    /// \param spacing Space between the contents
+    ///
+    /// \see getSpacing
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setSpacing(const sf::Uint16& spacing)
+    {
+        mSpacing = spacing;
+        update();
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the space between the contents
+    ///
+    /// \return The space between the contents
+    ///
+    /// \see setSpacing
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::Uint16      getSpacing()
+    {
+        return mSpacing;
+    }
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator << to add an object to the container
     ///
     ////////////////////////////////////////////////////////////
-    Container&  operator <<(Object& content);
-
-    ///////////////////////////////////////////////////////////
-    /// Overload of operator << to add a container to the container
-    ///
-    ////////////////////////////////////////////////////////////
-    Container&  operator <<(Container& content);
+    Container&      operator <<(Content& content)
+    {
+        content.setContainer(mPosition);
+        mContents.push_back(content);
+        update();
+        return *this;
+    }
 
     ////////////////////////////////////////////////////////////
     /// \brief Clear contents
     ///
     ////////////////////////////////////////////////////////////
-    void clear();
+    void            clear()
+    {
+        mContents.clear();
+    }
 
 protected:
     ////////////////////////////////////////////////////////////
@@ -83,18 +188,43 @@ protected:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void            draw(sf::RenderTarget& target, sf::RenderStates states) const
+    {
+        states.transform *= getTransform();
+
+        for(unsigned i = 0; i < mContents.size(); ++i)
+            target.draw(mContents[i], states);
+    }
 
     ////////////////////////////////////////////////////////////
     /// \brief Update the contents
     ///
     ////////////////////////////////////////////////////////////
-    virtual void update();
+    virtual void    update()
+    {
+        for(unsigned i = 0; i < mContents.size(); ++i)
+        {
+            if(mType == Type::Horizontal)
+            {
+                mContents[i].get().setSize(sf::Vector3f(mSize.x / mContents.size(), mSize.y, mContents[i].get().getSize().z));
+                mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
+            }
+            else if(mType == Type::Vertical)
+            {
+                mContents[i].get().setSize(sf::Vector3f(mSize.x, mSize.y / mContents.size(), mContents[i].get().getSize().z));
+                mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
+            }
+        }
+    }
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    std::vector<std::pair<sf::Drawable&, sf::Transformable&>>   mContents;  ///< All the contents
+    std::vector<std::reference_wrapper<Content>>    mContents;  ///< All the contents
+    sf::Vector2f                                    mSize;      ///< Size of the container
+    sf::Vector2f                                    mPosition;  ///< Position of the container
+    Type                                            mType;      ///< Type of the container
+    sf::Uint16                                      mSpacing;   ///< Space between the contents
 };
 
 } // namespace CNGui
