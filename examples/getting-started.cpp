@@ -12,15 +12,15 @@ int main()
     style.shape = CNGui::Shape::RoundedRectangle;
     style.fillcolor = sf::Color(200, 200, 200);
     style.hovercolor = sf::Color(100, 100, 100);
-    style.selectable = false;
+    style.selectable = true;
     style.outline = true;
 
     CNGui::Container<CNGui::Object> container(sf::Vector2f(500, 200), CNGui::Container<CNGui::Object>::Horizontal);
 
-    CNGui::Button button("Button#001", sf::Vector3f(200, 100, 25), handleEvent, style);
-    CNGui::Button button2("Start#002", sf::Vector3f(200, 100, 25), handleEvent, style);
+    CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
+    CNGui::Button buttonTest("Test#002", sf::Vector3f(200, 100, 25), handleEvent, style);
 
-    container << button << button2;
+    container << buttonStart << buttonTest;
     container.setPosition(200, 100);
     container.setSpacing(10);
 
@@ -37,10 +37,10 @@ int main()
             handleEvent.push(event);
         }
 
-        if(button(window) && button.onClick())
-            button << "I think thats too long hahahahha";
+        if(buttonStart(window) && buttonStart.onClick())
+            buttonStart << "I think thats too long hahahahha";
 
-        button2(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()));
+        buttonTest(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()));
 
         window.clear();
         window.draw(container);
