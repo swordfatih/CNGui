@@ -85,10 +85,12 @@ int main()
 You can easily create a new object by inheriting from the Object class, your class has to contain an `uptade()` function and a SFML `draw()` function.
 
 ```cpp
-class Button : public Object
+#include "CNGui/Objects/Object.hpp"
+
+class Button : public CNGui::Object
 {
 public:
-    using Object::Object;
+    using CNGui::Object::Object;
 
 private:
     void update()
