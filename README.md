@@ -132,7 +132,7 @@ private:
         target.draw(mShape, states);
     }
 
-    CNGui::Shape mShape; ///<Background shape
+    CNGui::Shape mShape; ///< Background shape
 };
 ```
 
