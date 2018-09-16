@@ -15,7 +15,7 @@ int main()
     style.selectable = true;
     style.outline = true;
 
-    CNGui::Container<CNGui::Object> container(sf::Vector3f(500, 200, 0), CNGui::Container<CNGui::Object>::Horizontal);
+    CNGui::Container<CNGui::Object> container(sf::Vector3f(500, 200, 0), CNGui::ContainerType::Horizontal);
 
     CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
     CNGui::Button buttonTest("Test#002", sf::Vector3f(200, 100, 25), handleEvent, style);
