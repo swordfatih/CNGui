@@ -14,7 +14,7 @@ An example code showing how CNGui is user-friendly and object-oriented!
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(960, 480), "CNGui Example");
+    sf::RenderWindow window(sf::VideoMode(300, 240), "CNGui Example");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
@@ -26,13 +26,13 @@ int main()
     style.selectable = true;
     style.outline = true;
 
-    CNGui::Container<CNGui::Object> container(sf::Vector2f(500, 200), CNGui::Container<CNGui::Object>::Horizontal);
+    CNGui::Container<CNGui::Object> container(sf::Vector2f(200, 150), CNGui::Container<CNGui::Object>::Vertical);
 
     CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
-    CNGui::Button buttonTest("Test#002", sf::Vector3f(200, 100, 25), handleEvent, style);
+    CNGui::Button buttonReset("Reset#002", sf::Vector3f(200, 100, 25), handleEvent, style);
 
-    container << buttonStart << buttonTest;
-    container.setPosition(200, 100);
+    container << buttonStart << buttonReset;
+    container.setPosition(50, 30);
     container.setSpacing(10);
 
     while(window.isOpen())
@@ -51,7 +51,8 @@ int main()
         if(buttonStart(window) && buttonStart.onClick())
             buttonStart << "I think thats too long hahahahha";
 
-        buttonTest(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()));
+        if(buttonReset(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView())))
+            buttonStart << "Start";
 
         window.clear();
         window.draw(container);
