@@ -1,12 +1,12 @@
-# CNGui (in development, prototype)
+# CNGui (in development)
 
 CNGui (Chats Noirs Gui) is a graphical user interface (GUI) library using SFML and C++.
 It is actually in development by Fatih#6810 (accfldekur@gmail.com) from *Les Chats Noirs du Clair de Lune*.
 
 ***
-**Prototype example code**
+**Example code**
 
-An example code showing how CNGui is user-friendly! 
+An example code showing how CNGui is user-friendly and object-oriented! 
 
 ```cpp
 #include <SFML/Graphics.hpp>
@@ -23,11 +23,17 @@ int main()
     style.shape = CNGui::Shape::RoundedRectangle;
     style.fillcolor = sf::Color(200, 200, 200);
     style.hovercolor = sf::Color(100, 100, 100);
-    style.selectable = false;
+    style.selectable = true;
     style.outline = true;
 
-    CNGui::Button button("Button#001", sf::Vector3f(200, 100, 25), handleEvent, style);
-    button.setPosition(50, 50);
+    CNGui::Container<CNGui::Object> container(sf::Vector2f(500, 200), CNGui::Container<CNGui::Object>::Horizontal);
+
+    CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
+    CNGui::Button buttonTest("Test#002", sf::Vector3f(200, 100, 25), handleEvent, style);
+
+    container << buttonStart << buttonTest;
+    container.setPosition(200, 100);
+    container.setSpacing(10);
 
     while(window.isOpen())
     {
@@ -42,13 +48,17 @@ int main()
             handleEvent.push(event);
         }
 
-        if(button(sf::Mouse::getPosition(window)))
-            button << "I think thats too long hahahahha";
+        if(buttonStart(window) && buttonStart.onClick())
+            buttonStart << "I think thats too long hahahahha";
+
+        buttonTest(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()));
 
         window.clear();
-        window.draw(button);
+        window.draw(container);
         window.display();
     }
+
+    return 0;
 }
 ```
 ![output](https://media.giphy.com/media/2wW4AwwxbnhMR9AMKP/giphy.gif)
