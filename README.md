@@ -143,5 +143,6 @@ Feel free to share your new super objects with the other users !
 **More examples**
 
 Stacking containers:
+
 ![stacking](https://i.imgur.com/ve9Qk0Y.png)
 
