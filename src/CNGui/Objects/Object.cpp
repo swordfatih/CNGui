@@ -23,144 +23,94 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGUI/Objects/Object.hpp"
+#include "CNGui/Objects/Button.hpp"
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Object::Object(const std::string& id, const sf::Vector3f& size, EventHandler& handleEvent, Style& style) : mSize(size), mHandleEvent(handleEvent), mStyle(style), mUpdate(true),  mReturn(false), mContainer(new sf::Vector2f(0, 0))
+bool Button::onClick()
 {
-    parse(id, mIndex, mName);
+    return mClicked;
 }
 
 ////////////////////////////////////////////////////////////
-Object::~Object()
+bool Button::onHover()
 {
-    //dtor
+    return mHover;
 }
 
 ////////////////////////////////////////////////////////////
-Object& Object::operator <<(const std::string& name)
+void Button::update()
 {
-
-    if(mName != name)
+    //Updating the style of the button
+    if(mUpdate)
     {
-        mName = name;
-        mUpdate = true;
+        mShape.setType(mStyle.shape);
+        mShape.setSize(mSize);
+        mShape.setFillColor(mStyle.fillcolor);
+        if(mStyle.outline)
+        {
+            mShape.setOutlineColor(mStyle.outlinecolor);
+            mShape.setOutlineThickness(mStyle.outlinethickness);
+        }
+        mLabel.setFont(mStyle.font);
+        mLabel.setFillColor(mStyle.labelcolor);
+        mLabel.setCharacterSize(mStyle.charactersize);
+        mLabel.setString(mName);
+        while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
+            mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
+        mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 1.95, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
+        mUpdate = false;
     }
-    return *this;
-}
 
-////////////////////////////////////////////////////////////
-bool Object::operator()(const sf::Vector2f& mouse)
-{
-    mMouse = mouse - *mContainer;
-    update();
-    return mReturn;
-}
-
-////////////////////////////////////////////////////////////
-bool Object::operator()(const sf::RenderWindow& window)
-{
-    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()) - *mContainer;
-    update();
-    return mReturn;
-}
-
-////////////////////////////////////////////////////////////
-bool Object::operator()(const sf::Vector2i& mouse)
-{
-    mMouse = sf::Vector2f(mouse) - *mContainer;
-    update();
-    return mReturn;
-}
-
-////////////////////////////////////////////////////////////
-void Object::setStyle(Style& style)
-{
-    mStyle = style;
-    mUpdate = true;
-}
-
-////////////////////////////////////////////////////////////
-Style& Object::getStyle()
-{
-    return mStyle;
-}
-
-////////////////////////////////////////////////////////////
-void Object::setId(const std::string& id)
-{
-    parse(id, mIndex, mName);
-    mUpdate = true;
-}
-
-////////////////////////////////////////////////////////////
-std::string Object::getId()
-{
-    return mName + "#" + std::to_string(mIndex);
-}
-
-////////////////////////////////////////////////////////////
-void Object::setSize(const sf::Vector3f& size)
-{
-    mSize = size;
-    mUpdate = true;
-}
-
-////////////////////////////////////////////////////////////
-sf::Vector3f Object::getSize()
-{
-    return mSize;
-}
-
-////////////////////////////////////////////////////////////
-void Object::setContainer(sf::Vector2f& pos)
-{
-    mContainer = &pos;
-}
-
-////////////////////////////////////////////////////////////
-void Object::setEventHandler(EventHandler& handleEvent)
-{
-    mHandleEvent = handleEvent;
-    mUpdate = true;
-}
-
-////////////////////////////////////////////////////////////
-EventHandler& Object::getEventHandler()
-{
-    return mHandleEvent;
-}
-
-////////////////////////////////////////////////////////////
-void Object::parse(const std::string& id, sf::Uint16& index, std::string& name)
-{
-    std::size_t pos(0);
-    do
+    //If the button is hovered
+    if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
     {
-        pos = id.find('#', pos);
-        name = id.substr(0, id.size() - 4);
+        mHover = true;
 
-        std::string temp = id.substr(pos + 1);
+        //Throwing event as button clicked
+        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
+            mClicked = true;
+        else
+            mClicked = false;
 
-        for(unsigned i = 0; i < temp.size(); ++i)
-            assert(!isalpha(temp.at(i))); // Invalid index
+        //Button is pressed
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            mShape.setFillColor(mStyle.clickedcolor);
+            mLabel.setFillColor(mStyle.labelclickedcolor);
+            mShape.setOutlineColor(mStyle.outlineclickedcolor);
+            mReturn = true;
+        }
+        else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
+        {
+            mShape.setFillColor(mStyle.hovercolor);
+            mLabel.setFillColor(mStyle.labelhovercolor);
+            mShape.setOutlineColor(mStyle.outlinehovercolor);
+        }
+    }
+    else
+    {
+        mHover = false;
 
-        index = std::stoi(temp);
-    }while(id.at(pos - 1) == '\\');
+        if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
+        {
+            mShape.setFillColor(mStyle.fillcolor);
+            mLabel.setFillColor(mStyle.labelcolor);
+            mShape.setOutlineColor(mStyle.outlinecolor);
+            if(mReturn)
+                mReturn = false;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////
-void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+    states.transform *= getTransform();
 
-}
-
-////////////////////////////////////////////////////////////
-void Object::update()
-{
-
+    target.draw(mShape, states);
+    target.draw(mLabel, states);
 }
 
 } // namespace CNGui
