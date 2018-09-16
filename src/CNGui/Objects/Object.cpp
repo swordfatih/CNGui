@@ -28,7 +28,7 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Object::Object(const std::string& id, const sf::Vector3f& size, EventHandler& handleEvent, Style& style) : mSize(size), mHandleEvent(handleEvent), mStyle(style), mUpdate(true),  mReturn(false)
+Object::Object(const std::string& id, const sf::Vector3f& size, EventHandler& handleEvent, Style& style) : mSize(size), mHandleEvent(handleEvent), mStyle(style), mUpdate(true),  mReturn(false), mContainer(new sf::Vector2f(0, 0))
 {
     parse(id, mIndex, mName);
 }
@@ -54,7 +54,15 @@ Object& Object::operator <<(const std::string& name)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::Vector2f& mouse)
 {
-    mMouse = mouse;
+    mMouse = mouse - *mContainer;
+    update();
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+bool Object::operator()(const sf::RenderWindow& window)
+{
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()) - *mContainer;
     update();
     return mReturn;
 }
@@ -62,7 +70,7 @@ bool Object::operator()(const sf::Vector2f& mouse)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::Vector2i& mouse)
 {
-    mMouse = sf::Vector2f(mouse);
+    mMouse = sf::Vector2f(mouse) - *mContainer;
     update();
     return mReturn;
 }
@@ -107,6 +115,12 @@ sf::Vector3f Object::getSize()
 }
 
 ////////////////////////////////////////////////////////////
+void Object::setContainer(sf::Vector2f& pos)
+{
+    mContainer = &pos;
+}
+
+////////////////////////////////////////////////////////////
 void Object::setEventHandler(EventHandler& handleEvent)
 {
     mHandleEvent = handleEvent;
@@ -135,6 +149,12 @@ void Object::parse(const std::string& id, sf::Uint16& index, std::string& name)
 
         index = std::stoi(temp);
     }while(id.at(pos - 1) == '\\');
+}
+
+////////////////////////////////////////////////////////////
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+
 }
 
 ////////////////////////////////////////////////////////////
