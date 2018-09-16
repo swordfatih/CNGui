@@ -133,5 +133,5 @@ private:
 };
 ```
 
-Check
-`CNGui::Object`'s members to see what you can use for your object. If you need more style parameters to customize your object add it to the `CNGui::Style` struct.
+Check `CNGui::Object`'s members to see what you can use for your object. If you need more style parameters to customize your object add it to the `CNGui::Style` struct.
+Feel free to share your new super widgets with the other users !
