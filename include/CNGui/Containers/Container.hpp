@@ -40,7 +40,18 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Base class for containers
+/// \brief Enumeration of the different container types
+///
+////////////////////////////////////////////////////////////
+enum ContainerType
+{
+    Free,
+    Vertical,
+    Horizontal
+};
+
+////////////////////////////////////////////////////////////
+/// \brief Container class
 ///
 ////////////////////////////////////////////////////////////
 template <class Content>
@@ -48,21 +59,10 @@ class Container : public sf::Drawable, public sf::Transformable
 {
 public:
     ////////////////////////////////////////////////////////////
-    /// \brief Enumeration of the different container types
-    ///
-    ////////////////////////////////////////////////////////////
-    enum            Type
-    {
-        Free,
-        Vertical,
-        Horizontal
-    };
-
-    ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(const sf::Vector2f& size = sf::Vector2f(400, 400), Type type = Type::Free) : mSize(size), mType(type), mSpacing(10)
+                    Container(const sf::Vector3f& size = sf::Vector3f(400, 400), ContainerType type = ContainerType::Free) : mSize(size), mType(type), mSpacing(10), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
     {
         static_assert(std::is_base_of<sf::Drawable, Content>::value && std::is_base_of<sf::Transformable, Content>::value, "Invalid type, must be Drawable and Transformable");
     }
@@ -103,6 +103,7 @@ public:
     {
         mPosition = sf::Vector2f{x, y};
         Transformable::setPosition(x, y);
+        update();
     }
 
     ////////////////////////////////////////////////////////////
@@ -113,7 +114,7 @@ public:
     /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    void            setSize(const sf::Vector2f& size)
+    void            setSize(const sf::Vector3f& size)
     {
         mSize = size;
         update();
@@ -127,12 +128,24 @@ public:
     /// \see setSize
     ///
     ////////////////////////////////////////////////////////////
-    sf::Vector2f    getSize()
+    sf::Vector3f    getSize()
     {
         return mSize;
     }
 
-        ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the main container of the container
+    ///
+    /// \param position Position of the container
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setContainer(sf::Vector2f& position)
+    {
+        mContainer = &position;
+        update();
+    }
+
+    ////////////////////////////////////////////////////////////
     /// \brief Set the space between the contents
     ///
     /// \param spacing Space between the contents
@@ -160,7 +173,7 @@ public:
     }
 
     ///////////////////////////////////////////////////////////
-    /// Overload of operator << to add an object to the container
+    /// Overload of operator << to add a content to the container
     ///
     ////////////////////////////////////////////////////////////
     Container&      operator <<(Content& content)
@@ -192,8 +205,8 @@ protected:
     {
         states.transform *= getTransform();
 
-        for(unsigned i = 0; i < mContents.size(); ++i)
-            target.draw(mContents[i], states);
+        for(auto&& it: mContents)
+            target.draw(it, states);
     }
 
     ////////////////////////////////////////////////////////////
@@ -202,14 +215,20 @@ protected:
     ////////////////////////////////////////////////////////////
     virtual void    update()
     {
-        for(unsigned i = 0; i < mContents.size(); ++i)
+        mDeep = *mContainer + mPosition;
+
+        for(auto&& it: mContents)
         {
-            if(mType == Type::Horizontal)
+            int i = &it - &mContents[0];
+
+            mContents[i].get().setContainer(mDeep);
+
+            if(mType == ContainerType::Horizontal)
             {
                 mContents[i].get().setSize(sf::Vector3f(mSize.x / mContents.size(), mSize.y, mContents[i].get().getSize().z));
                 mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
             }
-            else if(mType == Type::Vertical)
+            else if(mType == ContainerType::Vertical)
             {
                 mContents[i].get().setSize(sf::Vector3f(mSize.x, mSize.y / mContents.size(), mContents[i].get().getSize().z));
                 mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
@@ -221,10 +240,12 @@ protected:
     // Member data
     ////////////////////////////////////////////////////////////
     std::vector<std::reference_wrapper<Content>>    mContents;  ///< All the contents
-    sf::Vector2f                                    mSize;      ///< Size of the container
+    sf::Vector3f                                    mSize;      ///< Size of the container
     sf::Vector2f                                    mPosition;  ///< Position of the container
-    Type                                            mType;      ///< Type of the container
+    ContainerType                                   mType;      ///< Type of the container
     sf::Uint16                                      mSpacing;   ///< Space between the contents
+    sf::Vector2f*                                   mContainer; ///< Position of the container that contains it
+    sf::Vector2f                                    mDeep;      ///< Position after containers stacking
 };
 
 } // namespace CNGui
