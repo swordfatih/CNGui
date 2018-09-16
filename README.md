@@ -73,9 +73,9 @@ int main()
 
 `CNGui::Object` base class for every objects.
 
-`CNGui::Container` base class for every containers. They can hold objects and other containers.
+`CNGui::Container` Class that can hold objects and other containers.
 
-`CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with a type of shape as Rectangle, Triangle, Circle or RoundedRectangle.
+`CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with different types of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 
 `CNGui::Font` class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
 
@@ -135,4 +135,4 @@ private:
 ```
 
 Check `CNGui::Object`'s members to see what you can use for your object. If you need more style parameters to customize your object add it to the `CNGui::Style` struct.
-Feel free to share your new super widgets with the other users !
+Feel free to share your new super objects with the other users !
