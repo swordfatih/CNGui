@@ -105,20 +105,20 @@ private:
         }
         
         //Update the object here
-        if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
+        if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse)) //If button is hovered
         {
-            if(mHandleEvent.isActive(sf::Event::MouseButtonPressed))
+            if(mHandleEvent.isActive(sf::Event::MouseButtonPressed)) //If button is clicked
             {
                 mShape.setFillColor(mStyle.clickedcolor);
                 mReturn = true; 
             }
-            else
+            else //If button is only hovered
             {
                 mShape.setFillColor(mStyle.hovercolor);
                 mReturn = false;
             }
         }
-        else
+        else //If button is not hovered
         {
             mShape.setFillColor(mStyle.fillcolor);
         }
@@ -132,7 +132,7 @@ private:
         target.draw(mShape, states);
     }
 
-    Shape mShape; //Background shape
+    CNGui::Shape mShape; ///<Background shape
 };
 ```
 
