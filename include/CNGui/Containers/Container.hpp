@@ -62,7 +62,7 @@ public:
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(const sf::Vector3f& size = sf::Vector3f(400, 400), ContainerType type = ContainerType::Free) : mSize(size), mType(type), mSpacing(10), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
+                    Container(const sf::Vector2f& size = sf::Vector2f(400, 400), ContainerType type = ContainerType::Free) : mSize(size), mType(type), mSpacing(10), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
     {
         static_assert(std::is_base_of<sf::Drawable, Content>::value && std::is_base_of<sf::Transformable, Content>::value, "Invalid type, must be Drawable and Transformable");
     }
@@ -114,7 +114,7 @@ public:
     /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    void            setSize(const sf::Vector3f& size)
+    void            setSize(const sf::Vector2f& size)
     {
         mSize = size;
         update();
@@ -128,7 +128,7 @@ public:
     /// \see setSize
     ///
     ////////////////////////////////////////////////////////////
-    sf::Vector3f    getSize()
+    sf::Vector2f    getSize()
     {
         return mSize;
     }
@@ -225,12 +225,27 @@ protected:
 
             if(mType == ContainerType::Horizontal)
             {
-                mContents[i].get().setSize(sf::Vector3f(mSize.x / mContents.size(), mSize.y, mContents[i].get().getSize().z));
+                if(std::is_base_of<CNGui::Object, Content>::value)
+                {
+                    mContents[i].get().setSize(sf::Vector3f(mSize.x / mContents.size(), mSize.y, mContents[i].get().getSize().z));
+                }
+                else
+                {
+                    mContents[i].get().setSize(sf::Vector2f(mSize.x / mContents.size(), mSize.y));
+                }
+
                 mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
             }
             else if(mType == ContainerType::Vertical)
             {
-                mContents[i].get().setSize(sf::Vector3f(mSize.x, mSize.y / mContents.size(), mContents[i].get().getSize().z));
+                if(std::is_base_of<CNGui::Object, Content>::value)
+                {
+                    mContents[i].get().setSize(sf::Vector3f(mSize.x, mSize.y / mContents.size(), mContents[i].get().getSize().z));
+                }
+                else
+                {
+                    mContents[i].get().setSize(sf::Vector2f(mSize.x, mSize.y / mContents.size()));
+                }
                 mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
             }
         }
@@ -240,7 +255,7 @@ protected:
     // Member data
     ////////////////////////////////////////////////////////////
     std::vector<std::reference_wrapper<Content>>    mContents;  ///< All the contents
-    sf::Vector3f                                    mSize;      ///< Size of the container
+    sf::Vector2f                                    mSize;      ///< Size of the container
     sf::Vector2f                                    mPosition;  ///< Position of the container
     ContainerType                                   mType;      ///< Type of the container
     sf::Uint16                                      mSpacing;   ///< Space between the contents
