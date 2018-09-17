@@ -15,10 +15,10 @@ int main()
     style.selectable = true;
     style.outline = true;
 
-    CNGui::Container<CNGui::Container<CNGui::Object>> containerMain(sf::Vector3f(500, 300, 0), CNGui::ContainerType::Vertical);
+    CNGui::Container<CNGui::Container<CNGui::Object>> containerMain(sf::Vector2f(500, 300), CNGui::ContainerType::Vertical);
 
-    CNGui::Container<CNGui::Object> containerButton(sf::Vector3f(200, 150, 0), CNGui::ContainerType::Vertical);
-    CNGui::Container<CNGui::Object> containerTest(sf::Vector3f(200, 150, 0), CNGui::ContainerType::Horizontal);
+    CNGui::Container<CNGui::Object> containerButton(sf::Vector2f(200, 150), CNGui::ContainerType::Vertical);
+    CNGui::Container<CNGui::Object> containerTest(sf::Vector2f(200, 150), CNGui::ContainerType::Horizontal);
 
     CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
     CNGui::Button buttonReset("Reset#001", sf::Vector3f(200, 100, 25), handleEvent, style);
