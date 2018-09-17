@@ -59,7 +59,10 @@ void Button::update()
         mLabel.setString(mName);
         while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
             mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
-        mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 1.95, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
+        if(mStyle.outline)
+            mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().height);
+        else
+            mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
         mUpdate = false;
     }
 
