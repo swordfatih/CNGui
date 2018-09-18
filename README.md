@@ -14,26 +14,29 @@ An example code showing how CNGui is user-friendly and object-oriented!
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(300, 240), "CNGui Example");
+    sf::RenderWindow window({300, 200}, "CNGui Example");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
 
-    CNGui::Style style;
-    style.shape = CNGui::Shape::RoundedRectangle;
-    style.fillcolor = sf::Color(200, 200, 200);
-    style.hovercolor = sf::Color(100, 100, 100);
-    style.selectable = true;
-    style.outline = true;
+    CNGui::Style styleButton;
+    styleButton.shape = CNGui::Shape::RoundedRectangle;
+    styleButton.fillcolor = {200, 200, 200};
+    styleButton.hovercolor = {100, 100, 100};
+    styleButton.outline = true;
 
-    CNGui::Container<CNGui::Object> container(sf::Vector2f(200, 150), CNGui::Vertical);
+    CNGui::Style styleProgression = styleButton;
+    styleProgression.fillcolor = {80, 255, 129};
+    styleProgression.charactersize = 16;
 
-    CNGui::Button buttonStart("Start#001", sf::Vector3f(200, 100, 25), handleEvent, style);
-    CNGui::Button buttonReset("Reset#002", sf::Vector3f(200, 100, 25), handleEvent, style);
+    CNGui::ProgressIndicator progression("Progression#001", handleEvent, styleProgression);
+    CNGui::Button button("Add#001", handleEvent, styleButton);
 
-    container << buttonStart << buttonReset;
+    CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 100});
+    container << progression << button;
+
     container.setPosition(50, 30);
-    container.setSpacing(10);
+    container.setSpacing(25);
 
     while(window.isOpen())
     {
@@ -48,11 +51,11 @@ int main()
             handleEvent.push(event);
         }
 
-        if(buttonStart(window) && buttonStart.onClick())
-            buttonStart << "I think thats too long hahahahha";
+        if(button(window) && button.onClick())
+            progression.setProgression(progression.getProgression() + 0.1);
 
-        if(buttonReset(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView())))
-            buttonStart << "Start";
+        if(progression())
+            progression << "Progression done";
 
         window.clear();
         window.draw(container);
@@ -62,7 +65,7 @@ int main()
     return 0;
 }
 ```
-![output](https://media.giphy.com/media/orTDrM9QZH4H9P7QCJ/giphy.gif)
+![output](https://media.discordapp.net/attachments/414535622368296971/491656835695116290/progress.gif)
 
 ***
 **Explanations**
