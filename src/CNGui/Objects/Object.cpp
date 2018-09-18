@@ -23,94 +23,151 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Objects/Button.hpp"
+#include "CNGUI/Objects/Object.hpp"
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-bool Button::onClick()
+Object::Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size) : mSize(size), mHandleEvent(handleEvent), mStyle(style), mUpdate(true),  mReturn(false), mContainer(new sf::Vector2f(0, 0))
 {
-    return mClicked;
+    parse(id, mIndex, mName);
 }
 
 ////////////////////////////////////////////////////////////
-bool Button::onHover()
+Object::~Object()
 {
-    return mHover;
+    //dtor
 }
 
 ////////////////////////////////////////////////////////////
-void Button::update()
+Object& Object::operator <<(const std::string& name)
 {
-    //Updating the style of the button
-    if(mUpdate)
+
+    if(mName != name)
     {
-        mShape.setType(mStyle.shape);
-        mShape.setSize(mSize);
-        mShape.setFillColor(mStyle.fillcolor);
-        if(mStyle.outline)
-        {
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            mShape.setOutlineThickness(mStyle.outlinethickness);
-        }
-        mLabel.setFont(mStyle.font);
-        mLabel.setFillColor(mStyle.labelcolor);
-        mLabel.setCharacterSize(mStyle.charactersize);
-        mLabel.setString(mName);
-        while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
-            mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
-        mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 1.95, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
-        mUpdate = false;
+        mName = name;
+        mUpdate = true;
     }
-
-    //If the button is hovered
-    if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse))
-    {
-        mHover = true;
-
-        //Throwing event as button clicked
-        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
-            mClicked = true;
-        else
-            mClicked = false;
-
-        //Button is pressed
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            mShape.setFillColor(mStyle.clickedcolor);
-            mLabel.setFillColor(mStyle.labelclickedcolor);
-            mShape.setOutlineColor(mStyle.outlineclickedcolor);
-            mReturn = true;
-        }
-        else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
-        {
-            mShape.setFillColor(mStyle.hovercolor);
-            mLabel.setFillColor(mStyle.labelhovercolor);
-            mShape.setOutlineColor(mStyle.outlinehovercolor);
-        }
-    }
-    else
-    {
-        mHover = false;
-
-        if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
-        {
-            mShape.setFillColor(mStyle.fillcolor);
-            mLabel.setFillColor(mStyle.labelcolor);
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            if(mReturn)
-                mReturn = false;
-        }
-    }
+    return *this;
 }
 
 ////////////////////////////////////////////////////////////
-void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
+bool Object::operator()()
 {
-    states.transform *= getTransform();
+    update();
+    return mReturn;
+}
 
-    target.draw(mShape, states);
-    target.draw(mLabel, states);
+////////////////////////////////////////////////////////////
+bool Object::operator()(const sf::Vector2f& mouse)
+{
+    mMouse = mouse - *mContainer;
+    update();
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+bool Object::operator()(const sf::RenderWindow& window)
+{
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()) - *mContainer;
+    update();
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+bool Object::operator()(const sf::Vector2i& mouse)
+{
+    mMouse = sf::Vector2f(mouse) - *mContainer;
+    update();
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+void Object::setStyle(Style& style)
+{
+    mStyle = style;
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
+Style& Object::getStyle()
+{
+    return mStyle;
+}
+
+////////////////////////////////////////////////////////////
+void Object::setId(const std::string& id)
+{
+    parse(id, mIndex, mName);
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
+std::string Object::getId()
+{
+    return mName + "#" + std::to_string(mIndex);
+}
+
+////////////////////////////////////////////////////////////
+void Object::setSize(const sf::Vector2f& size)
+{
+    mSize = size;
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
+sf::Vector2f Object::getSize()
+{
+    return mSize;
+}
+
+////////////////////////////////////////////////////////////
+void Object::setContainer(sf::Vector2f& position)
+{
+    mContainer = &position;
+}
+
+////////////////////////////////////////////////////////////
+void Object::setEventHandler(EventHandler& handleEvent)
+{
+    mHandleEvent = handleEvent;
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
+EventHandler& Object::getEventHandler()
+{
+    return mHandleEvent;
+}
+
+////////////////////////////////////////////////////////////
+void Object::parse(const std::string& id, sf::Uint16& index, std::string& name)
+{
+    std::size_t pos(0);
+    do
+    {
+        pos = id.find('#', pos);
+        name = id.substr(0, id.size() - 4);
+
+        std::string temp = id.substr(pos + 1);
+
+        for(unsigned i = 0; i < temp.size(); ++i)
+            assert(!isalpha(temp.at(i))); // Invalid index
+
+        index = std::stoi(temp);
+    }while(id.at(pos - 1) == '\\');
+}
+
+////////////////////////////////////////////////////////////
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+
+}
+
+////////////////////////////////////////////////////////////
+void Object::update()
+{
+
 }
 
 } // namespace CNGui
