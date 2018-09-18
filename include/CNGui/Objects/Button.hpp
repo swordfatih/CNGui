@@ -85,6 +85,6 @@ private:
     bool            mHover = false;     ///< Hovering the button
 };
 
-}
+} // namespace CNGui
 
 #endif // BUTTON_HPP
