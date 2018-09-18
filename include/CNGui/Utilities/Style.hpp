@@ -1,3 +1,28 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+// CNGui - Chats Noirs Graphical User Interface
+// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 #ifndef STYLE_HPP_INCLUDED
 #define STYLE_HPP_INCLUDED
 
@@ -41,13 +66,16 @@ struct Style
     sf::Color   clickedcolor;           ///< Color of the object on click
     sf::Color   labelcolor;             ///< Color of the label
     sf::Color   labelhovercolor;        ///< Color of the label when hovering
-    sf::Color   labelclickedcolor;      ///< Color of the label when clicked
+    sf::Color   labelclickedcolor;      ///< Color of the label on click
     bool        selectable;             ///< The object is selectable
     bool        outline;                ///< The object has an outline
     sf::Uint16  outlinethickness;       ///< Thickness of the outline
     sf::Color   outlinecolor;           ///< Color of the outline
     sf::Color   outlinehovercolor;      ///< Color of the outline when hovering
-    sf::Color   outlineclickedcolor;    ///< Color of the outline when clicked
+    sf::Color   outlineclickedcolor;    ///< Color of the outline on click
+    sf::Color   backgroundcolor;        ///< Color of the background of the object
+    sf::Color   backgroundhovercolor;   ///< Color of the background of the object when hovering
+    sf::Color   backgroundclickedcolor; ///< Color of the background of the object on click
 };
 
 } // namespace CNGui
