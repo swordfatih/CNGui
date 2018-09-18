@@ -68,19 +68,19 @@ int main()
 ![output](https://media.discordapp.net/attachments/468477582761918465/491657988185128960/progress2.gif)
 
 ***
-**Explanations**
+**Classes**
 
 `CNGui::EventHolder` class that holds SFML events that you can use further in the code to update your objects.
-
 `CNGui::Style` struct that holds style parameters that the user can modify and apply to an object.
-
 `CNGui::Object` base class for every objects.
-
-`CNGui::Container` Class that can hold objects and other containers.
-
+`CNGui::Container` class that can hold objects and other containers to sort them.
 `CNGui::Shape` class that inheritates from `sf::Shape`, you can initialize it with different types of shape as Rectangle, Triangle, Circle or RoundedRectangle.
-
 `CNGui::Font` class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
+
+*Default objects*
+
+`CNGui::Button` button object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle` 
+`CNGui::ProgressIndicator` progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle` 
 
 ***
 **Creating a new object made easy**
