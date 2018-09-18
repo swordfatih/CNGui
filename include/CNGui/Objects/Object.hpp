@@ -51,7 +51,7 @@ public:
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                Object(const std::string& id, const sf::Vector3f& size, EventHandler& handleEvent, Style& style);
+                Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size = sf::Vector2f(0, 0));
 
     ////////////////////////////////////////////////////////////
     /// \brief Default destructor
@@ -107,7 +107,7 @@ public:
     /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    void            setSize(const sf::Vector3f& size);
+    void            setSize(const sf::Vector2f& size);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the size of the shape
@@ -117,7 +117,7 @@ public:
     /// \see setSize
     ///
     ////////////////////////////////////////////////////////////
-    sf::Vector3f    getSize();
+    sf::Vector2f    getSize();
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the container of the object
@@ -134,19 +134,28 @@ public:
     Object&     operator <<(const std::string& name);
 
     ///////////////////////////////////////////////////////////
+    /// Overload of operator () to get the object's return value
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        operator()();
+
+    ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
+    /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
     bool        operator()(const sf::Vector2f& mouse);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
+    /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
     bool        operator()(const sf::RenderWindow& window);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
+    /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
     bool        operator()(const sf::Vector2i& mouse);
@@ -202,7 +211,7 @@ protected:
     ////////////////////////////////////////////////////////////
     sf::Uint16      mIndex;         ///< Index of the object
     std::string     mName;          ///< Name of the object
-    sf::Vector3f    mSize;          ///< Size of the object, z value for radius
+    sf::Vector2f    mSize;          ///< Size of the object
     EventHandler&   mHandleEvent;   ///< Event handler
     Style&          mStyle;         ///< Style of the object
     bool            mUpdate;        ///< Needs update?
