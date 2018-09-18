@@ -17,5 +17,6 @@
 //Objects
 #include "CNGui/Objects/Object.hpp"
 #include "CNGui/Objects/Button.hpp"
+#include "CNGui/Objects/ProgressIndicator.hpp"
 
 #endif // CNGUI_HPP_INCLUDED
