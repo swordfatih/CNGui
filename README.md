@@ -65,7 +65,7 @@ int main()
     return 0;
 }
 ```
-![output](https://media.discordapp.net/attachments/414535622368296971/491656835695116290/progress.gif)
+![output](https://media.discordapp.net/attachments/468477582761918465/491657988185128960/progress2.gif)
 
 ***
 **Explanations**
