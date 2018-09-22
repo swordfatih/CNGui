@@ -76,6 +76,8 @@ struct Style
     sf::Color   backgroundcolor;        ///< Color of the background of the object
     sf::Color   backgroundhovercolor;   ///< Color of the background of the object when hovering
     sf::Color   backgroundclickedcolor; ///< Color of the background of the object on click
+    bool        animated;               ///< The object is animated if it is possible
+    bool        label;                  ///< The label of the object is shown
 };
 
 } // namespace CNGui
