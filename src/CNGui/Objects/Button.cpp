@@ -46,13 +46,20 @@ void Button::update()
     if(mUpdate)
     {
         mShape.setType(mStyle.shape);
-        mShape.setSize(mSize);
         mShape.setFillColor(mStyle.fillcolor);
-        if(mStyle.outline)
+
+        if(!mStyle.outline)
         {
+            mShape.setSize(mSize);
+        }
+        else
+        {
+            mShape.setSize(sf::Vector2f(mSize.x - mStyle.outlinethickness * 2, mSize.y - mStyle.outlinethickness * 2));
             mShape.setOutlineColor(mStyle.outlinecolor);
             mShape.setOutlineThickness(mStyle.outlinethickness);
+            mShape.setPosition(mStyle.outlinethickness, mStyle.outlinethickness);
         }
+
         if(mStyle.label)
         {
             mLabel.setFont(mStyle.font);
@@ -61,12 +68,13 @@ void Button::update()
             mLabel.setString(mName);
 
             while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
+            {
                 mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
-            if(mStyle.outline)
-                mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().height);
-            else
-                mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
+            }
+
+            mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mStyle.charactersize / 1.5);
         }
+        
         mUpdate = false;
     }
 
