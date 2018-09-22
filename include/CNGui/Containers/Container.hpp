@@ -225,12 +225,12 @@ protected:
 
             if(mType == ContainerType::Horizontal)
             {
-                mContents[i].get().setSize(sf::Vector2f(mSize.x / mContents.size() - (mSpacing / mContents.size()), mSize.y));
+                mContents[i].get().setSize(sf::Vector2f((mSize.x - mSpacing) / mContents.size(), mSize.y));
                 mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
             }
             else if(mType == ContainerType::Vertical)
             {
-                mContents[i].get().setSize(sf::Vector2f(mSize.x, mSize.y / mContents.size() - (mSpacing / mContents.size())));
+                mContents[i].get().setSize(sf::Vector2f(mSize.x, (mSize.y - mSpacing) / mContents.size()));
                 mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
             }
         }
