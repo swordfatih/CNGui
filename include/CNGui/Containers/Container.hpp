@@ -62,7 +62,7 @@ public:
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(ContainerType type = ContainerType::Free, const sf::Vector2f& size = sf::Vector2f(400, 400)) : mSize(size), mType(type), mSpacing(15), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
+                    Container(ContainerType type = ContainerType::Free, const sf::Vector2f& size = sf::Vector2f(400, 400)) : mSize(size), mType(type), mSpacing(5), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
     {
         static_assert(std::is_base_of<sf::Drawable, Content>::value && std::is_base_of<sf::Transformable, Content>::value, "Invalid type, must be Drawable and Transformable");
     }
@@ -225,12 +225,12 @@ protected:
 
             if(mType == ContainerType::Horizontal)
             {
-                mContents[i].get().setSize(sf::Vector2f(mSize.x / mContents.size(), mSize.y));
+                mContents[i].get().setSize(sf::Vector2f(mSize.x / mContents.size() - (mSpacing / mContents.size()), mSize.y));
                 mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
             }
             else if(mType == ContainerType::Vertical)
             {
-                mContents[i].get().setSize(sf::Vector2f(mSize.x, mSize.y / mContents.size()));
+                mContents[i].get().setSize(sf::Vector2f(mSize.x, mSize.y / mContents.size() - (mSpacing / mContents.size())));
                 mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
             }
         }
