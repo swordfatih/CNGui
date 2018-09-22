@@ -82,7 +82,6 @@ std::size_t Shape::getPointCount() const
                 radius = mSize.y / 5;
             return radius * 4;
         }
-
         case Circle: return 30;
     }
 }
@@ -122,9 +121,9 @@ sf::Vector2f Shape::getPoint(std::size_t index) const
             else
                 radius = mSize.y / 5;
 
-            float deltaAngle = 90.0f/(radius-1);
+            float deltaAngle = 90.0f/ (radius - 1);
             sf::Vector2f center;
-            unsigned int centerIndex = index/radius;
+            unsigned int centerIndex = index / radius;
             static const float pi = 3.141592654f;
 
             switch(centerIndex)
@@ -147,13 +146,13 @@ sf::Vector2f Shape::getPoint(std::size_t index) const
                     break;
             }
 
-            return sf::Vector2f(radius*std::cos(deltaAngle*(index-centerIndex)*pi/180)+center.x,-radius*std::sin(deltaAngle*(index-centerIndex)*pi/180)+center.y);
+            return sf::Vector2f(radius * std::cos(deltaAngle * (index-centerIndex)  * pi / 180) + center.x, -radius * std::sin(deltaAngle * (index-centerIndex) * pi / 180) + center.y);
         }
         case Circle:
         {
             static const float pi = 3.141592654f;
 
-            int radius = 0;
+            float radius = 0;
 
             if(mSize.x < mSize.y)
                 radius = mSize.x / 2;
