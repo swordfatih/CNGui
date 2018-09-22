@@ -66,6 +66,14 @@ public:
 
 private:
     ////////////////////////////////////////////////////////////
+    /// \brief Ease in out circ function
+    ///
+    /// \param t Time
+    ///
+    ////////////////////////////////////////////////////////////
+    float easeInOutCirc(float t);
+    
+    ////////////////////////////////////////////////////////////
     /// \brief Updates the object
     ///
     ////////////////////////////////////////////////////////////
@@ -83,12 +91,14 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape       mBackground;            ///< Background shape of the indicator
-    Shape       mShape;                 ///< Shape of the indicator
-    sf::Text    mLabel;                 ///< Description text of the indicator
-    sf::Text    mProgression;           ///< Progression text of the indicator
-    float       mActualProgression = 0; ///< Actual progression of the indicator
-    float       mNewProgression = 0;    ///< New progression of the indicator to transit to
+    Shape           mBackground;                ///< Background shape of the indicator
+    Shape           mShape;                     ///< Shape of the indicator
+    sf::Text        mLabel;                     ///< Description text of the indicator
+    sf::Text        mProgression;               ///< Progression text of the indicator
+    float           mOldProgression = 0;        ///< Old progression of the indicator
+    float           mActualProgression = 0;     ///< Actual progression of the indicator
+    float           mNewProgression = 0;        ///< New progression of the indicator to transit to
+    sf::Clock       mClock;                     ///< Animation clock
 };
 
 } // namespace CNGui
