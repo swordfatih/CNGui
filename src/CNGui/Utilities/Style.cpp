@@ -45,7 +45,9 @@ Style::Style() :
     outlineclickedcolor(sf::Color(150, 80, 20)),
     backgroundcolor(sf::Color::Transparent),
     backgroundhovercolor(sf::Color(220, 220, 220)),
-    backgroundclickedcolor(sf::Color(155, 155, 155))
+    backgroundclickedcolor(sf::Color(155, 155, 155)),
+    animated(true),
+    label(true)
 {
     font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
 }
