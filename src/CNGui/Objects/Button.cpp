@@ -53,16 +53,20 @@ void Button::update()
             mShape.setOutlineColor(mStyle.outlinecolor);
             mShape.setOutlineThickness(mStyle.outlinethickness);
         }
-        mLabel.setFont(mStyle.font);
-        mLabel.setFillColor(mStyle.labelcolor);
-        mLabel.setCharacterSize(mStyle.charactersize);
-        mLabel.setString(mName);
-        while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
-            mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
-        if(mStyle.outline)
-            mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().height);
-        else
-            mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
+        if(mStyle.label)
+        {
+            mLabel.setFont(mStyle.font);
+            mLabel.setFillColor(mStyle.labelcolor);
+            mLabel.setCharacterSize(mStyle.charactersize);
+            mLabel.setString(mName);
+
+            while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
+                mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
+            if(mStyle.outline)
+                mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mStyle.outlinethickness - mLabel.getGlobalBounds().height);
+            else
+                mLabel.setPosition(mShape.getGlobalBounds().width / 2 - mLabel.getGlobalBounds().width / 2, mShape.getGlobalBounds().height / 2 - mLabel.getGlobalBounds().height);
+        }
         mUpdate = false;
     }
 
@@ -113,7 +117,8 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
 
     target.draw(mShape, states);
-    target.draw(mLabel, states);
+    if(mStyle.label)
+        target.draw(mLabel, states);
 }
 
 } // namespace CNGui
