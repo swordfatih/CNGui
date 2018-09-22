@@ -138,7 +138,11 @@ void ProgressIndicator::update()
 
     if(mStyle.animated && mActualProgression < mNewProgression)
     {
-        mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asMilliseconds()) / 100;
+        mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asSeconds());
+
+        if(mActualProgression > 1)
+            mActualProgression = 1;
+
         mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
     }
     else
