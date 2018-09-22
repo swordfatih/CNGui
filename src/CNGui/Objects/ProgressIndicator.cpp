@@ -44,39 +44,88 @@ float ProgressIndicator::getProgression()
 }
 
 ////////////////////////////////////////////////////////////
+float ProgressIndicator::easeInOutCirc(float t)
+{
+    if(t < 0.5)
+    {
+        return (1 - sqrt(1 - 2 * t)) * 0.5;
+    }
+    else
+    {
+        return (1 + sqrt(2 * t - 1)) * 0.5;
+    }
+}
+
+////////////////////////////////////////////////////////////
 void ProgressIndicator::update()
 {
     //Updating the style of the button
     if(mUpdate)
     {
-        mLabel.setFont(mStyle.font);
-        mLabel.setFillColor(mStyle.labelcolor);
-        mLabel.setCharacterSize(mStyle.charactersize);
-        mLabel.setString(mName);
+        mShape.setType(mStyle.shape);
+        mShape.setFillColor(mStyle.fillcolor);
 
         mBackground.setType(mStyle.shape);
-        mBackground.setSize({mSize.x, mSize.y - mStyle.charactersize + mStyle.outlinethickness * 2});
         mBackground.setFillColor(mStyle.backgroundcolor);
-        if(mStyle.outline)
+
+        if(mStyle.label)
+        {
+            mLabel.setFont(mStyle.font);
+            mLabel.setFillColor(mStyle.labelcolor);
+            mLabel.setCharacterSize(mStyle.charactersize);
+            mLabel.setString(mName);
+
+            mProgression.setFont(mStyle.font);
+            mProgression.setFillColor(mStyle.labelcolor);
+            mProgression.setCharacterSize(mStyle.charactersize);
+            mProgression.setString(std::to_string(int(mNewProgression * 100)) + "%");
+            mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width, 0);
+
+            if(!mStyle.outline)
+            {
+                mBackground.setSize(sf::Vector2f(mSize.x, mSize.y - mStyle.charactersize * 1.25));
+                mBackground.setPosition(0, mStyle.charactersize * 1.25);
+            }
+            else
+            {
+                mBackground.setSize(sf::Vector2f(mSize.x - mStyle.outlinethickness * 2, mSize.y - (mStyle.charactersize * 1.25 + mStyle.outlinethickness * 2)));
+                mBackground.setPosition(mStyle.outlinethickness, mStyle.outlinethickness + mStyle.charactersize * 1.25);
+            }
+        }
+        else
+        {
+            if(!mStyle.outline)
+            {
+                mBackground.setSize({mSize.x, mSize.y});
+                mBackground.setPosition(0, 0);
+            }
+            else
+            {
+                mBackground.setSize({mSize.x - mStyle.outlinethickness * 2, mSize.y - mStyle.outlinethickness * 2});
+                mBackground.setPosition(mStyle.outlinethickness, mStyle.outlinethickness);
+            }
+        }
+
+        if(mStyle.animated)
+        {
+            mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
+        }
+        else
+        {
+            mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mNewProgression, mBackground.getSize().y * 0.75));
+        }
+
+        if(!mStyle.outline)
+        {
+            mShape.setPosition(mBackground.getSize().x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
+        }
+        else
         {
             mBackground.setOutlineColor(mStyle.outlinecolor);
             mBackground.setOutlineThickness(mStyle.outlinethickness);
+
+            mShape.setPosition(mSize.x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
         }
-        mBackground.setPosition(0, mStyle.charactersize + mStyle.outlinethickness * 2);
-
-        mShape.setType(mStyle.shape);
-        mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.935 * mActualProgression, mBackground.getSize().y * 0.75));
-        mShape.setFillColor(mStyle.fillcolor);
-        if(mStyle.outline)
-            mShape.setPosition(mStyle.outlinethickness + mBackground.getGlobalBounds().width * 0.01, mBackground.getPosition().y + mBackground.getGlobalBounds().height / 2 - mStyle.outlinethickness - mShape.getGlobalBounds().height / 2);
-        else
-            mShape.setPosition(mBackground.getGlobalBounds().width * 0.01, mBackground.getPosition().y + mBackground.getGlobalBounds().height / 2 - mShape.getGlobalBounds().height / 2);
-
-        mProgression.setFont(mStyle.font);
-        mProgression.setFillColor(mStyle.labelcolor);
-        mProgression.setCharacterSize(mStyle.charactersize);
-        mProgression.setString(std::to_string(int(mNewProgression * 100)) + "%");
-        mProgression.setPosition(mBackground.getGlobalBounds().width - mProgression.getGlobalBounds().width, 0);
 
         if(mNewProgression >= 1)
         {
@@ -87,14 +136,15 @@ void ProgressIndicator::update()
         mUpdate = false;
     }
 
-    if(mActualProgression < mNewProgression)
+    if(mStyle.animated && mActualProgression < mNewProgression)
     {
-        mActualProgression += 0.01;
-        mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.935 * mActualProgression, mBackground.getSize().y * 0.75));
-        if(mStyle.outline)
-            mShape.setPosition(mStyle.outlinethickness + mBackground.getGlobalBounds().width * 0.01, mBackground.getPosition().y + mBackground.getGlobalBounds().height / 2 - mStyle.outlinethickness - mShape.getGlobalBounds().height / 2);
-        else
-            mShape.setPosition(mBackground.getGlobalBounds().width * 0.01, mBackground.getPosition().y + mBackground.getGlobalBounds().height / 2 - mShape.getGlobalBounds().height / 2);
+        mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asMilliseconds()) / 100;
+        mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
+    }
+    else
+    {
+        mOldProgression = mNewProgression;
+        mClock.restart();
     }
 }
 
@@ -105,8 +155,11 @@ void ProgressIndicator::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
     target.draw(mBackground, states);
     target.draw(mShape, states);
-    target.draw(mLabel, states);
-    target.draw(mProgression, states);
+    if(mStyle.label)
+    {
+        target.draw(mLabel, states);
+        target.draw(mProgression, states);
+    }
 }
 
 } // namespace CNGui
