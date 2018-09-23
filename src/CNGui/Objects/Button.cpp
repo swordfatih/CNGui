@@ -47,6 +47,7 @@ void Button::update()
     {
         mShape.setType(mStyle.shape);
         mShape.setFillColor(mStyle.fillcolor);
+        mShape.setTexture(&mStyle.texturebackground);
 
         if(!mStyle.outline)
         {
@@ -74,7 +75,7 @@ void Button::update()
 
             mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mStyle.charactersize / 1.5);
         }
-        
+
         mUpdate = false;
     }
 
