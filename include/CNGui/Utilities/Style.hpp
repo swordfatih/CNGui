@@ -30,6 +30,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/System/Time.hpp>
 #include "CNGui/Utilities/Font.hpp"
 #include "CNGui/Utilities/Shape.hpp"
 
@@ -78,6 +79,8 @@ struct Style
     sf::Color   backgroundclickedcolor; ///< Color of the background of the object on click
     bool        animated;               ///< The object is animated if it is possible
     bool        label;                  ///< The label of the object is shown
+    sf::Time    durationanimation;      ///< Duration of the object's animation
+    sf::Texture texturebackground;      ///< Background texture of the object
 };
 
 } // namespace CNGui
