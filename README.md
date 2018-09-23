@@ -21,8 +21,6 @@ int main()
 
     CNGui::Style styleButton;
     styleButton.shape = CNGui::Shape::RoundedRectangle;
-    styleButton.fillcolor = {200, 200, 200};
-    styleButton.hovercolor = {100, 100, 100};
     styleButton.outline = true;
 
     CNGui::Style styleProgression = styleButton;
@@ -32,11 +30,10 @@ int main()
     CNGui::ProgressIndicator progression("Progression#001", handleEvent, styleProgression);
     CNGui::Button button("Add#001", handleEvent, styleButton);
 
-    CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 100});
-    container << progression << button;
+    CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 150});
+    container.setPosition(50, 20);
 
-    container.setPosition(50, 30);
-    container.setSpacing(25);
+    container << progression << button;
 
     while(window.isOpen())
     {
@@ -65,7 +62,7 @@ int main()
     return 0;
 }
 ```
-![output](https://media.discordapp.net/attachments/468477582761918465/491657988185128960/progress2.gif)
+![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
 
 ***
 Classes | Description
