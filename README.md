@@ -73,12 +73,12 @@ Classes | Description
 `CNGui::Container` | Class that can hold objects and other containers to sort them.
 `CNGui::Shape` | Class that inheritates from `sf::Shape`, you can initialize it with different types of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 `CNGui::Font` | Class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
-`CNGui::Text` | Class that inheritates from `sf::Text`, you can apply a limit size that the text wont exceed
+`CNGui::Text` | Class that inheritates from `sf::Text`, you can apply a limit size that the text wont exceed.
 
 Objects | Description
 ------- | -----------
-`CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle` 
-`CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle` 
+`CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`.
+`CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`.
 
 ***
 **Creating a new object made easy**
