@@ -68,7 +68,7 @@ private:
     void update();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the button to a render target
+    /// \brief Draw the object to a render target
     ///
     /// \param target Render target to draw to
     /// \param states Current render states
