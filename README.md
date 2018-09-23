@@ -77,7 +77,7 @@ Classes | Description
 
 Objects | Description
 ------- | -----------
-`CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`.
+`CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle`, `CNGui::Shape::RoundedRectangle`, `CNGui::Shape::Triangle` and `CNGui::Shape::Circle`.
 `CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`.
 
 ***
