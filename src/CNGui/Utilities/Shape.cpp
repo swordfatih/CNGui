@@ -98,10 +98,10 @@ sf::Vector2f Shape::getPoint(std::size_t index) const
             static const float pi = 3.141592654f;
 
             float angle = index * 2 * pi / 3 - pi / 2;
-            float x = std::cos(angle) * mSize.x;
-            float y = std::sin(angle) * mSize.y;
+            float x = std::cos(angle) * mSize.x / 2;
+            float y = std::sin(angle) * mSize.y / 2;
 
-            return sf::Vector2f(mSize.x + x, mSize.y + y);
+            return sf::Vector2f(mSize.x / 2 + x, mSize.y / 2 + y);
         }
         case Rectangle:
         {
