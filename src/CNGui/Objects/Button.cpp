@@ -67,13 +67,30 @@ void Button::update()
             mLabel.setFillColor(mStyle.labelcolor);
             mLabel.setCharacterSize(mStyle.charactersize);
             mLabel.setString(mName);
-
-            while(mLabel.getGlobalBounds().width > mShape.getGlobalBounds().width || mLabel.getGlobalBounds().height > mShape.getGlobalBounds().height)
+            if(mStyle.shape == CNGui::Shape::Rectangle || mStyle.shape == CNGui::Shape::RoundedRectangle)
             {
-                mLabel.setCharacterSize(mLabel.getCharacterSize() - 1);
+                mLabel.setSize(sf::Vector2f(mShape.getSize().x - mShape.getSize().x * 0.05, mShape.getSize().y));
+                mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2 - mLabel.getCharacterSize() / 2.5);
             }
-
-            mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mStyle.charactersize / 1.5);
+            else if(mStyle.shape == CNGui::Shape::Triangle)
+            {
+                mLabel.setSize(sf::Vector2f(mShape.getSize().x / 3, mShape.getSize().y / 3));
+                mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2 - mLabel.getCharacterSize() / 2.5);
+            }
+            else if(mStyle.shape == CNGui::Shape::Circle)
+            {
+                sf::Uint16 center;
+                if(mSize.x > mSize.y)
+                {
+                    center = mShape.getSize().y / 2;
+                }
+                else
+                {
+                    center = mShape.getSize().x / 2;
+                }
+                mLabel.setSize(sf::Vector2f(center, center));
+                mLabel.setPosition(center - mLabel.getGlobalBounds().width / 2.5, center - mLabel.getGlobalBounds().height / 2);
+            }
         }
 
         mUpdate = false;
