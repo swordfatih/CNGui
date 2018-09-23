@@ -126,6 +126,13 @@ sf::Vector2f Text::getSize()
 }
 
 ////////////////////////////////////////////////////////////
+void Text::setCharacterSize(const sf::Uint16& characterSize)
+{
+    mCharacterSize = characterSize;
+    sf::Text::setCharacterSize(characterSize);
+}
+
+////////////////////////////////////////////////////////////
 std::vector<std::string> Text::split(const sf::String& string)
 {
     std::vector<std::string> tokens;
