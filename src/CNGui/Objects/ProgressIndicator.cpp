@@ -23,18 +23,26 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "ProgressIndicator.hpp"
+#include "CNGui/Objects/ProgressIndicator.hpp"
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
 void ProgressIndicator::setProgression(float progression)
 {
-    if(mNewProgression < 1)
+    if(progression <= 1 && progression >= 0)
     {
         mNewProgression = progression;
-        mUpdate = true;
     }
+    else if(progression < 0)
+    {
+        mNewProgression = 0;
+    }
+    else if(progression > 1)
+    {
+        mNewProgression = 1;
+    }
+    mUpdate = true;
 }
 
 ////////////////////////////////////////////////////////////
@@ -67,6 +75,7 @@ void ProgressIndicator::update()
 
         mBackground.setType(mStyle.shape);
         mBackground.setFillColor(mStyle.backgroundcolor);
+        mBackground.setTexture(&mStyle.texturebackground);
 
         if(mStyle.label)
         {
@@ -129,25 +138,43 @@ void ProgressIndicator::update()
 
         if(mNewProgression >= 1)
         {
+            mNewProgression = 1;
             mShape.setFillColor(mStyle.clickedcolor);
             mReturn = true;
+        }
+        else
+        {
+            mReturn = false;
         }
 
         mUpdate = false;
     }
 
-    if(mStyle.animated && mActualProgression < mNewProgression)
+    if(mStyle.animated && mOldProgression != mNewProgression)
     {
-        mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asSeconds());
-
-        if(mActualProgression > 1)
-            mActualProgression = 1;
+        if(mOldProgression < mNewProgression)
+        {
+            mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asSeconds() / mStyle.durationanimation.asSeconds());
+            if(mActualProgression > mNewProgression)
+            {
+                mActualProgression = mNewProgression;
+                mOldProgression = mNewProgression;
+            }
+        }
+        else
+        {
+            mActualProgression = mOldProgression - easeInOutCirc(mClock.getElapsedTime().asSeconds() / mStyle.durationanimation.asSeconds());
+            if(mActualProgression < mNewProgression)
+            {
+                mActualProgression = mNewProgression;
+                mOldProgression = mNewProgression;
+            }
+        }
 
         mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
     }
     else
     {
-        mOldProgression = mNewProgression;
         mClock.restart();
     }
 }
