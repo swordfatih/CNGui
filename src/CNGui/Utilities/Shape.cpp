@@ -80,6 +80,7 @@ std::size_t Shape::getPointCount() const
                 radius = mSize.x / 5;
             else
                 radius = mSize.y / 5;
+
             return radius * 4;
         }
         case Circle: return 30;
