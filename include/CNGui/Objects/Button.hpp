@@ -31,7 +31,9 @@
 ////////////////////////////////////////////////////////////
 #include "CNGui/Objects/Object.hpp"
 #include "CNGui/Utilities/Shape.hpp"
+#include "CNGui/Utilities/Text.hpp"
 #include <SFML/Graphics/Text.hpp>
+#include <iostream>
 
 namespace CNGui
 {
@@ -80,7 +82,7 @@ private:
     // Member data
     ////////////////////////////////////////////////////////////
     Shape           mShape;             ///< Shape of the button
-    sf::Text        mLabel;             ///< Label of the button
+    Text            mLabel;             ///< Label of the button
     bool            mClicked = false;   ///< Button clicked
     bool            mHover = false;     ///< Hovering the button
 };
