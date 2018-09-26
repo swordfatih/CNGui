@@ -83,12 +83,15 @@ void ProgressIndicator::update()
             mLabel.setFillColor(mStyle.labelcolor);
             mLabel.setCharacterSize(mStyle.charactersize);
             mLabel.setString(mName);
+            mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
 
             mProgression.setFont(mStyle.font);
             mProgression.setFillColor(mStyle.labelcolor);
             mProgression.setCharacterSize(mStyle.charactersize);
             mProgression.setString(std::to_string(int(mNewProgression * 100)) + "%");
-            mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width, 0);
+            mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width - mProgression.getLocalBounds().left, -mProgression.getLocalBounds().top);
+
+            mLabel.setSize(sf::Vector2f(mSize.x - mProgression.getGlobalBounds().width * 1.3, mStyle.charactersize * 1.25));
 
             if(!mStyle.outline)
             {
