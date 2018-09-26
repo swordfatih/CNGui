@@ -153,12 +153,18 @@ void LineEdit::update()
             mOutput.setFillColor(mStyle.clickedcolor);
             mCursor.setFillColor(sf::Color::White);
             mShape.setSize(sf::Vector2f(mBackground.getSize().x, mBackground.getSize().y * 0.05));
-            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x * 2, mCursor.getPosition().y);
 
             if(mOutput.getString() == mDefault)
             {
                 mOutput.setString(mString);
                 mOutput.setStyle(CNGui::Text::Regular);
+                mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
+            }
+            else
+            {
+                mOutput.setString(mString.substr(0, mString.size() - mPositionCursor));
+                mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
+                mOutput.setString(mString);
             }
 
             mReturn = true;
@@ -185,63 +191,63 @@ void LineEdit::update()
     if(mReturn)
     {
         mOnReturn = false;
+        bool updatePosition = false;
+
+        if(mHandleEvent.isActive(sf::Event::KeyPressed))
+        {
+
+            if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Left && mPositionCursor < mString.size())
+            {
+                mPositionCursor += 1;
+                updatePosition = true;
+            }
+            else if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Right && mPositionCursor > 0)
+            {
+                mPositionCursor -= 1;
+                updatePosition = true;
+            }
+            else if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Delete && mPositionCursor > 0)
+            {
+                mString.erase(mString.end() - mPositionCursor);
+                mPositionCursor -= 1;
+                updatePosition = true;
+            }
+            else if(mHandleEvent[sf::Event::KeyPressed].key.control && mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::C)
+            {
+                sf::Clipboard::setString(mString);
+            }
+            else if(mHandleEvent[sf::Event::KeyPressed].key.control && mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::V)
+            {
+                mString.insert(mString.size() - mPositionCursor, sf::Clipboard::getString());
+                mOutput.setString(mString);
+            }
+        }
 
         if(mHandleEvent.isActive(sf::Event::TextEntered))
         {
             //Handle input
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
             {
-                if(mString.size() > 0)
+                if(mPositionCursor < mString.size())
                 {
                     mString.pop_back();
                 }
             }
             else
             {
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-                {
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-                    {
-                        sf::Clipboard::setString(mString);
-                    }
-                    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::V))
-                    {
-                        mString += sf::Clipboard::getString();
-                        mOutput.setString(mString);
-                    }
-                }
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
                 {
                     mOnReturn = true;
                 }
-                else
+                else if(!mHandleEvent[sf::Event::KeyPressed].key.control)
                 {
-                    mString += static_cast<char>(mHandleEvent[sf::Event::TextEntered].text.unicode);
+                    mString.insert(mString.size() - mPositionCursor, 1, static_cast<char>(mHandleEvent[sf::Event::TextEntered].text.unicode));
                 }
             }
 
             mOutput.setString(mString);
 
-            //Update position
-            sf::Vector2f position = {0, mOutput.getPosition().y};
-
-            if(!mStyle.outline)
-            {
-                position.x = -mOutput.getLocalBounds().left;
-            }
-            else
-            {
-                position.x = -mOutput.getLocalBounds().left + mStyle.outlinethickness;
-            }
-
-            if(mOutput.getGlobalBounds().width > mSize.x)
-            {
-                position.x -= mOutput.getGlobalBounds().width - mSize.x + mSize.x * 0.02;
-            }
-
-            mOutput.setPosition(position);
-            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x * 2, mCursor.getPosition().y);
-            mCursor.setFillColor(sf::Color::White);
+            updatePosition = true;
         }
         else
         {
@@ -262,6 +268,33 @@ void LineEdit::update()
                     mAnimation.restart();
                 }
             }
+        }
+
+        if(updatePosition)
+        {
+            //Update position
+            mOutput.setString(mString.substr(0, mString.size() - mPositionCursor));
+
+            sf::Vector2f position = {0, mOutput.getPosition().y};
+
+            if(!mStyle.outline)
+            {
+                position.x = -mOutput.getLocalBounds().left;
+            }
+            else
+            {
+                position.x = -mOutput.getLocalBounds().left + mStyle.outlinethickness;
+            }
+
+            if(mOutput.getGlobalBounds().width > mSize.x)
+            {
+                position.x -= mOutput.getGlobalBounds().width - mSize.x + mSize.x * 0.02;
+            }
+
+            mCursor.setFillColor(sf::Color::White);
+            mOutput.setPosition(position);
+            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
+            mOutput.setString(mString);
         }
     }
 }
