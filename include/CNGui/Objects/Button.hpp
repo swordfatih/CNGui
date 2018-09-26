@@ -32,8 +32,6 @@
 #include "CNGui/Objects/Object.hpp"
 #include "CNGui/Utilities/Shape.hpp"
 #include "CNGui/Utilities/Text.hpp"
-#include <SFML/Graphics/Text.hpp>
-#include <iostream>
 
 namespace CNGui
 {
