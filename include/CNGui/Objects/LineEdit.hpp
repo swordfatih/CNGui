@@ -93,15 +93,16 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape       mShape;         ///< Underline shape
-    Shape       mBackground;    ///< Background shape
-    Shape       mCursor;        ///< Cursor shape
-    Text        mLabel;         ///< Label text
-    sf::Text    mOutput;        ///< Output text
-    std::string mString;        ///< Output string
-    std::string mDefault;       ///< Default string
-    sf::Clock   mAnimation;     ///< Cursor animation
-    bool        mOnReturn;      ///< On return key pressed
+    Shape       mShape;                 ///< Underline shape
+    Shape       mBackground;            ///< Background shape
+    Shape       mCursor;                ///< Cursor shape
+    sf::Uint16  mPositionCursor = 0;    ///< Cursor position
+    Text        mLabel;                 ///< Label text
+    sf::Text    mOutput;                ///< Output text
+    std::string mString;                ///< Output string
+    std::string mDefault;               ///< Default string
+    sf::Clock   mAnimation;             ///< Cursor animation
+    bool        mOnReturn = false;      ///< On return key pressed
 
 };
 
