@@ -51,7 +51,7 @@ public:
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size = sf::Vector2f(0, 0));
+                Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size = sf::Vector2f(100, 50));
 
     ////////////////////////////////////////////////////////////
     /// \brief Default destructor
