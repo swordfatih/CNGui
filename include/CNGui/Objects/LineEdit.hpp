@@ -29,8 +29,9 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include <SFML/OpenGL.hpp>
 #include "CNGui/Objects/Object.hpp"
-#include <SFML/Graphics/Text.hpp>
+#include "CNGui/Utilities/Text.hpp"
 
 namespace CNGui
 {
@@ -43,12 +44,42 @@ class LineEdit : public Object
 public:
     using Object::Object;
 
+    ////////////////////////////////////////////////////////////
+    /// \brief Return key pressed event
+    ///
+    /// \return Returns true on return key pressed
+    ///
+    ////////////////////////////////////////////////////////////
+    bool onReturn();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the output string
+    ///
+    /// \return Output string
+    ///
+    ////////////////////////////////////////////////////////////
+    std::string getString();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the default shown string of the text
+    ///
+    /// \param string Default string
+    ///
+    ////////////////////////////////////////////////////////////
+    void setDefaultString(const std::string& string);
+
+    ////////////////////////////////////////////////////////////
+    /// Overload of operator >> to read object's output
+    ///
+    ////////////////////////////////////////////////////////////
+    LineEdit& operator >>(std::string& output);
+
 private:
     ////////////////////////////////////////////////////////////
     /// \brief Updates the object
     ///
     ////////////////////////////////////////////////////////////
-    void update();
+    void            update();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -57,12 +88,20 @@ private:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    sf::Text mText;
+    Shape       mShape;         ///< Underline shape
+    Shape       mBackground;    ///< Background shape
+    Shape       mCursor;        ///< Cursor shape
+    Text        mLabel;         ///< Label text
+    sf::Text    mOutput;        ///< Output text
+    std::string mString;        ///< Output string
+    std::string mDefault;       ///< Default string
+    sf::Clock   mAnimation;     ///< Cursor animation
+    bool        mOnReturn;      ///< On return key pressed
 
 };
 
