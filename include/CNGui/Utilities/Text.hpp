@@ -32,7 +32,6 @@
 #include <SFML/Graphics/Text.hpp>
 #include <vector>
 #include <sstream>
-#include <iostream>
 
 namespace CNGui
 {
