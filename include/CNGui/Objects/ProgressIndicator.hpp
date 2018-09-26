@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////
 #include "CNGui/Objects/Object.hpp"
 #include "CNGui/Utilities/Shape.hpp"
-#include <SFML/Graphics/Text.hpp>
+#include "CNGui/Utilities/Text.hpp"
 
 namespace CNGui
 {
@@ -93,8 +93,8 @@ private:
     ////////////////////////////////////////////////////////////
     Shape           mBackground;                ///< Background shape of the indicator
     Shape           mShape;                     ///< Shape of the indicator
-    sf::Text        mLabel;                     ///< Description text of the indicator
-    sf::Text        mProgression;               ///< Progression text of the indicator
+    Text            mLabel;                     ///< Description text of the indicator
+    Text            mProgression;               ///< Progression text of the indicator
     float           mOldProgression = 0;        ///< Old progression of the indicator
     float           mActualProgression = 0;     ///< Actual progression of the indicator
     float           mNewProgression = 0;        ///< New progression of the indicator to transit to
