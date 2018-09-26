@@ -70,12 +70,12 @@ void Button::update()
             if(mStyle.shape == CNGui::Shape::Rectangle || mStyle.shape == CNGui::Shape::RoundedRectangle)
             {
                 mLabel.setSize(sf::Vector2f(mShape.getSize().x - mShape.getSize().x * 0.05, mShape.getSize().y));
-                mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2 - mLabel.getCharacterSize() / 2.5);
+                mLabel.setPosition(mShape.getPosition().x - mLabel.getLocalBounds().left + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y - mLabel.getLocalBounds().top + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2);
             }
             else if(mStyle.shape == CNGui::Shape::Triangle)
             {
                 mLabel.setSize(sf::Vector2f(mShape.getSize().x / 3, mShape.getSize().y / 3));
-                mLabel.setPosition(mShape.getPosition().x + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2 - mLabel.getCharacterSize() / 2.5);
+                mLabel.setPosition(mShape.getPosition().x - mLabel.getLocalBounds().left + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y - mLabel.getLocalBounds().top + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2);
             }
             else if(mStyle.shape == CNGui::Shape::Circle)
             {
@@ -89,7 +89,7 @@ void Button::update()
                     center = mShape.getSize().x / 2;
                 }
                 mLabel.setSize(sf::Vector2f(center, center));
-                mLabel.setPosition(center - mLabel.getGlobalBounds().width / 2.5, center - mLabel.getGlobalBounds().height / 2);
+                mLabel.setPosition(center - mLabel.getGlobalBounds().width / 2.5 + mLabel.getLocalBounds().left, center - mLabel.getGlobalBounds().height / 2.5 - mLabel.getLocalBounds().top);
             }
         }
 
