@@ -105,15 +105,15 @@ else()
 endif()
 
 
-# Add directory containing FindSFML.cmake to module path
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
+# Add directory containing SFMLConfig.cmake to module path
+set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/;${CMAKE_MODULE_PATH}")
 
 
 # Find SFML
 if(NOT CNGUI_SHARED_LIBS)
 	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
-find_package(SFML 2 COMPONENTS graphics window system)
+find_package(SFML 2.4 COMPONENTS graphics window system)
 
 if(SFML_FOUND)
 	include_directories(${SFML_INCLUDE_DIR})
