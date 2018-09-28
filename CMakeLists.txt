@@ -49,10 +49,3 @@ target_link_libraries(cngui sfml-graphics)
 
 # Install target
 #install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${PROJECT_BINARY_DIR})
-
-# CPack packaging
-include(InstallRequiredSystemLibraries)
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${cngui_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${cngui_VERSION_MINOR}")
-include(CPack)
