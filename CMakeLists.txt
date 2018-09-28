@@ -51,7 +51,7 @@ endif()
 
 
 # Install target
-install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${CNGUI_BINARY_DIR})
+install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${PROJECT_BINARY_DIR})
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
