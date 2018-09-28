@@ -9,13 +9,15 @@ project(cngui)
 set(cngui_VERSION_MAJOR 1)
 set(cngui_VERSION_MINOR 0)
 
-include_directories("${PROJECT_BINARY_DIR}/bin")
+set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
+
+find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 # Define sources
-set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
-set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
+set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
+set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src")
 
-set(
+add_executable(${EXECUTABLE_NAME}
 	SOURCES
 	"${INCLUDE_PATH}/CNGui.hpp"
 	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
@@ -38,20 +40,10 @@ set(
 	"${SOURCE_PATH}/CNGui/Utilities/Shape.cpp"
 )
 
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
-
-find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
-
-add_executable(${EXECUTABLE_NAME} $(SOURCES))
-
-if(SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(cngui SFML::graphics)
-endif()
-
+target_link_libraries(cngui sfml-graphics)
 
 # Install target
-install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${PROJECT_BINARY_DIR})
+#install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${PROJECT_BINARY_DIR})
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
