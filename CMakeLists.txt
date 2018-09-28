@@ -18,7 +18,7 @@ endif()
 
 set(SFML_DIR "${SFML_ROOT}/cmake")
 
-find_package(SFML 2 COMPONENTS graphics REQUIRED)
+find_package(SFML COMPONENTS graphics REQUIRED)
 
 # Define sources
 set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
