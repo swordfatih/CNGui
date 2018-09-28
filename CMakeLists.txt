@@ -11,7 +11,7 @@ set(cngui_VERSION_MINOR 0)
 
 include_directories("${PROJECT_BINARY_DIR}/bin")
 
-# Define sources and executable
+# Define sources
 set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
 set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
@@ -38,7 +38,6 @@ set(
 	"${SOURCE_PATH}/CNGui/Utilities/Shape.cpp"
 )
 
-# Detect and add SFML
 set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
