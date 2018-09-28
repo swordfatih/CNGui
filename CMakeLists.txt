@@ -7,6 +7,7 @@ endif()
 project(cngui)
 
 set(cngui_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
+set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
 
 set(cngui_VERSION_MAJOR 1)
 set(cngui_VERSION_MINOR 0)
@@ -15,7 +16,7 @@ if(NOT cngui_SHARED_LIBS)
 	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
+set(SFML_DIR "${SFML_ROOT}/cmake")
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
 
