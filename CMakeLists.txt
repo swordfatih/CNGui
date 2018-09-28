@@ -6,19 +6,24 @@ endif()
 
 project(cngui)
 
+set(cngui_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
+
 set(cngui_VERSION_MAJOR 1)
 set(cngui_VERSION_MINOR 0)
 
+if(NOT cngui_SHARED_LIBS)
+	set(SFML_STATIC_LIBRARIES TRUE)
+endif()
+
 set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
 
-find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+find_package(SFML 2 COMPONENTS graphics REQUIRED)
 
 # Define sources
 set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
 set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src")
 
-add_executable(${EXECUTABLE_NAME}
-	SOURCES
+add_executable(cngui 
 	"${INCLUDE_PATH}/CNGui.hpp"
 	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
