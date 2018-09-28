@@ -1,166 +1,62 @@
-#################################################################################
-##
-## CNGui - Chats Noirs Graphical User Interface
-## Copyright (c) 2018 Fatih (accfldekur@gmail.com)
-##
-## This software is provided 'as-is', without any express or implied
-## warranty. In no event will the authors be held liable for any damages
-## arising from the use of this software.
-##
-## Permission is granted to anyone to use this software for any purpose,
-## including commercial applications, and to alter it and redistribute it
-## freely, subject to the following restrictions:
-##
-## 1. The origin of this software must not be misrepresented; you must not
-##    claim that you wrote the original software. If you use this software
-##    in a product, an acknowledgment in the product documentation would be
-##    appreciated but is not required.
-##
-## 2. Altered source versions must be plainly marked as such, and must not be
-##    misrepresented as being the original software.
-##
-## 3. This notice may not be removed or altered from any source distribution.
-##
-#################################################################################
+cmake_minimum_required(VERSION 3.11)
 
-# Directory CNGui
-
-cmake_minimum_required(VERSION 3.0)
-
-# Specify default build type if none provided (before project() command)
 if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
-endif()
-
-# For generators with multiple configurations (like VS), only allow Debug and Release
-if(CMAKE_CONFIGURATION_TYPES)
-	set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Limited configurations" FORCE)
-	mark_as_advanced(CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
 endif()
 
 project(cngui)
 
+set(cngui_VERSION_MAJOR 1)
+set(cngui_VERSION_MINOR 0)
 
-# Global preprocessor and include options
-add_definitions(-DCNGUI_EXPORTS)
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories("${PROJECT_BINARY_DIR}/bin")
 
-# Predefined configuration options
-set(CNGUI_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
-set(CNGUI_BUILD_EXAMPLES FALSE CACHE BOOL "Build example projects")
-set(CNGUI_BUILD_DOC FALSE CACHE BOOL "Create HTML documentation (requires Doxygen)")
+# Define sources and executable
+set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
+set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
-# Windows: Choose to link CRT libraries statically or dynamically
-if(WIN32)
-	set(CNGUI_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? This option must match the one used for SFML.")
+set(
+	SOURCES
+	"${INCLUDE_PATH}/CNGui.hpp"
+	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
+	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
+	"${INCLUDE_PATH}/CNGui/Objects/Button.hpp"
+	"${INCLUDE_PATH}/CNGui/Objects/ProgressIndicator.hpp"
+	"${INCLUDE_PATH}/CNGui/Objects/LineEdit.hpp"
+	"${INCLUDE_PATH}/CNGui/Utilities/Text.hpp"
+	"${INCLUDE_PATH}/CNGui/Utilities/Style.hpp"
+	"${INCLUDE_PATH}/CNGui/Utilities/Shape.hpp"
+	"${INCLUDE_PATH}/CNGui/Utilities/EventHandler.hpp"
+	"${INCLUDE_PATH}/CNGui/Utilities/Font.hpp"
+	"${SOURCE_PATH}/CNGui/Objects/Object.cpp"
+	"${SOURCE_PATH}/CNGui/Objects/LineEdit.cpp"
+	"${SOURCE_PATH}/CNGui/Objects/Button.cpp"
+	"${SOURCE_PATH}/CNGui/Objects/ProgressIndicator.cpp"
+	"${SOURCE_PATH}/CNGui/Utilities/EventHandler.cpp"
+	"${SOURCE_PATH}/CNGui/Utilities/Text.cpp"
+	"${SOURCE_PATH}/CNGui/Utilities/Style.cpp"
+	"${SOURCE_PATH}/CNGui/Utilities/Shape.cpp"
+)
 
-	# Determine whether we're dealing with a TDM compiler or not
-	if(CMAKE_COMPILER_IS_GNUCXX)
-		execute_process(COMMAND "${CMAKE_CXX_COMPILER}" "--version" OUTPUT_VARIABLE GCC_COMPILER_VERSION)
-		string(REGEX MATCHALL ".*(tdm[64]*-[1-9]).*" COMPILER_GCC_TDM "${GCC_COMPILER_VERSION}")
-	endif()
+# Detect and add SFML
+set(SFML_DIR "${CMAKE_SOURCE_DIR}/cmake")
 
-	# Modify compiler flags globally
-	if(CNGUI_STATIC_STD_LIBS)
-		if(CNGUI_SHARED_LIBS)
-			message("\n-> CNGUI_STATIC_STD_LIBS and CNGUI_SHARED_LIBS are not compatible.")
-			message("-> They lead to multiple runtime environments which result in undefined behavior.\n")
-		elseif(MSVC)
-			foreach(flag CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-				if(${flag} MATCHES "/MD")
-					string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
-				endif()
-			endforeach()
-		elseif(CMAKE_COMPILER_IS_GNUCXX AND NOT COMPILER_GCC_TDM)
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
-		endif()
-	elseif(COMPILER_GCC_TDM)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -shared-libgcc -shared-libstdc++")
-	endif()
-endif()
+find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
-
-# Compiler-specific flags and definitions
-if(CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	set(CNGUI_CLANG_STDLIB "" CACHE STRING "Chose standard library (libstdc++ or libc++) or leave empty for default")
-
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-switch -Wno-logical-op-parentheses")
-	if(NOT CNGUI_CLANG_STDLIB STREQUAL "")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=${CNGUI_CLANG_STDLIB}")
-	endif()
-
-	add_definitions(-DCNGUI_USE_STD_RANDOMENGINE) # Workaround for libc++ bug
-endif()
-
-
-# Variable for install directory
-if(UNIX)
-	set(CNGUI_EXAMPLE_INSTALL_DIR share/Thor)
-	set(CNGUI_DOC_INSTALL_DIR share/doc/Thor)
-else()
-	set(CNGUI_EXAMPLE_INSTALL_DIR .)
-	set(CNGUI_DOC_INSTALL_DIR .)
-endif()
-
-
-# Add directory containing SFMLConfig.cmake to module path
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/;${CMAKE_MODULE_PATH}")
-
-
-# Find SFML
-if(NOT CNGUI_SHARED_LIBS)
-	set(SFML_STATIC_LIBRARIES TRUE)
-endif()
-find_package(SFML 2.4 COMPONENTS graphics window system)
+add_executable(${EXECUTABLE_NAME} $(SOURCES))
 
 if(SFML_FOUND)
-	include_directories(${SFML_INCLUDE_DIR})
-else()
-	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-	message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
-	message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
+  include_directories(${SFML_INCLUDE_DIR})
+  target_link_libraries(cngui SFML::graphics)
 endif()
 
 
-# Macro to link SFML
-macro(cngui_link_sfml CNGUI_TARGET)
-	target_link_libraries(${CNGUI_TARGET} ${SFML_LIBRARIES})
-endmacro()
+# Install target
+install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${CNGUI_BINARY_DIR})
 
-macro(cngui_link_sfml_dependencies CNGUI_TARGET)
-	target_link_libraries(${CNGUI_TARGET} ${SFML_DEPENDENCIES})
-endmacro()
-
-# Macro to link Thor (for examples)
-macro(cngui_link_thor CNGUI_TARGET)
-	target_link_libraries(${CNGUI_TARGET} thor)
-endmacro()
-
-
-# Enable IDE folders and set them for predefined CMake projects
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
-
-
-# Documentation
-if(CNGUI_BUILD_DOC)
-	add_subdirectory(doc)
-endif()
-
-
-# C++ source code
-add_subdirectory(src)
-
-if(CNGUI_BUILD_EXAMPLES)
-	add_subdirectory(examples)
-endif()
-
-
-# Install include directory and license files
-install(DIRECTORY include
-		DESTINATION .)
-
-install(FILES license.md
-		DESTINATION ${CNGUI_DOC_INSTALL_DIR})
+# CPack packaging
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+set(CPACK_PACKAGE_VERSION_MAJOR "${cngui_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${cngui_VERSION_MINOR}")
+include(CPack)
