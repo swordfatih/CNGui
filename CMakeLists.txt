@@ -1,22 +1,21 @@
 cmake_minimum_required(VERSION 3.11)
 
+set(CNGUI_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
 endif()
 
 project(cngui)
 
-set(cngui_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
-set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-
 set(cngui_VERSION_MAJOR 1)
 set(cngui_VERSION_MINOR 0)
 
-if(NOT cngui_SHARED_LIBS)
+if(NOT CNGUI_SHARED_LIBS)
 	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-set(SFML_DIR "${SFML_ROOT}/cmake")
+set(SFML_DIR "" CACHE PATH "Folder that contains SFMLConfig.cmake (usually in lib/cmake/SFML/")
 
 find_package(SFML COMPONENTS graphics REQUIRED)
 
