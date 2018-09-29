@@ -16,7 +16,7 @@ An example code showing how CNGui is user-friendly and object-oriented!
 
 int main()
 {
-    sf::RenderWindow window({300, 200}, "CNGui Example");
+    sf::RenderWindow window({300, 200}, CNGui Example);
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
