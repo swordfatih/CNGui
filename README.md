@@ -10,7 +10,7 @@ An example code showing how CNGui is user-friendly and object-oriented!
 
 <details><summary>Example code</summary>
 <p>
-___cpp
+```cpp
 #include <SFML/Graphics.hpp>
 #include "CNGui.hpp"
 
@@ -62,8 +62,7 @@ int main()
     }
 
     return 0;
-}
-___
+}```
 </p></details>
 
 ![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
