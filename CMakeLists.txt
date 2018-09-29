@@ -15,16 +15,24 @@ if(NOT CNGUI_SHARED_LIBS)
 	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-set(SFML_DIR "" CACHE PATH "Folder that contains SFMLConfig.cmake (usually in lib/cmake/SFML/")
+set(SFML_DIR "" CACHE PATH "Folder that contains SFMLConfig.cmake (usually in lib/cmake/SFML/)")
 
-find_package(SFML COMPONENTS graphics REQUIRED)
+if(NOT SFML_DIR)
+	message(SEND_ERROR "Please provide path for the folder that contains SFMLConfig.cmake in SFML_DIR (usually SFML/lib/cmake/SFML/)")
+endif()
+
+find_package(OpenGL REQUIRED)
+find_package(SFML COMPONENTS graphics QUIET)
 
 # Define sources
-set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
-set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src")
+set(INCLUDE_PATH "${CMAKE_SOURCE_DIR}/include")
+set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/src")
+
+include_directories("${INCLUDE_PATH}")
+include_directories("${SOURCE_PATH}")
 
 add_executable(cngui 
-	"${INCLUDE_PATH}/CNGui.hpp"
+	"${INCLUDE_PATH}/CNGui/CNGui.hpp"
 	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Button.hpp"
@@ -45,7 +53,4 @@ add_executable(cngui
 	"${SOURCE_PATH}/CNGui/Utilities/Shape.cpp"
 )
 
-target_link_libraries(cngui sfml-graphics)
-
-# Install target
-#install(TARGETS cngui sfml-graphics sfml-window sfml-system CONFIGURATIONS ${CMAKE_BUILD_TYPE} RUNTIME DESTINATION ${PROJECT_BINARY_DIR})
+target_link_libraries(cngui sfml-graphics ${OPENGL_gl_LIBRARY})
