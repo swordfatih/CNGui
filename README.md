@@ -63,8 +63,9 @@ int main()
     return 0;
 }
 ```
-![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
 </details>
+
+![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
 
 ***
 Classes | Description
