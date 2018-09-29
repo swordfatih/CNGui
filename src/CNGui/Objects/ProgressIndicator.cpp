@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Objects/ProgressIndicator.hpp"
+#include <CNGui/Objects/ProgressIndicator.hpp>
 
 namespace CNGui
 {

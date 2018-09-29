@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Utilities/Style.hpp"
+#include <CNGui/Utilities/Style.hpp>
 
 namespace CNGui
 {

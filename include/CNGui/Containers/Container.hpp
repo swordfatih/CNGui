@@ -33,7 +33,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "CNGui/Objects/Object.hpp"
+#include <CNGui/Objects/Object.hpp>
 #include <vector>
 #include <memory>
 

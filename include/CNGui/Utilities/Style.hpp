@@ -31,8 +31,8 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System/Time.hpp>
-#include "CNGui/Utilities/Font.hpp"
-#include "CNGui/Utilities/Shape.hpp"
+#include <CNGui/Utilities/Font.hpp>
+#include <CNGui/Utilities/Shape.hpp>
 
 namespace CNGui
 {

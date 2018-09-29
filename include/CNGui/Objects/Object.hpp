@@ -34,8 +34,8 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "CNGui/Utilities/Style.hpp"
-#include "CNGui/Utilities/EventHandler.hpp"
+#include <CNGui/Utilities/Style.hpp>
+#include <CNGui/Utilities/EventHandler.hpp>
 #include <assert.h>
 
 namespace CNGui

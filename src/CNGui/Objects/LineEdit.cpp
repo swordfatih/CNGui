@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Objects/LineEdit.hpp"
+#include <CNGui/Objects/LineEdit.hpp>
 
 namespace CNGui
 {

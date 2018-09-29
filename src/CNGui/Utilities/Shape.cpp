@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "CNGui/Utilities/Shape.hpp"
+#include <CNGui/Utilities/Shape.hpp>
 
 namespace CNGui
 {

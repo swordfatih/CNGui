@@ -29,9 +29,10 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include <SFML/Window/Clipboard.hpp>
 #include <SFML/OpenGL.hpp>
-#include "CNGui/Objects/Object.hpp"
-#include "CNGui/Utilities/Text.hpp"
+#include <CNGui/Objects/Object.hpp>
+#include <CNGui/Utilities/Text.hpp>
 
 namespace CNGui
 {
