@@ -10,7 +10,8 @@ An example code showing how CNGui is user-friendly and object-oriented!
 
 <details><summary>Example code</summary>
 ```cpp
-
+#include <SFML/Graphics.hpp>
+#include <CNGui/CNGui.hpp>
 
 int main()
 {
