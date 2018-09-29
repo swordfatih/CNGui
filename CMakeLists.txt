@@ -22,7 +22,11 @@ if(NOT SFML_DIR)
 endif()
 
 find_package(OpenGL REQUIRED)
-find_package(SFML COMPONENTS graphics QUIET)
+find_package(SFML COMPONENTS graphics main QUIET)
+
+if(SFML_FOUND)
+	message(STATUS "Found SFML in ${SFML_DIR}")
+endif()
 
 # Define sources
 set(INCLUDE_PATH "${CMAKE_SOURCE_DIR}/include")
@@ -31,7 +35,7 @@ set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/src")
 include_directories("${INCLUDE_PATH}")
 include_directories("${SOURCE_PATH}")
 
-add_executable(cngui 
+add_library(cngui 
 	"${INCLUDE_PATH}/CNGui/CNGui.hpp"
 	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
@@ -53,4 +57,4 @@ add_executable(cngui
 	"${SOURCE_PATH}/CNGui/Utilities/Shape.cpp"
 )
 
-target_link_libraries(cngui sfml-graphics ${OPENGL_gl_LIBRARY})
+target_link_libraries(cngui sfml-graphics sfml-main ${OPENGL_gl_LIBRARY})
