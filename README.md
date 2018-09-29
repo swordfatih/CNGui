@@ -11,12 +11,12 @@ An example code showing how CNGui is user-friendly and object-oriented!
 <details><summary>Example code</summary>
 <p>
 ```cpp
-#include <SFML/Graphics.hpp>
+#include SFML/Graphics.hpp
 #include "CNGui.hpp"
 
 int main()
 {
-    sf::RenderWindow window({300, 200}, CNGui Example);
+    sf::RenderWindow window({300, 200}, "CNGui Example");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
