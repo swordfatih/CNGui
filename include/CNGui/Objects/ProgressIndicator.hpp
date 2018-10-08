@@ -45,6 +45,16 @@ public:
     using Object::Object;
 
     ////////////////////////////////////////////////////////////
+    /// \brief Add progression to the indicator
+    ///
+    /// \param progression New progression to add (between 0 and 1)
+    ///
+    /// \see setProgression
+    ///
+    ////////////////////////////////////////////////////////////
+    void add(float progression);
+
+    ////////////////////////////////////////////////////////////
     /// \brief Set the progression of the indicator
     ///
     /// \param progression New progression between 0 and 1
