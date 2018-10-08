@@ -101,7 +101,14 @@ void LineEdit::update()
         //Texts
         mOutput.setFont(mStyle.outputfont);
         mOutput.setFillColor(mStyle.fillcolor);
-        mFirst == true ? mOutput.setStyle(CNGui::Text::Italic) : mOutput.setStyle(CNGui::Text::Regular);
+        if(mFirst)
+        {
+            mOutput.setStyle(CNGui::Text::Italic);
+        }
+        else
+        {
+            mOutput.setStyle(CNGui::Text::Regular);
+        }
         mOutput.setString("pb");
         mOutput.setCharacterSize(mStyle.outputcharactersize);
         mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
@@ -131,7 +138,14 @@ void LineEdit::update()
         mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
         mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mCursor.getSize().y / 4);
 
-        mFirst == true ? mOutput.setString(mDefault) : mOutput.setString(mString);
+        if(mFirst)
+        {
+            mOutput.setString(mDefault);
+        }
+        else
+        {
+            mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
+        }
 
         mUpdate = false;
     }
