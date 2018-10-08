@@ -23,157 +23,144 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <CNGui/Utilities/Text.hpp>
+#ifndef TEXT_HPP
+#define TEXT_HPP
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/System/String.hpp>
+#include <vector>
+#include <sstream>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Text::Text() : sf::Text::Text()
-{
-
-}
-
+/// \brief Class that creates a graphical text
+///
 ////////////////////////////////////////////////////////////
-Text::Text(const sf::String& string, const sf::Font& font, unsigned int characterSize, const sf::Vector2f& size) : sf::Text::Text(string, font, characterSize), mString(string), mCharacterSize(characterSize), mSize(size)
+class Text : public sf::Text
 {
-    setString(string);
-}
+public:
+    ////////////////////////////////////////////////////////////
+    /// \brief Default constructor
+    ///
+    /// Creates an empty text.
+    ///
+    ////////////////////////////////////////////////////////////
+    Text();
 
-////////////////////////////////////////////////////////////
-void Text::setString(const sf::String& string)
-{
-    mString = string;
+    ////////////////////////////////////////////////////////////
+    /// \brief Construct the text from a string, font and size
+    ///
+    /// Note that if the used font is a bitmap font, it is not
+    /// scalable, thus not all requested sizes will be available
+    /// to use. This needs to be taken into consideration when
+    /// setting the character size. If you need to display text
+    /// of a certain size, make sure the corresponding bitmap
+    /// font that supports that size is used.
+    ///
+    /// \param string         Text assigned to the string
+    /// \param font           Font used to draw the string
+    /// \param characterSize  Base size of characters, in pixels
+    ///
+    ////////////////////////////////////////////////////////////
+    Text(const sf::String& string, const sf::Font& font, unsigned int characterSize = 30, const sf::Vector2f& size = {0, 0});
 
-    if(getCharacterSize() != mCharacterSize)
-        setCharacterSize(mCharacterSize);
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the text's string
+    ///
+    /// The \a string argument is a sf::String, which can
+    /// automatically be constructed from standard string types.
+    /// So, the following calls are all valid:
+    /// \code
+    /// text.setString("hello");
+    /// text.setString(L"hello");
+    /// text.setString(std::string("hello"));
+    /// text.setString(std::wstring(L"hello"));
+    /// \endcode
+    /// A text's string is empty by default.
+    ///
+    /// \param string New string
+    ///
+    /// \see getString
+    ///
+    ////////////////////////////////////////////////////////////
+    void setString(const sf::String& string);
 
-    //If limit size is defined
-    if(mSize.x > 0)
-    {
-        do
-        {
-            std::string text;
-            for(auto it: CNGui::Text::split(string))
-            {
-                sf::Text::setString(it);
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the string
+    ///
+    /// \return The string of the text
+    ///
+    /// \see setString
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::String getString();
 
-                if(getGlobalBounds().width > mSize.x)
-                {
-                    for(auto token: fit(it))
-                    {
-                        if(!text.empty())
-                            text += '\n';
-                        text += token;
-                    }
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the string's limit size
+    ///
+    /// A text's size is unlimited by default.
+    ///
+    /// \param size New size
+    ///
+    /// \see getSize
+    ///
+    ////////////////////////////////////////////////////////////
+    void setSize(const sf::Vector2f& size);
 
-                    text += ' ';
-                }
-                else
-                {
-                    sf::Text::setString(text + it);
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the string's limit size
+    ///
+    /// \return Limit size of the string
+    ///
+    /// \see setSize
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::Vector2f getSize();
 
-                    if(getGlobalBounds().width > mSize.x)
-                    {
-                        text += '\n' + it + ' ';
-                    }
-                    else
-                    {
-                        text += it + ' ';
-                    }
-                }
-            }
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the text's character size
+    ///
+    /// \param characterSize New character size
+    ///
+    /// \see getCharacterSize
+    ///
+    ////////////////////////////////////////////////////////////
+    void setCharacterSize(const sf::Uint16& characterSize);
 
-            sf::Text::setString(text);
-        }
-        while([&]()
-        {
-            if(mSize.y > 0)
-            {
-                if(getGlobalBounds().height > mSize.y)
-                {
-                    setCharacterSize(getCharacterSize() - 2);
-                }
+    ////////////////////////////////////////////////////////////
+    /// \brief Split a string in a vector
+    ///
+    /// \param string String to split
+    ///
+    /// \return Vector containing tokens
+    ///
+    ////////////////////////////////////////////////////////////
+    static std::vector<std::string> split(const sf::String& string);
 
-                return getGlobalBounds().height > mSize.y;
-            }
+    ////////////////////////////////////////////////////////////
+    /// \brief Split a word relative to a size in a vector
+    ///
+    /// \param string Word to split
+    ///
+    /// \return Vector containing tokens
+    ///
+    ////////////////////////////////////////////////////////////
+    std::vector<std::string> fit(const std::string& word);
 
-            return false;
-        }());
+private:
+    ////////////////////////////////////////////////////////////
+    // Member data
+    ////////////////////////////////////////////////////////////
+    sf::String      mString;        ///< String of the text
+    sf::Uint16      mCharacterSize; ///< Text's character size
+    sf::Vector2f    mSize;          ///< Size of the text box
 
-        return;
-    }
-
-    sf::Text::setString(string);
-}
-
-////////////////////////////////////////////////////////////
-sf::String Text::getString()
-{
-    return mString;
-}
-
-////////////////////////////////////////////////////////////
-void Text::setSize(const sf::Vector2f& size)
-{
-    mSize = size;
-    setString(getString());
-}
-
-////////////////////////////////////////////////////////////
-sf::Vector2f Text::getSize()
-{
-    return mSize;
-}
-
-////////////////////////////////////////////////////////////
-void Text::setCharacterSize(const sf::Uint16& characterSize)
-{
-    mCharacterSize = characterSize;
-    sf::Text::setCharacterSize(characterSize);
-}
-
-////////////////////////////////////////////////////////////
-std::vector<std::string> Text::split(const sf::String& string)
-{
-    std::vector<std::string> tokens;
-    std::istringstream stream(string);
-    for(std::string token; std::getline(stream, token, ' ');)
-    {
-        tokens.push_back(token);
-    }
-
-   return tokens;
-}
-
-////////////////////////////////////////////////////////////
-std::vector<std::string> Text::fit(const std::string& word)
-{
-    std::vector<std::string> tokens;
-
-    for(sf::Uint16 pos = 0; pos < word.size(); ++pos)
-    {
-        sf::Text::setString(word.substr(0, word.size() - 1 - pos));
-
-        if(getGlobalBounds().width < mSize.x)
-        {
-            tokens.push_back(word.substr(0, word.size() - 1 - pos));
-
-            sf::Text::setString(word.substr(word.size() - 1 - pos));
-            if(getGlobalBounds().width > mSize.x)
-            {
-                std::vector<std::string> deep = fit(word.substr(word.size() - 1 - pos));
-                tokens.insert(tokens.end(), deep.begin(), deep.end());
-            }
-            else
-            {
-                tokens.push_back(word.substr(word.size() - 1 - pos));
-            }
-
-            break;
-        }
-    }
-
-    return tokens;
-}
+};
 
 } // namespace CNGui
+
+#endif // TEXT_HPP
