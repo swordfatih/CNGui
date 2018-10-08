@@ -28,6 +28,24 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
+void ProgressIndicator::add(float progression)
+{
+    if(mNewProgression + progression <= 1 && mNewProgression + progression >= 0)
+    {
+        mNewProgression += progression;
+    }
+    else if(mNewProgression + progression < 0)
+    {
+        mNewProgression = 0;
+    }
+    else if(mNewProgression + progression > 1)
+    {
+        mNewProgression = 1;
+    }
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
 void ProgressIndicator::setProgression(float progression)
 {
     if(progression <= 1 && progression >= 0)
@@ -95,13 +113,13 @@ void ProgressIndicator::update()
 
             if(!mStyle.outline)
             {
-                mBackground.setSize(sf::Vector2f(mSize.x, mSize.y - mStyle.charactersize * 1.25));
-                mBackground.setPosition(0, mStyle.charactersize * 1.25);
+                mBackground.setSize(sf::Vector2f(mSize.x, mSize.y - mLabel.getGlobalBounds().height * 1.2));
+                mBackground.setPosition(0, mLabel.getGlobalBounds().height * 1.2);
             }
             else
             {
-                mBackground.setSize(sf::Vector2f(mSize.x - mStyle.outlinethickness * 2, mSize.y - (mStyle.charactersize * 1.25 + mStyle.outlinethickness * 2)));
-                mBackground.setPosition(mStyle.outlinethickness, mStyle.outlinethickness + mStyle.charactersize * 1.25);
+                mBackground.setSize(sf::Vector2f(mSize.x - mStyle.outlinethickness * 2, mSize.y - mStyle.outlinethickness * 2 - mLabel.getGlobalBounds().height * 1.2));
+                mBackground.setPosition(mStyle.outlinethickness, mStyle.outlinethickness + mLabel.getGlobalBounds().height * 1.2);
             }
         }
         else
