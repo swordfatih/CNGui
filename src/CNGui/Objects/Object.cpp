@@ -42,7 +42,6 @@ Object::~Object()
 ////////////////////////////////////////////////////////////
 Object& Object::operator <<(const std::string& name)
 {
-
     if(mName != name)
     {
         mName = name;
