@@ -34,6 +34,14 @@ bool LineEdit::onReturn()
 }
 
 ////////////////////////////////////////////////////////////
+void LineEdit::clear()
+{
+    mString.clear();
+    mPositionCursor = 0;
+    mUpdate = true;
+}
+
+////////////////////////////////////////////////////////////
 std::string LineEdit::getString()
 {
     return mString;
@@ -79,7 +87,7 @@ void LineEdit::update()
         //Shape
         mShape.setType(CNGui::Shape::Rectangle);
         mShape.setFillColor(mStyle.fillcolor);
-        mShape.setSize(sf::Vector2f(mBackground.getSize().x, mBackground.getSize().y * 0.02));
+        mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
 
         if(!mStyle.outline)
         {
@@ -91,51 +99,40 @@ void LineEdit::update()
         }
 
         //Texts
-        mOutput.setFont(mStyle.font);
+        mOutput.setFont(mStyle.outputfont);
         mOutput.setFillColor(mStyle.fillcolor);
         mOutput.setStyle(CNGui::Text::Italic);
         mOutput.setString("pb");
+        mOutput.setCharacterSize(mStyle.outputcharactersize);
+        mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
 
         if(mStyle.label)
         {
             mLabel.setFont(mStyle.font);
             mLabel.setFillColor(mStyle.labelcolor);
+            mLabel.setStyle(mStyle.labelstyle);
             mLabel.setCharacterSize(mStyle.charactersize);
             mLabel.setString(mName);
             mLabel.setSize(sf::Vector2f(mBackground.getSize().x, mStyle.charactersize * 1.25));
-            mOutput.setCharacterSize(mSize.y - mStyle.charactersize - 3);
 
             if(!mStyle.outline)
             {
                 mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
-                mOutput.setPosition(-mOutput.getLocalBounds().left, mSize.y / 2 + mLabel.getGlobalBounds().height / 2 - mShape.getSize().y - mOutput.getGlobalBounds().height / 2 - mOutput.getLocalBounds().top);
             }
             else
             {
                 mLabel.setPosition(mStyle.outlinethickness - mLabel.getLocalBounds().left, mStyle.outlinethickness - mLabel.getLocalBounds().top);
-                mOutput.setPosition(-mOutput.getLocalBounds().left + mStyle.outlinethickness, mSize.y / 2 + mLabel.getGlobalBounds().height / 2 - mShape.getSize().y - mOutput.getGlobalBounds().height / 2 - mOutput.getLocalBounds().top);
             }
         }
-        else
-        {
-            mOutput.setCharacterSize(mSize.y - 3);
-            if(!mStyle.outline)
-            {
-                mOutput.setPosition(-mOutput.getLocalBounds().left, mSize.y / 2 - mShape.getSize().y - mOutput.getGlobalBounds().height / 2 - mOutput.getLocalBounds().top);
-            }
-            else
-            {
-                mOutput.setPosition(-mOutput.getLocalBounds().left + mStyle.outlinethickness, mSize.y / 2 - mShape.getSize().y - mOutput.getGlobalBounds().height / 2 - mOutput.getLocalBounds().top);
-            }
-        }
-
-        mOutput.setString(mDefault);
 
         //Cursor
         mCursor.setType(CNGui::Shape::Rectangle);
         mCursor.setFillColor(sf::Color::Transparent);
-        mCursor.setSize(sf::Vector2f(2, mOutput.getGlobalBounds().height));
-        mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x * 2, mOutput.getPosition().y + mOutput.getLocalBounds().top);
+        mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
+
+        mOutput.setString(mDefault);
+
+        mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mOutput.getGlobalBounds().height + mCursor.getSize().y / 4);
 
         mUpdate = false;
     }
@@ -151,8 +148,9 @@ void LineEdit::update()
             mBackground.setOutlineColor(mStyle.outlineclickedcolor);
             mLabel.setFillColor(mStyle.labelclickedcolor);
             mOutput.setFillColor(mStyle.clickedcolor);
+            mOutput.setStyle(mStyle.outputstyle);
             mCursor.setFillColor(sf::Color::White);
-            mShape.setSize(sf::Vector2f(mBackground.getSize().x, mBackground.getSize().y * 0.05));
+            mShape.setSize(sf::Vector2f(mBackground.getSize().x, 3));
 
             if(mOutput.getString() == mDefault)
             {
@@ -162,9 +160,9 @@ void LineEdit::update()
             }
             else
             {
-                mOutput.setString(mString.substr(0, mString.size() - mPositionCursor));
+                mStyle.outputhide == ' ' ? mOutput.setString(mString.substr(0, mString.size() - mPositionCursor)) : mOutput.setString(std::string(mString.size() - mPositionCursor, mStyle.outputhide));
                 mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
-                mOutput.setString(mString);
+                mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
             }
 
             mReturn = true;
@@ -181,7 +179,7 @@ void LineEdit::update()
             mLabel.setFillColor(mStyle.labelcolor);
             mOutput.setFillColor(mStyle.fillcolor);
             mCursor.setFillColor(sf::Color::Transparent);
-            mShape.setSize(sf::Vector2f(mBackground.getSize().x, mBackground.getSize().y * 0.02));
+            mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
 
             mReturn = false;
         }
@@ -219,7 +217,7 @@ void LineEdit::update()
             else if(mHandleEvent[sf::Event::KeyPressed].key.control && mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::V)
             {
                 mString.insert(mString.size() - mPositionCursor, sf::Clipboard::getString());
-                mOutput.setString(mString);
+                mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
             }
         }
 
@@ -245,7 +243,7 @@ void LineEdit::update()
                 }
             }
 
-            mOutput.setString(mString);
+            mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
 
             updatePosition = true;
         }
@@ -272,8 +270,7 @@ void LineEdit::update()
 
         if(updatePosition)
         {
-            //Update position
-            mOutput.setString(mString.substr(0, mString.size() - mPositionCursor));
+            mStyle.outputhide == ' ' ? mOutput.setString(mString.substr(0, mString.size() - mPositionCursor)) : mOutput.setString(std::string(mString.size() - mPositionCursor, mStyle.outputhide));
 
             sf::Vector2f position = {0, mOutput.getPosition().y};
 
@@ -294,7 +291,8 @@ void LineEdit::update()
             mCursor.setFillColor(sf::Color::White);
             mOutput.setPosition(position);
             mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
-            mOutput.setString(mString);
+
+            mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
         }
     }
 }
