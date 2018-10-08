@@ -30,6 +30,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
 #include <CNGui/Utilities/Font.hpp>
 #include <CNGui/Utilities/Shape.hpp>
@@ -59,28 +60,33 @@ struct Style
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape::Type shape;                  ///< Shape of the object
-    sf::Uint16  charactersize;          ///< Character size of the label, resized if higher than the height of the object
-    sf::Font    font;                   ///< Font of the label
-    sf::Color   fillcolor;              ///< Color of the object
-    sf::Color   hovercolor;             ///< Color of the object when hovering
-    sf::Color   clickedcolor;           ///< Color of the object on click
-    sf::Color   labelcolor;             ///< Color of the label
-    sf::Color   labelhovercolor;        ///< Color of the label when hovering
-    sf::Color   labelclickedcolor;      ///< Color of the label on click
-    bool        selectable;             ///< The object is selectable
-    bool        outline;                ///< The object has an outline
-    sf::Uint16  outlinethickness;       ///< Thickness of the outline
-    sf::Color   outlinecolor;           ///< Color of the outline
-    sf::Color   outlinehovercolor;      ///< Color of the outline when hovering
-    sf::Color   outlineclickedcolor;    ///< Color of the outline on click
-    sf::Color   backgroundcolor;        ///< Color of the background of the object
-    sf::Color   backgroundhovercolor;   ///< Color of the background of the object when hovering
-    sf::Color   backgroundclickedcolor; ///< Color of the background of the object on click
-    bool        animated;               ///< The object is animated if it is possible
-    bool        label;                  ///< The label of the object is shown
-    sf::Time    durationanimation;      ///< Duration of the object's animation
-    sf::Texture texturebackground;      ///< Background texture of the object
+    Shape::Type     shape;                  ///< Shape of the object
+    sf::Uint16      charactersize;          ///< Character size of the label, resized if higher than the height of the object
+    sf::Font        font;                   ///< Font of the label
+    sf::Color       fillcolor;              ///< Color of the object
+    sf::Color       hovercolor;             ///< Color of the object when hovering
+    sf::Color       clickedcolor;           ///< Color of the object on click
+    sf::Color       labelcolor;             ///< Color of the label
+    sf::Color       labelhovercolor;        ///< Color of the label when hovering
+    sf::Color       labelclickedcolor;      ///< Color of the label on click
+    bool            selectable;             ///< The object is selectable
+    bool            outline;                ///< The object has an outline
+    sf::Uint16      outlinethickness;       ///< Thickness of the outline
+    sf::Color       outlinecolor;           ///< Color of the outline
+    sf::Color       outlinehovercolor;      ///< Color of the outline when hovering
+    sf::Color       outlineclickedcolor;    ///< Color of the outline on click
+    sf::Color       backgroundcolor;        ///< Color of the background of the object
+    sf::Color       backgroundhovercolor;   ///< Color of the background of the object when hovering
+    sf::Color       backgroundclickedcolor; ///< Color of the background of the object on click
+    bool            animated;               ///< The object is animated if it is possible
+    bool            label;                  ///< The label of the object is shown
+    sf::Time        durationanimation;      ///< Duration of the object's animation
+    sf::Texture     texturebackground;      ///< Background texture of the object
+    sf::Uint16      outputcharactersize;    ///< Character size of the output text of the object
+    sf::Font        outputfont;             ///< Secondary font of the output text
+    sf::Text::Style labelstyle;             ///< Style of the label
+    sf::Text::Style outputstyle;            ///< Style of the output text
+    char            outputhide;             ///< Character to hide the output with
 };
 
 } // namespace CNGui
