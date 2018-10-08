@@ -69,7 +69,15 @@ bool Object::operator()(const sf::Vector2f& mouse)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::RenderWindow& window)
 {
-    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView()) - *mContainer;
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()) - *mContainer;
+    update();
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+bool Object::operator()(const sf::RenderWindow& window, const sf::View& view)
+{
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), view) - *mContainer;
     update();
     return mReturn;
 }
