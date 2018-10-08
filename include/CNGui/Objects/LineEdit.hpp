@@ -110,6 +110,7 @@ private:
     std::string mDefault;               ///< Default string
     sf::Clock   mAnimation;             ///< Cursor animation
     bool        mOnReturn = false;      ///< On return key pressed
+    bool        mFirst = true;          ///< Not clicked yet
 
 };
 
