@@ -158,6 +158,13 @@ public:
     /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
+    bool        operator()(const sf::RenderWindow& window, const sf::View& view);
+
+    ///////////////////////////////////////////////////////////
+    /// Overload of operator () to get the mouse position
+    /// and to get the object's return value
+    ///
+    ////////////////////////////////////////////////////////////
     bool        operator()(const sf::Vector2i& mouse);
 
 protected:
