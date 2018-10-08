@@ -140,4 +140,4 @@ private:
 
 } // namespace CNGui
 
-#endif // SHAPE_HPP
+#endif // SHAPE_HPP 
