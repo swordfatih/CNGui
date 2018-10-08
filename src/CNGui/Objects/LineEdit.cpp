@@ -245,7 +245,7 @@ void LineEdit::update()
                 {
                     mOnReturn = true;
                 }
-                else if(!mHandleEvent[sf::Event::KeyPressed].key.control)
+                else if(!(mHandleEvent[sf::Event::KeyPressed].key.control && (mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::C || mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::V)))
                 {
                     mString.insert(mString.size() - mPositionCursor, 1, static_cast<char>(mHandleEvent[sf::Event::TextEntered].text.unicode));
                 }
