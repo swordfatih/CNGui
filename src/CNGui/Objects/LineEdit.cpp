@@ -155,6 +155,11 @@ void LineEdit::update()
             mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
             mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
 
+            if(mFirst)
+            {
+                mFirst = false;
+            }
+
             mReturn = true;
         }
     }
