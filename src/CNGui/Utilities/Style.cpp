@@ -23,72 +23,45 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef STYLE_HPP_INCLUDED
-#define STYLE_HPP_INCLUDED
-
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/System/Time.hpp>
-#include <CNGui/Utilities/Font.hpp>
-#include <CNGui/Utilities/Shape.hpp>
+#include <CNGui/Utilities/Style.hpp>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Utility struct for manipulating object styles
-///
-////////////////////////////////////////////////////////////
-struct Style
+Style::Style() :
+    shape(Shape::Rectangle),
+    charactersize(24),
+    fillcolor(200, 200, 200),
+    hovercolor(100, 100, 100),
+    clickedcolor(230, 130, 60),
+    labelcolor(255, 255, 255),
+    labelhovercolor(220, 220, 220),
+    labelclickedcolor(200, 100, 30),
+    selectable(false),
+    outline(false),
+    outlinethickness(3),
+    outlinecolor(150, 150, 150),
+    outlinehovercolor(50, 50, 50),
+    outlineclickedcolor(150, 80, 20),
+    backgroundcolor(sf::Color::Transparent),
+    backgroundhovercolor(sf::Color::Transparent),
+    backgroundclickedcolor(sf::Color::Transparent),
+    animated(true),
+    label(true),
+    durationanimation(sf::seconds(3)),
+    outputcharactersize(16),
+    labelstyle(sf::Text::Regular),
+    outputstyle(sf::Text::Regular),
+    outputhide(' ')
 {
-    ////////////////////////////////////////////////////////////
-    /// \brief Default constructor
-    ///
-    /// Constructs an empty style
-    ///
-    ////////////////////////////////////////////////////////////
-            Style();
+    font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
+    outputfont.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
+}
 
-    ////////////////////////////////////////////////////////////
-    /// \brief Default destructor
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual ~Style();
-
-    ////////////////////////////////////////////////////////////
-    // Member data
-    ////////////////////////////////////////////////////////////
-    Shape::Type     shape;                  ///< Shape of the object
-    sf::Uint16      charactersize;          ///< Character size of the label, resized if higher than the height of the object
-    sf::Font        font;                   ///< Font of the label
-    sf::Color       fillcolor;              ///< Color of the object
-    sf::Color       hovercolor;             ///< Color of the object when hovering
-    sf::Color       clickedcolor;           ///< Color of the object on click
-    sf::Color       labelcolor;             ///< Color of the label
-    sf::Color       labelhovercolor;        ///< Color of the label when hovering
-    sf::Color       labelclickedcolor;      ///< Color of the label on click
-    bool            selectable;             ///< The object is selectable
-    bool            outline;                ///< The object has an outline
-    sf::Uint16      outlinethickness;       ///< Thickness of the outline
-    sf::Color       outlinecolor;           ///< Color of the outline
-    sf::Color       outlinehovercolor;      ///< Color of the outline when hovering
-    sf::Color       outlineclickedcolor;    ///< Color of the outline on click
-    sf::Color       backgroundcolor;        ///< Color of the background of the object
-    sf::Color       backgroundhovercolor;   ///< Color of the background of the object when hovering
-    sf::Color       backgroundclickedcolor; ///< Color of the background of the object on click
-    bool            animated;               ///< The object is animated if it is possible
-    bool            label;                  ///< The label of the object is shown
-    sf::Time        durationanimation;      ///< Duration of the object's animation
-    sf::Texture     texturebackground;      ///< Background texture of the object
-    sf::Uint16      outputcharactersize;    ///< Character size of the output text of the object
-    sf::Font        outputfont;             ///< Secondary font of the output text
-    sf::Text::Style labelstyle;             ///< Style of the label
-    sf::Text::Style outputstyle;            ///< Style of the output text
-    char            outputhide;             ///< Character to hide the output with
-};
+////////////////////////////////////////////////////////////
+Style::~Style()
+{
+    //dtor
+}
 
 } // namespace CNGui
-
-#endif // STYLE_HPP_INCLUDED
