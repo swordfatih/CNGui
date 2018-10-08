@@ -65,6 +65,7 @@ void Button::update()
         {
             mLabel.setFont(mStyle.font);
             mLabel.setFillColor(mStyle.labelcolor);
+            mLabel.setStyle(mStyle.labelstyle);
             mLabel.setCharacterSize(mStyle.charactersize);
             mLabel.setString(mName);
             if(mStyle.shape == CNGui::Shape::Rectangle || mStyle.shape == CNGui::Shape::RoundedRectangle)
