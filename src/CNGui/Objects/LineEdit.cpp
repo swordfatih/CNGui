@@ -101,7 +101,7 @@ void LineEdit::update()
         //Texts
         mOutput.setFont(mStyle.outputfont);
         mOutput.setFillColor(mStyle.fillcolor);
-        mOutput.setStyle(CNGui::Text::Italic);
+        mFirst == true ? mOutput.setStyle(CNGui::Text::Italic) : mOutput.setStyle(CNGui::Text::Regular);
         mOutput.setString("pb");
         mOutput.setCharacterSize(mStyle.outputcharactersize);
         mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
@@ -129,10 +129,9 @@ void LineEdit::update()
         mCursor.setType(CNGui::Shape::Rectangle);
         mCursor.setFillColor(sf::Color::Transparent);
         mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
+        mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mCursor.getSize().y / 4);
 
-        mOutput.setString(mDefault);
-
-        mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mOutput.getGlobalBounds().height + mCursor.getSize().y / 4);
+        mFirst == true ? mOutput.setString(mDefault) : mOutput.setString(mString);
 
         mUpdate = false;
     }
@@ -152,18 +151,9 @@ void LineEdit::update()
             mCursor.setFillColor(sf::Color::White);
             mShape.setSize(sf::Vector2f(mBackground.getSize().x, 3));
 
-            if(mOutput.getString() == mDefault)
-            {
-                mOutput.setString(mString);
-                mOutput.setStyle(CNGui::Text::Regular);
-                mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
-            }
-            else
-            {
-                mStyle.outputhide == ' ' ? mOutput.setString(mString.substr(0, mString.size() - mPositionCursor)) : mOutput.setString(std::string(mString.size() - mPositionCursor, mStyle.outputhide));
-                mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
-                mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
-            }
+            mStyle.outputhide == ' ' ? mOutput.setString(mString.substr(0, mString.size() - mPositionCursor)) : mOutput.setString(std::string(mString.size() - mPositionCursor, mStyle.outputhide));
+            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
+            mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
 
             mReturn = true;
         }
@@ -193,7 +183,6 @@ void LineEdit::update()
 
         if(mHandleEvent.isActive(sf::Event::KeyPressed))
         {
-
             if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Left && mPositionCursor < mString.size())
             {
                 mPositionCursor += 1;
@@ -250,21 +239,10 @@ void LineEdit::update()
         else
         {
             //Animation
-            if(mStyle.animated)
+            if(mStyle.animated && mAnimation.getElapsedTime().asMilliseconds() > 500)
             {
-                if(mAnimation.getElapsedTime().asMilliseconds() > 500)
-                {
-                    if(mCursor.getFillColor() == sf::Color::White)
-                    {
-                        mCursor.setFillColor(sf::Color::Transparent);
-                    }
-                    else
-                    {
-                        mCursor.setFillColor(sf::Color::White);
-                    }
-
-                    mAnimation.restart();
-                }
+                mCursor.getFillColor() == sf::Color::White ? mCursor.setFillColor(sf::Color::Transparent) : mCursor.setFillColor(sf::Color::White);
+                mAnimation.restart();
             }
         }
 
