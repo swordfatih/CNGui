@@ -236,7 +236,7 @@ void LineEdit::update()
             {
                 if(mPositionCursor < mString.size())
                 {
-                    mString.pop_back();
+                    mString.erase(mString.size() - mPositionCursor - 1, 1);
                 }
             }
             else
