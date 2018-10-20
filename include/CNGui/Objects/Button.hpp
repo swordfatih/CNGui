@@ -53,6 +53,14 @@ public:
     bool onClick();
 
     ////////////////////////////////////////////////////////////
+    /// \brief Release event
+    ///
+    /// \return Returns true on button release
+    ///
+    ////////////////////////////////////////////////////////////
+    bool onRelease();
+
+    ////////////////////////////////////////////////////////////
     /// \brief Hover event
     ///
     /// \return Returns true when button hovered
@@ -82,9 +90,10 @@ private:
     Shape           mShape;             ///< Shape of the button
     Text            mLabel;             ///< Label of the button
     bool            mClicked = false;   ///< Button clicked
+    bool            mReleased = false;  ///< Button released
     bool            mHover = false;     ///< Hovering the button
 };
 
 } // namespace CNGui
 
-#endif // BUTTON_HPP 
+#endif // BUTTON_HPP
