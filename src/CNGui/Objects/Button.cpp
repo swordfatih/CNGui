@@ -24,6 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <CNGui/Objects/Button.hpp>
+#include <iostream>
 
 namespace CNGui
 {
@@ -31,6 +32,12 @@ namespace CNGui
 bool Button::onClick()
 {
     return mClicked;
+}
+
+////////////////////////////////////////////////////////////
+bool Button::onRelease()
+{
+    return mReleased;
 }
 
 ////////////////////////////////////////////////////////////
@@ -112,6 +119,16 @@ void Button::update()
             mClicked = false;
         }
 
+        //Throwing event as button released
+        if(mHandleEvent.isActive(sf::Event::MouseButtonReleased) && mHandleEvent[sf::Event::MouseButtonReleased].mouseButton.button == sf::Mouse::Left)
+        {
+            mReleased = true;
+        }
+        else
+        {
+            mReleased = false;
+        }
+
         //Button is pressed
         if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mStyle.selectable) || (mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left && mStyle.selectable))
         {
@@ -130,6 +147,8 @@ void Button::update()
     else
     {
         mHover = false;
+        mClicked = false;
+        mReleased = false;
 
         if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
         {
@@ -137,7 +156,9 @@ void Button::update()
             mLabel.setFillColor(mStyle.labelcolor);
             mShape.setOutlineColor(mStyle.outlinecolor);
             if(mReturn)
+            {
                 mReturn = false;
+            }
         }
     }
 }
