@@ -104,12 +104,16 @@ void Button::update()
 
         //Throwing event as button clicked
         if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
+        {
             mClicked = true;
+        }
         else
+        {
             mClicked = false;
+        }
 
         //Button is pressed
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mStyle.selectable) || (mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left && mStyle.selectable))
         {
             mShape.setFillColor(mStyle.clickedcolor);
             mLabel.setFillColor(mStyle.labelclickedcolor);
