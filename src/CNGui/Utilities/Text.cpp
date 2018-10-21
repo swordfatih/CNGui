@@ -52,6 +52,9 @@ void Text::setString(const sf::String& string)
     {
         do
         {
+            sf::Text::setString(" ");
+            float space = getGlobalBounds().width;
+
             std::string text;
             for(auto it: CNGui::Text::split(string))
             {
@@ -72,7 +75,7 @@ void Text::setString(const sf::String& string)
                 {
                     sf::Text::setString(text + it);
 
-                    if(getGlobalBounds().width > mSize.x)
+                    if(getGlobalBounds().width > mSize.x + space)
                     {
                         text += '\n' + it + ' ';
                     }
