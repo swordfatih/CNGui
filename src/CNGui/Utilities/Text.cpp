@@ -28,7 +28,7 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Text::Text() : sf::Text::Text()
+Text::Text() : sf::Text::Text(), mString(""), mCharacterSize(30)
 {
 
 }
@@ -52,7 +52,7 @@ void Text::setString(const sf::String& string)
     {
         do
         {
-            sf::Text::setString(" ");
+            sf::Text::setString("_");
             float space = getGlobalBounds().width;
 
             std::string text = "";
