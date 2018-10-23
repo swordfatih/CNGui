@@ -146,6 +146,18 @@ public:
     }
 
     ////////////////////////////////////////////////////////////
+    /// \brief Set the type of the container
+    ///
+    /// \param type Type of the container
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setType(const ContainerType& type)
+    {
+        mType = type;
+        update();
+    }
+
+    ////////////////////////////////////////////////////////////
     /// \brief Set the space between the contents
     ///
     /// \param spacing Space between the contents
