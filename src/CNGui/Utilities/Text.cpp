@@ -48,14 +48,14 @@ void Text::setString(const sf::String& string)
         setCharacterSize(mCharacterSize);
 
     //If limit size is defined
-    if(mSize.x > 0)
+    if(mSize.x > 0 && string.getSize() != 0)
     {
         do
         {
             sf::Text::setString(" ");
             float space = getGlobalBounds().width;
 
-            std::string text;
+            std::string text = "";
             for(auto it: CNGui::Text::split(string))
             {
                 sf::Text::setString(it);
