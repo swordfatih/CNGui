@@ -137,7 +137,7 @@ void Object::setContainer(sf::Vector2f& position)
 ////////////////////////////////////////////////////////////
 sf::FloatRect Object::getBounds() const
 {
-    return sf::FloatRect(getPosition(), mSize);
+    return sf::FloatRect(getPosition() + *mContainer, mSize);
 }
 
 ////////////////////////////////////////////////////////////
