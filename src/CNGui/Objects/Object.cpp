@@ -135,6 +135,12 @@ void Object::setContainer(sf::Vector2f& position)
 }
 
 ////////////////////////////////////////////////////////////
+sf::FloatRect Object::getBounds() const
+{
+    return sf::FloatRect(getPosition(), mSize);
+}
+
+////////////////////////////////////////////////////////////
 void Object::setEventHandler(EventHandler& handleEvent)
 {
     mHandleEvent = handleEvent;
@@ -146,6 +152,7 @@ EventHandler& Object::getEventHandler()
 {
     return mHandleEvent;
 }
+
 
 ////////////////////////////////////////////////////////////
 void Object::parse(const std::string& id, sf::Uint16& index, std::string& name)
