@@ -84,7 +84,7 @@ Objects | Description
 `CNGui::Object` | Base class for every objects.
 `CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle`, `CNGui::Shape::RoundedRectangle`, `CNGui::Shape::Triangle` and `CNGui::Shape::Circle`.
 `CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`, animatable.
-`CNGui::LineEdit` | Line edit object, animatable. 
+`CNGui::LineEdit` | Line edit object to input text, animatable. 
 
 ***
 **Creating a new object made easy**
