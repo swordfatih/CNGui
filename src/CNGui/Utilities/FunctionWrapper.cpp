@@ -64,14 +64,11 @@ bool FunctionWrapper::connected()
 ////////////////////////////////////////////////////////////
 bool FunctionWrapper::execute()
 {
-    if(mFunction)
+    if(mFunction && !mRunning)
     {
-        if(!mRunning)
-        {
-            mCondition.notify_one();
-            mRunning = true;
-            return true;
-        }
+        mCondition.notify_one();
+        mRunning = true;
+        return true;
     }
 
     return false;
@@ -80,11 +77,12 @@ bool FunctionWrapper::execute()
 ////////////////////////////////////////////////////////////
 bool FunctionWrapper::execute(const std::function<void(void)>& function)
 {
-    if(mFunction)
+    if(!mRunning)
     {
-        if(!mRunning)
+        connect(function);
+
+        if(mFunction)
         {
-            connect(function);
             mCondition.notify_one();
             mRunning = true;
             return true;
