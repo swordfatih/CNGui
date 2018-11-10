@@ -82,10 +82,19 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Execute the connected function
     ///
-    /// \return False if no function is connected
+    /// \return False if no function is connected or a function
+    /// is already running
     ///
     ////////////////////////////////////////////////////////////
     bool    execute();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Connect and execute a function
+    ///
+    /// \return False if a function is already running
+    ///
+    ////////////////////////////////////////////////////////////
+    bool    execute(const std::function<void(void)>& function);
 
     ////////////////////////////////////////////////////////////
     /// \brief Terminate the thread by force
