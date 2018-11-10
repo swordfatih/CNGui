@@ -78,6 +78,23 @@ bool FunctionWrapper::execute()
 }
 
 ////////////////////////////////////////////////////////////
+bool FunctionWrapper::execute(const std::function<void(void)>& function)
+{
+    if(mFunction)
+    {
+        if(!mRunning)
+        {
+            connect(function);
+            mCondition.notify_one();
+            mRunning = true;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////
 void FunctionWrapper::terminate()
 {
     mTerminate = true;
