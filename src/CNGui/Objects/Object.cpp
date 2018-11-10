@@ -54,6 +54,7 @@ Object& Object::operator <<(const std::string& name)
 bool Object::operator()()
 {
     update();
+    executeFunction();
     return mReturn;
 }
 
@@ -62,6 +63,7 @@ bool Object::operator()(const sf::Vector2f& mouse)
 {
     mMouse = mouse - *mContainer;
     update();
+    executeFunction();
     return mReturn;
 }
 
@@ -70,6 +72,7 @@ bool Object::operator()(const sf::RenderWindow& window)
 {
     mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()) - *mContainer;
     update();
+    executeFunction();
     return mReturn;
 }
 
@@ -78,6 +81,7 @@ bool Object::operator()(const sf::RenderWindow& window, const sf::View& view)
 {
     mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), view) - *mContainer;
     update();
+    executeFunction();
     return mReturn;
 }
 
@@ -86,6 +90,7 @@ bool Object::operator()(const sf::Vector2i& mouse)
 {
     mMouse = sf::Vector2f(mouse) - *mContainer;
     update();
+    executeFunction();
     return mReturn;
 }
 
@@ -138,6 +143,21 @@ void Object::setContainer(sf::Vector2f& position)
 sf::FloatRect Object::getBounds() const
 {
     return sf::FloatRect(getPosition() + *mContainer, mSize);
+}
+
+////////////////////////////////////////////////////////////
+void Object::setFunction(const std::function<void(void)>& function)
+{
+    mFunction.connect(function);
+}
+
+////////////////////////////////////////////////////////////
+void Object::executeFunction()
+{
+    if(mFunction.connected())
+    {
+        mFunction.execute();
+    }
 }
 
 ////////////////////////////////////////////////////////////
