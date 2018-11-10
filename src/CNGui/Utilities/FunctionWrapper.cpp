@@ -28,7 +28,7 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-FunctionWrapper::FunctionWrapper() : mHandle(&FunctionWrapper::handle, this), mTerminate(false)
+FunctionWrapper::FunctionWrapper() : mHandle(&FunctionWrapper::handle, this), mTerminate(false), mRunning(false)
 {
     //ctor
 }
