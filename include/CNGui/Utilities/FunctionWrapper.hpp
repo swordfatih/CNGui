@@ -72,6 +72,14 @@ public:
     void    connect(const std::function<void(void)>& function);
 
     ////////////////////////////////////////////////////////////
+    /// \brief Get connected
+    ///
+    /// \return True if a function is connected
+    ///
+    ////////////////////////////////////////////////////////////
+    bool    connected();
+
+    ////////////////////////////////////////////////////////////
     /// \brief Execute the connected function
     ///
     /// \return False if no function is connected
