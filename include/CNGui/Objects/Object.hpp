@@ -36,6 +36,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <CNGui/Utilities/Style.hpp>
 #include <CNGui/Utilities/EventHandler.hpp>
+#include <CNGui/Utilities/FunctionWrapper.hpp>
 #include <assert.h>
 
 namespace CNGui
@@ -135,6 +136,14 @@ public:
     ////////////////////////////////////////////////////////////
     sf::FloatRect   getBounds() const;
 
+    ////////////////////////////////////////////////////////////
+    /// \brief Set a function to execute when return is true
+    ///
+    /// \param function Function to execute when return is true
+    ///
+    ////////////////////////////////////////////////////////////
+    void            setFunction(const std::function<void(void)>& function);
+
     ///////////////////////////////////////////////////////////
     /// Overload of operator << to change the name of the object
     ///
@@ -176,6 +185,12 @@ public:
     bool        operator()(const sf::Vector2i& mouse);
 
 protected:
+    ////////////////////////////////////////////////////////////
+    /// \brief Execute connected function if there is one
+    ///
+    ////////////////////////////////////////////////////////////
+    void            executeFunction();
+
     ////////////////////////////////////////////////////////////
     /// \brief Set the event handler of the shape
     ///
@@ -229,6 +244,7 @@ protected:
     sf::Vector2f    mSize;          ///< Size of the object
     EventHandler&   mHandleEvent;   ///< Event handler
     Style&          mStyle;         ///< Style of the object
+    FunctionWrapper mFunction;      ///< Function to execute when returning true
     bool            mUpdate;        ///< Needs update?
     bool            mReturn;        ///< Bool conversion value
     sf::Vector2f    mMouse;         ///< Mouse position
