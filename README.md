@@ -66,15 +66,18 @@ int main()
 ![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
 
 ***
-Classes | Description
+Utilities | Description
 ------- | -----------
 `CNGui::EventHolder` | Class that holds SFML events that you can use further in the code to update your objects.
 `CNGui::Style` | Struct that holds style parameters that the user can modify and apply to an object.
-`CNGui::Container` | Class that can hold objects and other containers to sort them.
 `CNGui::Shape` | Class that inheritates from `sf::Shape`, you can initialize it with different types of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 `CNGui::Font` | Class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
 `CNGui::Text` | Class that inheritates from `sf::Text`, you can apply a limit size that the text wont exceed.
 `CNGui::FunctionWrapper` | Class that can store a `std::function` and execute it on another `std::thread`.
+
+Containers | Description
+------- | -----------
+`CNGui::Container` | Class that can hold objects and other containers to sort them.
 
 Objects | Description
 ------- | -----------
