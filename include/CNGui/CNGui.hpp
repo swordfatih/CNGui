@@ -8,8 +8,9 @@
 //Utilities
 #include <CNGui/Utilities/EventHandler.hpp>
 #include <CNGui/Utilities/Font.hpp>
-#include <CNGui/Utilities/Style.hpp>
+#include <CNGui/Utilities/FunctionWrapper.hpp>
 #include <CNGui/Utilities/Shape.hpp>
+#include <CNGui/Utilities/Style.hpp>
 #include <CNGui/Utilities/Text.hpp>
 
 //Containers
