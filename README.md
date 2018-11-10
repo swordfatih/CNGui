@@ -70,7 +70,6 @@ Classes | Description
 ------- | -----------
 `CNGui::EventHolder` | Class that holds SFML events that you can use further in the code to update your objects.
 `CNGui::Style` | Struct that holds style parameters that the user can modify and apply to an object.
-`CNGui::Object` | Base class for every objects.
 `CNGui::Container` | Class that can hold objects and other containers to sort them.
 `CNGui::Shape` | Class that inheritates from `sf::Shape`, you can initialize it with different types of shape as Rectangle, Triangle, Circle or RoundedRectangle.
 `CNGui::Font` | Class that holds hex arrays of few free fonts that you can use with an sf::Font by loading from memory. (actually holds only one, license in license.md file)
@@ -79,6 +78,7 @@ Classes | Description
 
 Objects | Description
 ------- | -----------
+`CNGui::Object` | Base class for every objects.
 `CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle`, `CNGui::Shape::RoundedRectangle`, `CNGui::Shape::Triangle` and `CNGui::Shape::Circle`.
 `CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`, animatable.
 `CNGui::LineEdit` | Line edit object, animatable. 
