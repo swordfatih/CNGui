@@ -52,6 +52,16 @@ void FunctionWrapper::connect(const std::function<void(void)>& function)
 }
 
 ////////////////////////////////////////////////////////////
+bool FunctionWrapper::connected()
+{
+    if(mFunction)
+    {
+        return true;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////
 bool FunctionWrapper::execute()
 {
     if(mFunction)
