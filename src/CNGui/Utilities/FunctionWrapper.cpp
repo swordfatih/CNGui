@@ -36,7 +36,7 @@ FunctionWrapper::FunctionWrapper() : mHandle(&FunctionWrapper::handle, this), mT
 ////////////////////////////////////////////////////////////
 FunctionWrapper::FunctionWrapper(const std::function<void(void)>& function) : FunctionWrapper()
 {
-    mFunction = function;
+    connect(function);
 }
 
 ////////////////////////////////////////////////////////////
@@ -58,6 +58,7 @@ bool FunctionWrapper::connected()
     {
         return true;
     }
+
     return false;
 }
 
@@ -83,8 +84,8 @@ bool FunctionWrapper::execute(const std::function<void(void)>& function)
 
         if(mFunction)
         {
-            mCondition.notify_one();
             mRunning = true;
+            mCondition.notify_one();
             return true;
         }
     }
@@ -96,6 +97,7 @@ bool FunctionWrapper::execute(const std::function<void(void)>& function)
 void FunctionWrapper::terminate()
 {
     mTerminate = true;
+    mRunning = true;
     mCondition.notify_one();
     mHandle.join();
 }
@@ -113,7 +115,7 @@ void FunctionWrapper::handle()
     {
         std::unique_lock<std::mutex> lock(mMutex);
 
-        mCondition.wait(lock);
+        mCondition.wait(lock, [this](){return mRunning.load();});
 
         if(!mTerminate)
         {
