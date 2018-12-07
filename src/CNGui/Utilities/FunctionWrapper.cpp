@@ -109,6 +109,12 @@ bool FunctionWrapper::isRunning()
 }
 
 ////////////////////////////////////////////////////////////
+std::mutex* FunctionWrapper::getMutex()
+{
+    return &mMutex;
+}
+
+////////////////////////////////////////////////////////////
 void FunctionWrapper::handle()
 {
     while(!mTerminate)
