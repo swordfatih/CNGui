@@ -99,19 +99,16 @@ void FunctionWrapper::terminate()
     mTerminate = true;
     mRunning = true;
     mCondition.notify_one();
-    mHandle.join();
+    if(mHandle.joinable())
+    {
+        mHandle.join();
+    }
 }
 
 ////////////////////////////////////////////////////////////
 bool FunctionWrapper::isRunning()
 {
     return mRunning;
-}
-
-////////////////////////////////////////////////////////////
-std::mutex* FunctionWrapper::getMutex()
-{
-    return &mMutex;
 }
 
 ////////////////////////////////////////////////////////////
