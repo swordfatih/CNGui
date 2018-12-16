@@ -49,7 +49,7 @@ int main()
         }
 
         if(button(window) && button.onClick())
-            progression.setProgression(progression.getProgression() + 0.1);
+            progression.add(0.1);
 
         if(progression())
             progression << "Progression done";
