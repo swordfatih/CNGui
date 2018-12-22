@@ -85,6 +85,7 @@ Objects | Description
 `CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle`, `CNGui::Shape::RoundedRectangle`, `CNGui::Shape::Triangle` and `CNGui::Shape::Circle`.
 `CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`, animatable.
 `CNGui::LineEdit` | Line edit object to input text, animatable. 
+`CNGui::Poster` | Poster object to add a title, date and a description to your pictures, animatable.
 
 ***
 **Creating a new object made easy**
@@ -150,4 +151,5 @@ Feel free to share your new super objects with the other users !
 More examples | Screen
 ------------- | ------
 Stacking containers | ![stacking](https://media.discordapp.net/attachments/468477582761918465/491665422438105088/containerstacking.PNG?width=378&height=300)
+Poster object | ![poster](https://cdn.discordapp.com/attachments/414535658410082341/526071702614966272/poster.gif)
 
