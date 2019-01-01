@@ -29,8 +29,8 @@ if(SFML_FOUND)
 endif()
 
 # Define sources
-set(INCLUDE_PATH "${CMAKE_SOURCE_DIR}/include")
-set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/src")
+set(INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 include_directories("${INCLUDE_PATH}")
 include_directories("${SOURCE_PATH}")
