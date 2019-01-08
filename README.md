@@ -90,7 +90,7 @@ Objects | Description
 ***
 **Creating a new object made easy**
 
-You can easily create a new object by inheriting from the Object class, your class has to contain an `uptade()` function and a SFML `draw()` function.
+You can easily create a new object by inheriting from the Object class, your class has to contain an `update()` function and a SFML `draw()` function.
 
 ```cpp
 #include "CNGui/Objects/Object.hpp"
