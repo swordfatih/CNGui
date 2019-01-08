@@ -6,7 +6,7 @@ It is actually in development by Fatih#6810 (accfldekur@gmail.com) from *Moonlit
 ***
 **Example code**
 
-An example code showing how CNGui is user-friendly and object-oriented! 
+An example code showing how user-friendly and object-oriented CNGui is! 
 
 ```cpp
 #include <SFML/Graphics.hpp>
