@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "CNGui.hpp"
+#include <CNGui/CNGui.hpp>
 
 int main()
 {
