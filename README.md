@@ -1,4 +1,4 @@
-# CNGui 
+# CNGui 1.1
 
 CNGui (Chats Noirs Gui) is a new graphical user interface (GUI) library using SFML and C++.
 It is actually in development by Fatih#6810 (accfldekur@gmail.com) from *Moonlit Black Cats*.
