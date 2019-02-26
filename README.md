@@ -27,8 +27,8 @@ int main()
     styleProgression.fillcolor = {80, 255, 129};
     styleProgression.charactersize = 16;
 
-    CNGui::ProgressIndicator progression("Progression#001", handleEvent, styleProgression);
-    CNGui::Button button("Add#001", handleEvent, styleButton);
+    CNGui::ProgressIndicator progression("Progression", handleEvent, styleProgression);
+    CNGui::Button button("Add", handleEvent, styleButton);
 
     CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 150});
     container.setPosition(50, 20);
