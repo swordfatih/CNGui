@@ -41,7 +41,7 @@ add_library(cngui
 	"${INCLUDE_PATH}/CNGui/Core/Registration.hpp"
 	"${INCLUDE_PATH}/CNGui/Core/EventHandler.hpp"
 	"${INCLUDE_PATH}/CNGui/Core/Updatable.hpp"
-	"${INCLUDE_PATH}/CNGui/Containers/Container.hpp"
+	"${INCLUDE_PATH}/CNGui/Core/Container.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/Button.hpp"
 	"${INCLUDE_PATH}/CNGui/Objects/ProgressIndicator.hpp"
