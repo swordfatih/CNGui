@@ -33,7 +33,7 @@
 #include <CNGui/Core/EventHandler.hpp>
 #include <CNGui/Core/Updatable.hpp>
 #include <CNGui/Core/Style.hpp>
-#include <CNGui/Containers/Container.hpp>
+#include <CNGui/Core/Container.hpp>
 #include <CNGui/Tools/FunctionWrapper.hpp>
 
 //SFML
