@@ -1,3 +1,5 @@
+**Many things are changing with the 1.1 version, the following text is about CNGui 1.0 
+
 # CNGui 1.1 (in development)
 
 CNGui (Chats Noirs Gui) is a new graphical user interface (GUI) library using SFML and C++.
