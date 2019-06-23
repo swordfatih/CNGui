@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -109,7 +109,8 @@ void Button::update()
         mHover = true;
 
         //Throwing event as button clicked
-        if(mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left)
+        auto event_mouse = mHandleEvent.get_if(sf::Event::MouseButtonPressed);
+        if(event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left)
         {
             mClicked = true;
         }
@@ -119,7 +120,7 @@ void Button::update()
         }
 
         //Throwing event as button released
-        if(mHandleEvent.isActive(sf::Event::MouseButtonReleased) && mHandleEvent[sf::Event::MouseButtonReleased].mouseButton.button == sf::Mouse::Left)
+        if(auto event = mHandleEvent.get_if(sf::Event::MouseButtonReleased); event && event->mouseButton.button == sf::Mouse::Left)
         {
             mReleased = true;
         }
@@ -129,7 +130,7 @@ void Button::update()
         }
 
         //Button is pressed
-        if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mStyle.selectable) || (mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left && mStyle.selectable))
+        if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mStyle.selectable) || (event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left && mStyle.selectable))
         {
             mShape.setFillColor(mStyle.clickedcolor);
             mLabel.setFillColor(mStyle.labelclickedcolor);
@@ -149,11 +150,13 @@ void Button::update()
         mClicked = false;
         mReleased = false;
 
-        if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && mHandleEvent.isActive(sf::Event::MouseButtonPressed) && mHandleEvent[sf::Event::MouseButtonPressed].mouseButton.button == sf::Mouse::Left))
+        auto event_mouse = mHandleEvent.get_if(sf::Event::MouseButtonPressed);
+        if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left))
         {
             mShape.setFillColor(mStyle.fillcolor);
             mLabel.setFillColor(mStyle.labelcolor);
             mShape.setOutlineColor(mStyle.outlinecolor);
+
             if(mReturn)
             {
                 mReturn = false;
@@ -168,8 +171,11 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
 
     target.draw(mShape, states);
+
     if(mStyle.label)
+    {
         target.draw(mLabel, states);
+    }
 }
 
 } // namespace CNGui

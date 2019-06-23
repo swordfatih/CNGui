@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -22,7 +22,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
-
 #include <CNGui/Objects/Poster.hpp>
 
 namespace CNGui
@@ -78,17 +77,17 @@ void Poster::update()
     //Updating the style of the button
     if(mUpdate)
     {
-        mShape.setTexture(&mStyle.texturebackground);
-        mShape.setSize(mSize);
+        mSprite.setTexture(mStyle.texturebackground);
+        mSprite.setScale(mSize.x / mSprite.getLocalBounds().width, mSize.y / mSprite.getLocalBounds().height);
 
         mBackground.setFillColor(mStyle.backgroundcolor);
-        mBackground.setSize(mShape.getSize());
+        mBackground.setSize({mSprite.getGlobalBounds().width, mSprite.getGlobalBounds().height});
 
         mTitle.setFont(mStyle.font);
         mTitle.setCharacterSize(mStyle.charactersize);
         mTitle.setFillColor(mStyle.fillcolor);
         mTitle.setString(mName);
-        mTitle.setSize(sf::Vector2f(mShape.getSize().x - mStyle.outlinethickness * 2, mTitle.getCharacterSize()));
+        mTitle.setSize(sf::Vector2f(mSprite.getGlobalBounds().width - mStyle.outlinethickness * 2, mTitle.getCharacterSize()));
 
         mDate.setFont(mStyle.font);
         mDate.setCharacterSize(mStyle.charactersize - 12);
@@ -96,15 +95,15 @@ void Poster::update()
         mDate.setSize(sf::Vector2f(mTitle.getSize().x, mDate.getCharacterSize()));
 
         mLine.setFillColor(mStyle.outlinecolor);
-        mLine.setSize(sf::Vector2f(mShape.getSize().x, mStyle.outlinethickness));
+        mLine.setSize(sf::Vector2f(mSprite.getGlobalBounds().width, mStyle.outlinethickness));
 
         mDescription.setFont(mStyle.outputfont);
         mDescription.setCharacterSize(mStyle.outputcharactersize);
         mDescription.setFillColor(mStyle.labelcolor);
         mDescription.setStyle(mStyle.labelstyle);
-        mDescription.setSize({mTitle.getSize().x, mShape.getSize().y});
+        mDescription.setSize({mTitle.getSize().x, mSprite.getGlobalBounds().height});
 
-        mTitle.setPosition(mStyle.outlinethickness - mTitle.getLocalBounds().left, mShape.getPosition().y + mShape.getSize().y - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
+        mTitle.setPosition(mStyle.outlinethickness - mTitle.getLocalBounds().left, mSprite.getPosition().y + mSprite.getGlobalBounds().height - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
         mBackground.setPosition(0, mTitle.getPosition().y);
         mDate.setPosition(mStyle.outlinethickness - mDate.getLocalBounds().left, mTitle.getPosition().y + mTitle.getLocalBounds().top + mTitle.getGlobalBounds().height * 1.25 - mDate.getLocalBounds().top);
         mLine.setPosition(0, mDate.getPosition().y + mDate.getLocalBounds().top + mDate.getGlobalBounds().height + mLine.getSize().y * 2);
@@ -114,7 +113,7 @@ void Poster::update()
     }
 
     //If the button is hovered
-    if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getSize().x, mShape.getSize().y).contains(mMouse))
+    if(sf::FloatRect(getPosition().x, getPosition().y, mSprite.getGlobalBounds().width, mSprite.getGlobalBounds().height).contains(mMouse))
     {
         mHover = true;
         mReturn = true;
@@ -122,7 +121,7 @@ void Poster::update()
         if(mTitle.getPosition().y - mTitle.getLocalBounds().top > 0)
         {
             mAnimation = mAnimation + easeInOutCirc(mClock.getElapsedTime().asSeconds() * sf::seconds(50).asSeconds());
-            mTitle.setPosition(mTitle.getPosition().x, mShape.getPosition().y + mShape.getSize().y - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top - mAnimation);
+            mTitle.setPosition(mTitle.getPosition().x, mSprite.getPosition().y + mSprite.getGlobalBounds().height - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top - mAnimation);
         }
         else
         {
@@ -142,7 +141,7 @@ void Poster::update()
         if(mAnimation != 0)
         {
             mAnimation = 0;
-            mTitle.setPosition(mTitle.getPosition().x, mShape.getPosition().y + mShape.getSize().y - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
+            mTitle.setPosition(mTitle.getPosition().x, mSprite.getPosition().y + mSprite.getGlobalBounds().height - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
             mBackground.setPosition(mBackground.getPosition().x, mTitle.getPosition().y);
             mDate.setPosition(mDate.getPosition().x, mTitle.getPosition().y + mTitle.getLocalBounds().top + mTitle.getGlobalBounds().height * 1.25 - mDate.getLocalBounds().top);
             mLine.setPosition(mLine.getPosition().x, mDate.getPosition().y + mDate.getLocalBounds().top + mDate.getGlobalBounds().height + mLine.getSize().y * 2);
@@ -156,14 +155,22 @@ void Poster::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-    target.draw(mShape, states);
+    target.draw(mSprite, states);
 
     glEnable(GL_SCISSOR_TEST);
 
     auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
     auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
 
-    glScissor(scissorStart.x + mContainer->x, target.getSize().y - scissorStart.y - mContainer->y, scissorSize.x, scissorSize.y);
+    if(mContained)
+    {
+        glScissor(scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y);
+    }
+    else
+    {
+        glScissor(scissorStart.x, target.getSize().y - scissorStart.y, scissorSize.x, scissorSize.y);
+    }
+
     target.draw(mBackground, states);
     target.draw(mLine, states);
     target.draw(mDescription, states);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -28,9 +28,9 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Object::Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size) : mSize(size), mHandleEvent(handleEvent), mStyle(style), mUpdate(true),  mReturn(false), mContainer(new sf::Vector2f(0, 0))
+Object::Object(const std::string& name, const Style& style, const sf::Vector2f& size) : Registrable::Registrable(typeid(Object)), mName(name), mSize(size), mHandleEvent(*Registrable::getRegisteredInstances<EventHandler>()[0]), mStyle(style), mUpdate(true),  mReturn(false)
 {
-    parse(id, mIndex, mName);
+
 }
 
 ////////////////////////////////////////////////////////////
@@ -47,6 +47,7 @@ Object& Object::operator <<(const std::string& name)
         mName = name;
         mUpdate = true;
     }
+
     return *this;
 }
 
@@ -60,7 +61,8 @@ bool Object::operator()()
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::Vector2f& mouse)
 {
-    mMouse = mouse - *mContainer;
+    mMouse = mouse - mInPosition;
+
     update();
     return mReturn;
 }
@@ -68,7 +70,8 @@ bool Object::operator()(const sf::Vector2f& mouse)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::RenderWindow& window)
 {
-    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()) - *mContainer;
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()) - mInPosition;
+
     update();
     return mReturn;
 }
@@ -76,7 +79,8 @@ bool Object::operator()(const sf::RenderWindow& window)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::RenderWindow& window, const sf::View& view)
 {
-    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), view) - *mContainer;
+    mMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window), view) - mInPosition;
+
     update();
     return mReturn;
 }
@@ -84,13 +88,14 @@ bool Object::operator()(const sf::RenderWindow& window, const sf::View& view)
 ////////////////////////////////////////////////////////////
 bool Object::operator()(const sf::Vector2i& mouse)
 {
-    mMouse = sf::Vector2f(mouse) - *mContainer;
+    mMouse = sf::Vector2f(mouse) - mInPosition;
+
     update();
     return mReturn;
 }
 
 ////////////////////////////////////////////////////////////
-void Object::setStyle(Style& style)
+void Object::setStyle(const Style& style)
 {
     mStyle = style;
     mUpdate = true;
@@ -103,16 +108,16 @@ Style& Object::getStyle()
 }
 
 ////////////////////////////////////////////////////////////
-void Object::setId(const std::string& id)
+void Object::setName(const std::string& name)
 {
-    parse(id, mIndex, mName);
+    mName = name;
     mUpdate = true;
 }
 
 ////////////////////////////////////////////////////////////
-std::string Object::getId()
+std::string Object::getName()
 {
-    return mName + "#" + std::to_string(mIndex);
+    return mName;
 }
 
 ////////////////////////////////////////////////////////////
@@ -129,58 +134,44 @@ sf::Vector2f Object::getSize()
 }
 
 ////////////////////////////////////////////////////////////
-void Object::setContainer(sf::Vector2f& position)
+sf::FloatRect Object::getGlobalBounds() const
 {
-    mContainer = &position;
-}
-
-////////////////////////////////////////////////////////////
-sf::FloatRect Object::getBounds() const
-{
-    return sf::FloatRect(getPosition() + *mContainer, mSize);
-}
-
-////////////////////////////////////////////////////////////
-void Object::setEventHandler(EventHandler& handleEvent)
-{
-    mHandleEvent = handleEvent;
-    mUpdate = true;
-}
-
-////////////////////////////////////////////////////////////
-EventHandler& Object::getEventHandler()
-{
-    return mHandleEvent;
-}
-
-////////////////////////////////////////////////////////////
-void Object::parse(const std::string& id, sf::Uint16& index, std::string& name)
-{
-    std::size_t pos(0);
-    do
+    if(mContained)
     {
-        pos = id.find('#', pos);
-        name = id.substr(0, id.size() - 4);
+        return sf::FloatRect(getPosition() - mInPosition, mSize);
+    }
 
-        std::string temp = id.substr(pos + 1);
-
-        for(unsigned i = 0; i < temp.size(); ++i)
-            assert(!isalpha(temp.at(i))); // Invalid index
-
-        index = std::stoi(temp);
-    }while(id.at(pos - 1) == '\\');
+    return {getPosition(), mSize};
 }
 
-////////////////////////////////////////////////////////////
-void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+namespace Core
 {
 
-}
-
 ////////////////////////////////////////////////////////////
-void Object::update()
+void draw(sf::RenderTarget& target)
 {
+    for(const auto& object_instance: Registrable::getRegisteredInstances<Object>())
+    {
+        if(!object_instance->isContained())
+        {
+           target.draw(*object_instance);
+        }
+    }
 
+    for(const auto& container_instance: Registrable::getRegisteredInstances<Container>())
+    {
+        if(!container_instance->isContained())
+        {
+           target.draw(*container_instance);
+        }
+    }
+
+    for(const auto& drawable_instance: Registrable::getRegisteredInstances<sf::Drawable>())
+    {
+        target.draw(*drawable_instance);
+    }
 }
+
+} // namespace Core
 
 } // namespace CNGui

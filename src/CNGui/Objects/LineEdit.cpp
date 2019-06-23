@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -200,36 +200,36 @@ void LineEdit::update()
         mOnReturn = false;
         bool updatePosition = false;
 
-        if(mHandleEvent.isActive(sf::Event::KeyPressed))
+        if(auto event = mHandleEvent.get_if(sf::Event::KeyPressed))
         {
-            if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Left && mPositionCursor < mString.size())
+            if(event->key.code == sf::Keyboard::Left && mPositionCursor < mString.size())
             {
                 mPositionCursor += 1;
                 updatePosition = true;
             }
-            else if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Right && mPositionCursor > 0)
+            else if(event->key.code == sf::Keyboard::Right && mPositionCursor > 0)
             {
                 mPositionCursor -= 1;
                 updatePosition = true;
             }
-            else if(mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::Delete && mPositionCursor > 0)
+            else if(event->key.code == sf::Keyboard::Delete && mPositionCursor > 0)
             {
                 mString.erase(mString.end() - mPositionCursor);
                 mPositionCursor -= 1;
                 updatePosition = true;
             }
-            else if(mHandleEvent[sf::Event::KeyPressed].key.control && mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::C)
+            else if(event->key.control && event->key.code == sf::Keyboard::C)
             {
                 sf::Clipboard::setString(mString);
             }
-            else if(mHandleEvent[sf::Event::KeyPressed].key.control && mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::V)
+            else if(event->key.control && event->key.code == sf::Keyboard::V)
             {
                 mString.insert(mString.size() - mPositionCursor, sf::Clipboard::getString());
                 mStyle.outputhide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.outputhide));
             }
         }
 
-        if(mHandleEvent.isActive(sf::Event::TextEntered))
+        if(auto event = mHandleEvent.get_if(sf::Event::TextEntered))
         {
             //Handle input
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
@@ -245,9 +245,9 @@ void LineEdit::update()
                 {
                     mOnReturn = true;
                 }
-                else if(!(mHandleEvent[sf::Event::KeyPressed].key.control && (mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::C || mHandleEvent[sf::Event::KeyPressed].key.code == sf::Keyboard::V)))
+                else if(auto event_key = mHandleEvent.get_if(sf::Event::KeyPressed); !(event_key->key.control && (event_key->key.code == sf::Keyboard::C || event_key->key.code == sf::Keyboard::V)))
                 {
-                    mString.insert(mString.size() - mPositionCursor, 1, static_cast<char>(mHandleEvent[sf::Event::TextEntered].text.unicode));
+                    mString.insert(mString.size() - mPositionCursor, 1, static_cast<char>(event->text.unicode));
                 }
             }
 
@@ -307,7 +307,15 @@ void LineEdit::draw(sf::RenderTarget& target, sf::RenderStates states) const
     auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
     auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
 
-    glScissor(scissorStart.x + mContainer->x, target.getSize().y - scissorStart.y - mContainer->y, scissorSize.x, scissorSize.y);
+    if(mContained)
+    {
+        glScissor(scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y);
+    }
+    else
+    {
+        glScissor(scissorStart.x, target.getSize().y - scissorStart.y, scissorSize.x, scissorSize.y);
+    }
+
     target.draw(mOutput, states);
 
     glDisable(GL_SCISSOR_TEST);
