@@ -1,67 +1,57 @@
-#include <SFML/Graphics.hpp>
 #include <CNGui/CNGui.hpp>
+#include <SFML/Graphics.hpp>
 
+///////////////////////////////////////////////////////////
 int main()
 {
-    sf::RenderWindow window({640, 480}, "CNGui Example");
-    window.setFramerateLimit(60);
+    sf::RenderWindow window({600, 400}, "CNGui 1.1");
 
     CNGui::EventHandler handleEvent;
 
-    CNGui::Style style;
-    style.shape = CNGui::Shape::RoundedRectangle;
-    style.fillcolor = {200, 200, 200};
-    style.hovercolor = {100, 100, 100};
-    style.selectable = true;
-    style.outline = true;
+    CNGui::Container container_left(CNGui::Vertical);
+    CNGui::LineEdit edit_left("Left edit");
+    CNGui::Button button_left("Hello");
+    sf::RectangleShape shape;
+    container_left << edit_left << button_left << shape;
 
-    CNGui::Button buttonStart("Start#001", handleEvent, style, {200, 100});
-    CNGui::Button buttonReset("Reset#001", handleEvent, style, {200, 100});
-    CNGui::Button buttonTestOne("Test#001", handleEvent, style, {200, 100});
-    CNGui::Button buttonTestTwo("Test#002", handleEvent, style, {200, 100});
+    CNGui::Container container_right(CNGui::Vertical);
+    CNGui::LineEdit edit_right("Right edit");
+    CNGui::Button button_right("Hello");
+    container_right << edit_right << button_right;
 
-    CNGui::Container<CNGui::Object> containerButton(CNGui::Vertical, sf::Vector2f(200, 150));
-    containerButton << buttonStart << buttonReset;
-    
-    CNGui::Container<CNGui::Object> containerTest(CNGui::Horizontal, sf::Vector2f(200, 150));
-    containerTest << buttonTestOne << buttonTestTwo;
-
-    CNGui::Container<CNGui::Container<CNGui::Object>> containerMain(CNGui::Vertical, {500, 300});
-    containerMain << containerButton << containerTest;
-    
-    containerMain.setSpacing(50);
-    containerMain.setPosition(70, 50);
+    CNGui::Container container_main(CNGui::Horizontal, {200, 200});
+    container_main.setPosition(50, 50);
+    container_main << container_left << container_right;
 
     while(window.isOpen())
     {
-        handleEvent.clear();
+        handleEvent.process(window);
 
-        sf::Event event;
-        while(window.pollEvent(event))
+        if(handleEvent.get_if(sf::Event::Closed))
         {
-            if(event.type == sf::Event::Closed)
-                window.close();
-
-            handleEvent.push(event);
+            window.close();
         }
 
-        if(buttonStart(window) && buttonStart.onClick())
-            buttonStart << "I think thats too long";
+        edit_left(window);
+        edit_right(window);
 
-        if(buttonReset(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView())))
-            buttonStart << "Start";
-
-        buttonTestOne(window);
-        buttonTestTwo(window);
+        if(button_left(window) && button_left.onClick())
+        {
+            button_left << edit_left.getString();
+        }
+        
+        if(button_right(window) && button_right.onClick())
+        {
+            button_right << edit_right.getString();
+        }
 
         window.clear();
-        window.draw(containerMain);
+        CNGui::Core::draw(window);
         window.display();
     }
 
     return 0;
 }
-
 
 
 
