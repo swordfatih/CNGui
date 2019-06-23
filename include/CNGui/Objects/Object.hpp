@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,14 +29,21 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+//CNGui
+#include <CNGui/Core/EventHandler.hpp>
+#include <CNGui/Core/Updatable.hpp>
+#include <CNGui/Core/Style.hpp>
+#include <CNGui/Containers/Container.hpp>
+#include <CNGui/Tools/FunctionWrapper.hpp>
+
+//SFML
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <CNGui/Utilities/Style.hpp>
-#include <CNGui/Utilities/EventHandler.hpp>
-#include <CNGui/Utilities/FunctionWrapper.hpp>
+
+//Standard
 #include <assert.h>
 
 namespace CNGui
@@ -45,35 +52,35 @@ namespace CNGui
 /// \brief Base class for objects
 ///
 ////////////////////////////////////////////////////////////
-class Object : public sf::Drawable, public sf::Transformable
+class Object : public Updatable, public sf::Drawable, public Core::Registrable
 {
 public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                Object(const std::string& id, EventHandler& handleEvent, Style& style, const sf::Vector2f& size = sf::Vector2f(100, 50));
+                    Object(const std::string& id, const Style& style = {}, const sf::Vector2f& size = sf::Vector2f(100, 50));
 
     ////////////////////////////////////////////////////////////
     /// \brief Default destructor
     ///
     ////////////////////////////////////////////////////////////
-    virtual     ~Object();
+    virtual         ~Object();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the style of the shape
+    /// \brief Set the style of the object
     ///
-    /// \param style Style of the shape
+    /// \param style Style of the object
     ///
     /// \see getStyle
     ///
     ////////////////////////////////////////////////////////////
-    void            setStyle(Style& style);
+    void            setStyle(const Style& style);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the style of the shape
+    /// \brief Get the style of the object
     ///
-    /// \return The style of the shape
+    /// \return The style of the object
     ///
     /// \see setStyle
     ///
@@ -81,29 +88,29 @@ public:
     Style&          getStyle();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the id of the shape
+    /// \brief Set the name of the object
     ///
-    /// \param id Id of the shape
+    /// \param name Name of the object
     ///
-    /// \see getId
+    /// \see getName
     ///
     ////////////////////////////////////////////////////////////
-    void            setId(const std::string& id);
+    void            setName(const std::string& name);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the id of the shape
+    /// \brief Get the name of the object
     ///
-    /// \return The id of the shape
+    /// \return The name of the object
     ///
-    /// \see setId
+    /// \see setName
     ///
     ////////////////////////////////////////////////////////////
-    std::string     getId();
+    std::string     getName();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the size of the shape
+    /// \brief Set the size of the object
     ///
-    /// \param size Size of the shape
+    /// \param size Size of the object
     ///
     /// \see getSize
     ///
@@ -111,9 +118,9 @@ public:
     void            setSize(const sf::Vector2f& size);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the size of the shape
+    /// \brief Get the size of the object
     ///
-    /// \return The size of the shape
+    /// \return The size of the object
     ///
     /// \see setSize
     ///
@@ -121,120 +128,73 @@ public:
     sf::Vector2f    getSize();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the container of the object
-    ///
-    /// \param position Position of the container
-    ///
-    ////////////////////////////////////////////////////////////
-    void            setContainer(sf::Vector2f& position);
-
-    ////////////////////////////////////////////////////////////
     /// \brief Get the bounding rectangle of the object
     ///
     /// \return Bounding rectangle of the object
     ///
     ////////////////////////////////////////////////////////////
-    sf::FloatRect   getBounds() const;
+    sf::FloatRect   getGlobalBounds() const;
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator << to change the name of the object
     ///
     ////////////////////////////////////////////////////////////
-    Object&     operator <<(const std::string& name);
+    Object&         operator <<(const std::string& name);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
-    bool        operator()();
+    bool            operator()();
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
     /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::Vector2f& mouse);
+    bool            operator()(const sf::Vector2f& mouse);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
     /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::RenderWindow& window);
+    bool            operator()(const sf::RenderWindow& window);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
     /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::RenderWindow& window, const sf::View& view);
+    bool            operator()(const sf::RenderWindow& window, const sf::View& view);
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator () to get the mouse position
     /// and to get the object's return value
     ///
     ////////////////////////////////////////////////////////////
-    bool        operator()(const sf::Vector2i& mouse);
+    bool            operator()(const sf::Vector2i& mouse);
 
 protected:
     ////////////////////////////////////////////////////////////
-    /// \brief Set the event handler of the shape
-    ///
-    /// \param handleEvent Event handler of the shape
-    ///
-    /// \see getEventHandler
-    ///
-    ////////////////////////////////////////////////////////////
-    void            setEventHandler(EventHandler& handleEvent);
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Get the event handler of the shape
-    ///
-    /// \return The event handler of the shape
-    ///
-    /// \see setEventHandler
-    ///
-    ////////////////////////////////////////////////////////////
-    EventHandler&   getEventHandler();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Parse an id to an index and name
-    ///
-    /// \param id Id to parse
-    /// \param index Index of the id to update
-    /// \param name Name of the id to update
-    ///
-    ////////////////////////////////////////////////////////////
-    void            parse(const std::string& id, sf::Uint16& index, std::string& name);
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual void    update();
-
-    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    sf::Uint16      mIndex;         ///< Index of the object
     std::string     mName;          ///< Name of the object
     sf::Vector2f    mSize;          ///< Size of the object
     EventHandler&   mHandleEvent;   ///< Event handler
-    Style&          mStyle;         ///< Style of the object
+    Style           mStyle;         ///< Style of the object
     bool            mUpdate;        ///< Needs update?
     bool            mReturn;        ///< Bool conversion value
     sf::Vector2f    mMouse;         ///< Mouse position
-    sf::Vector2f*   mContainer;     ///< Position of the container that contains it
 };
+
+namespace Core
+{
+
+////////////////////////////////////////////////////////////
+void draw(sf::RenderTarget& target);
+
+} // namespace Core
 
 } // namespace CNGui
 

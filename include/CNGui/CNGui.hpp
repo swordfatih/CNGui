@@ -5,13 +5,17 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+//Core
+#include <CNGui/Core/Registration.hpp>
+#include <CNGui/Core/EventHandler.hpp>
+#include <CNGui/Core/Updatable.hpp>
+#include <CNGui/Core/Style.hpp>
+
 //Utilities
-#include <CNGui/Utilities/EventHandler.hpp>
-#include <CNGui/Utilities/Font.hpp>
-#include <CNGui/Utilities/FunctionWrapper.hpp>
-#include <CNGui/Utilities/Shape.hpp>
-#include <CNGui/Utilities/Style.hpp>
-#include <CNGui/Utilities/Text.hpp>
+#include <CNGui/Tools/Font.hpp>
+#include <CNGui/Tools/FunctionWrapper.hpp>
+#include <CNGui/Tools/Shape.hpp>
+#include <CNGui/Tools/Text.hpp>
 
 //Containers
 #include <CNGui/Containers/Container.hpp>
@@ -21,5 +25,6 @@
 #include <CNGui/Objects/Button.hpp>
 #include <CNGui/Objects/ProgressIndicator.hpp>
 #include <CNGui/Objects/LineEdit.hpp>
+#include <CNGui/Objects/Poster.hpp>
 
 #endif // CNGUI_HPP_INCLUDED

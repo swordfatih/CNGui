@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,21 +29,60 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+//CNGui
+#include <CNGui/Core/Updatable.hpp>
+#include <CNGui/Core/Registration.hpp>
+
+//SFML
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <CNGui/Objects/Object.hpp>
+
+//Standard
 #include <vector>
-#include <memory>
+#include <functional>
 
 namespace CNGui
 {
+
+namespace Core
+{
+
+////////////////////////////////////////////////////////////
+/// \brief Class to check if a given class has a member
+/// function signed setSize()
+///
+////////////////////////////////////////////////////////////
+template<typename, typename T>
+class has_size_setter;
+
+////////////////////////////////////////////////////////////
+/// \brief Specialization of has_size_setter
+///
+////////////////////////////////////////////////////////////
+template<typename C, typename Ret, typename... Args>
+class has_size_setter<C, Ret(Args...)>
+{
+    template<typename T>
+    static constexpr auto check(T*) -> typename std::is_same<decltype(std::declval<T>().setSize(std::declval<Args>()...)), Ret>::type;
+
+    template<typename>
+    static constexpr std::false_type check(...);
+
+    typedef decltype(check<C>(0)) type;
+
+public:
+    static constexpr bool value = type::value;
+};
+
+} // namespace Core
+
 ////////////////////////////////////////////////////////////
 /// \brief Enumeration of the different container types
 ///
 ////////////////////////////////////////////////////////////
-enum ContainerType
+enum Align
 {
     Free,
     Vertical,
@@ -54,17 +93,16 @@ enum ContainerType
 /// \brief Container class
 ///
 ////////////////////////////////////////////////////////////
-template <class Content>
-class Container : public sf::Drawable, public sf::Transformable
+class Container : public Updatable, public sf::Drawable, public Core::Registrable
 {
 public:
     ////////////////////////////////////////////////////////////
-    /// \brief Default constructor
+    /// \brief Constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(ContainerType type = ContainerType::Free, const sf::Vector2f& size = sf::Vector2f(400, 400)) : mSize(size), mType(type), mSpacing(5), mContainer(new sf::Vector2f(0, 0)), mDeep(0, 0)
+                    Container(Align align = Align::Free, const sf::Vector2f& size = sf::Vector2f(400, 400)) : Registrable::Registrable(typeid(Container)), mSize(size), mAlign(align), mSpacing(5)
     {
-        static_assert(std::is_base_of<sf::Drawable, Content>::value && std::is_base_of<sf::Transformable, Content>::value, "Invalid type, must be Drawable and Transformable");
+        //ctor
     }
 
     ////////////////////////////////////////////////////////////
@@ -88,6 +126,7 @@ public:
     {
         mPosition = position;
         Transformable::setPosition(position);
+        update();
     }
 
     ////////////////////////////////////////////////////////////
@@ -101,7 +140,7 @@ public:
     ////////////////////////////////////////////////////////////
     void            setPosition(float x, float y)
     {
-        mPosition = sf::Vector2f{x, y};
+        mPosition = {x, y};
         Transformable::setPosition(x, y);
         update();
     }
@@ -134,27 +173,30 @@ public:
     }
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the main container of the container
+    /// \brief Set the align of the container
     ///
-    /// \param position Position of the container
+    /// \param align Align of the container
+    ///
+    /// \see getAlign
     ///
     ////////////////////////////////////////////////////////////
-    void            setContainer(sf::Vector2f& position)
+    void            setAlign(const Align& align)
     {
-        mContainer = &position;
+        mAlign = align;
         update();
     }
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the type of the container
+    /// \brief Get the align of the container
     ///
-    /// \param type Type of the container
+    /// \return The align of the container
+    ///
+    /// \see setAlign
     ///
     ////////////////////////////////////////////////////////////
-    void            setType(const ContainerType& type)
+    Align           getAlign() const
     {
-        mType = type;
-        update();
+        return mAlign;
     }
 
     ////////////////////////////////////////////////////////////
@@ -165,7 +207,7 @@ public:
     /// \see getSpacing
     ///
     ////////////////////////////////////////////////////////////
-    void            setSpacing(const sf::Uint16& spacing)
+    void            setSpacing(const uint32_t& spacing)
     {
         mSpacing = spacing;
         update();
@@ -179,21 +221,39 @@ public:
     /// \see setSpacing
     ///
     ////////////////////////////////////////////////////////////
-    sf::Uint16      getSpacing()
+    uint32_t        getSpacing()
     {
         return mSpacing;
     }
 
     ///////////////////////////////////////////////////////////
-    /// Overload of operator << to add a content to the container
+    /// Overload of operator << to add to the container
     ///
     ////////////////////////////////////////////////////////////
+    template <typename Content>
     Container&      operator <<(Content& content)
     {
-        content.setContainer(mPosition);
-        mContents.push_back(content);
-        update();
+        static_assert(Core::has_size_setter<Content, void(sf::Vector2f)>::value, "Invalid type, must have a size setter.");
+
+        add(&content, [&content](sf::Vector2f size)
+        {
+            content.setSize(std::move(size));
+        });
+
         return *this;
+    }
+
+    ///////////////////////////////////////////////////////////
+    /// \brief Add to the container
+    ///
+    /// \param content Pointer to the content to add
+    /// \param function_size Size setter of the content
+    ///
+    ////////////////////////////////////////////////////////////
+    void            add(sf::Transformable* content, std::function<void(const sf::Vector2f&)> function_size)
+    {
+        mContents.push_back(std::make_pair(content, function_size));
+        update();
     }
 
     ////////////////////////////////////////////////////////////
@@ -203,61 +263,84 @@ public:
     void            clear()
     {
         mContents.clear();
+        update();
     }
 
 protected:
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the contents to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    void            draw(sf::RenderTarget& target, sf::RenderStates states) const
-    {
-        states.transform *= getTransform();
-
-        for(auto&& it: mContents)
-            target.draw(it, states);
-    }
-
     ////////////////////////////////////////////////////////////
     /// \brief Update the contents
     ///
     ////////////////////////////////////////////////////////////
     virtual void    update()
     {
-        mDeep = *mContainer + mPosition;
-
-        for(auto&& it: mContents)
+        for(auto& content: mContents)
         {
-            int i = &it - &mContents[0];
+            int i = &content - &mContents[0];
 
-            mContents[i].get().setContainer(mDeep);
+            if(auto updatable = dynamic_cast<Updatable*>(content.first))
+            {
+                updatable->setInheritance(mPosition + mInPosition);
+            }
 
-            if(mType == ContainerType::Horizontal)
+            auto size = mSize;
+
+            if(mAlign == Align::Horizontal)
             {
-                mContents[i].get().setSize(sf::Vector2f((mSize.x - mSpacing) / mContents.size(), mSize.y));
-                mContents[i].get().setPosition(i * (mContents[i].get().getSize().x + mSpacing), 0);
+                size.x = (mSize.x - mSpacing * (mContents.size() - 1)) / mContents.size();
+
+                if(auto container = dynamic_cast<Container*>(content.first))
+                {
+                    container->setPosition(i * (size.x + mSpacing), 0);
+                }
+                else
+                {
+                    content.first->setPosition(i * (size.x + mSpacing), 0);
+                }
             }
-            else if(mType == ContainerType::Vertical)
+            else if(mAlign == Align::Vertical)
             {
-                mContents[i].get().setSize(sf::Vector2f(mSize.x, (mSize.y - mSpacing) / mContents.size()));
-                mContents[i].get().setPosition(0, i * (mContents[i].get().getSize().y + mSpacing));
+                size.y = (mSize.y - mSpacing * (mContents.size() - 1)) / mContents.size();
+
+                if(auto container = dynamic_cast<Container*>(content.first))
+                {
+                    container->setPosition(0, i * (size.y + mSpacing));
+                }
+                else
+                {
+                    content.first->setPosition(0, i * (size.y + mSpacing));
+                }
             }
+
+            content.second(size);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Draw the container to a render target
+    ///
+    /// \param target Render target to draw to
+    /// \param states Current render states
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    {
+        states.transform *= getTransform();
+
+        for(const auto& [content, setter] : mContents)
+        {
+            target.draw(*dynamic_cast<sf::Drawable*>(content), states);
         }
     }
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    std::vector<std::reference_wrapper<Content>>    mContents;  ///< All the contents
-    sf::Vector2f                                    mSize;      ///< Size of the container
-    sf::Vector2f                                    mPosition;  ///< Position of the container
-    ContainerType                                   mType;      ///< Type of the container
-    sf::Uint16                                      mSpacing;   ///< Space between the contents
-    sf::Vector2f*                                   mContainer; ///< Position of the container that contains it
-    sf::Vector2f                                    mDeep;      ///< Position after containers stacking
+    std::vector<std::pair<sf::Transformable*, std::function<void(sf::Vector2f)>>>   mContents;  ///< All the contents
+    sf::Vector2f                                                                    mSize;      ///< Size of the container
+    sf::Vector2f                                                                    mPosition;  ///< Position of the container
+    Align                                                                           mAlign;     ///< Align of the container
+    uint32_t                                                                        mSpacing;   ///< Space between the contents
+
 };
 
 } // namespace CNGui

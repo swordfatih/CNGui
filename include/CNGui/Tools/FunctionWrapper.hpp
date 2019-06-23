@@ -23,100 +23,111 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef LINEEDIT_HPP
-#define LINEEDIT_HPP
+#ifndef FUNCTIONWRAPPER_HPP
+#define FUNCTIONWRAPPER_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-// CNGui
-#include <CNGui/Objects/Object.hpp>
-#include <CNGui/Tools/Text.hpp>
-
-//SFML
-#include <SFML/Window/Clipboard.hpp>
-#include <SFML/OpenGL.hpp>
+#include <thread>
+#include <functional>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Class that creates a graphical line edit
+/// \brief Class that can store a function and execute it on
+/// another thread
 ///
 ////////////////////////////////////////////////////////////
-class LineEdit : public Object
+class FunctionWrapper
 {
 public:
-    using       Object::Object;
+    ////////////////////////////////////////////////////////////
+    /// \brief Default constructor
+    ///
+    ////////////////////////////////////////////////////////////
+                FunctionWrapper();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Return key pressed event
-    ///
-    /// \return Returns true on return key pressed
+    /// \brief Constructor that connects a function by default
     ///
     ////////////////////////////////////////////////////////////
-    bool        onReturn();
+                FunctionWrapper(const std::function<void(void)>& function);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Clear the output string
+    /// \brief Destructor that calls terminate
     ///
     ////////////////////////////////////////////////////////////
-    void        clear();
+    virtual     ~FunctionWrapper();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the output string
+    /// \brief Connect a function
     ///
-    /// \return Output string
+    /// \param function Function to connect
     ///
     ////////////////////////////////////////////////////////////
-    std::string getString();
+    void        connect(const std::function<void(void)>& function);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the default shown string of the text
+    /// \brief Get connected
     ///
-    /// \param string Default string
+    /// \return True if a function is connected
     ///
     ////////////////////////////////////////////////////////////
-    void        setDefaultString(const std::string& string);
+    bool        connected();
 
     ////////////////////////////////////////////////////////////
-    /// Overload of operator >> to read object's output
+    /// \brief Execute the connected function
+    ///
+    /// \return False if no function is connected or a function
+    /// is already running
     ///
     ////////////////////////////////////////////////////////////
-    LineEdit&   operator >>(std::string& output);
+    bool        execute();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Connect and execute a function
+    ///
+    /// \return False if a function is already running
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        execute(const std::function<void(void)>& function);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Terminate the thread by force
+    ///
+    ////////////////////////////////////////////////////////////
+    void        terminate();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get function running event
+    ///
+    /// \return True if function running
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        isRunning();
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
+    /// \brief Thread function
     ///
     ////////////////////////////////////////////////////////////
-    void        update();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    void        draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void        handle();
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape       mShape;                 ///< Underline shape
-    Shape       mBackground;            ///< Background shape
-    Shape       mCursor;                ///< Cursor shape
-    sf::Uint16  mPositionCursor = 0;    ///< Cursor position
-    Text        mLabel;                 ///< Label text
-    sf::Text    mOutput;                ///< Output text
-    std::string mString;                ///< Output string
-    std::string mDefault;               ///< Default string
-    sf::Clock   mAnimation;             ///< Cursor animation
-    bool        mOnReturn = false;      ///< On return key pressed
-    bool        mFirst = true;          ///< Not clicked yet
-
+    std::function<void(void)>   mFunction;  ///< Connected function
+    std::thread                 mHandle;    ///< Thread to execute the connected function on
+    std::mutex                  mMutex;     ///< Thread mutex
+    std::condition_variable     mCondition; ///< Condition variable
+    std::atomic_bool            mTerminate; ///< Terminate function
+    std::atomic_bool            mRunning;   ///< Function is running
 };
 
 } // namespace CNGui
 
-#endif // LINEEDIT_HPP
+#endif // FUNCTIONWRAPPER_HPP

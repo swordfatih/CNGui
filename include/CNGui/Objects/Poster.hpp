@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// CNGui - Chats Noirs Graphical User Interface
-// Copyright (c) 2018 Fatih (accfldekur@gmail.com)
+// CNGui 1.1 - Chats Noirs Graphical User Interface
+// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -31,8 +31,9 @@
 ////////////////////////////////////////////////////////////
 #include <CNGui/Objects/Object.hpp>
 #include <SFML/OpenGL.hpp>
-#include <CNGui/Utilities/Shape.hpp>
-#include <CNGui/Utilities/Text.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <CNGui/Tools/Shape.hpp>
+#include <CNGui/Tools/Text.hpp>
 
 namespace CNGui
 {
@@ -120,7 +121,7 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape           mShape;         ///< Shape of the poster
+    sf::Sprite      mSprite;        ///< Sprite of the poster
     Shape           mBackground;    ///< Background of the poster
     Shape           mLine;          ///< Separation line
     Text            mTitle;         ///< Title of the poster

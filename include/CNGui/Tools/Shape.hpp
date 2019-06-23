@@ -23,100 +23,121 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef LINEEDIT_HPP
-#define LINEEDIT_HPP
+#ifndef SHAPE_HPP
+#define SHAPE_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-// CNGui
-#include <CNGui/Objects/Object.hpp>
-#include <CNGui/Tools/Text.hpp>
-
-//SFML
-#include <SFML/Window/Clipboard.hpp>
-#include <SFML/OpenGL.hpp>
+#include <SFML/Graphics/Shape.hpp>
+#include <cmath>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Class that creates a graphical line edit
+/// \brief Class that creates a custom shape
 ///
 ////////////////////////////////////////////////////////////
-class LineEdit : public Object
+class Shape : public sf::Shape
 {
 public:
-    using       Object::Object;
+    ////////////////////////////////////////////////////////////
+    /// \brief Enumeration of the different shape types
+    ///
+    ////////////////////////////////////////////////////////////
+    enum                    Type
+    {
+        Triangle,
+        Rectangle,
+        RoundedRectangle,
+        Circle
+    };
 
     ////////////////////////////////////////////////////////////
-    /// \brief Return key pressed event
-    ///
-    /// \return Returns true on return key pressed
+    /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-    bool        onReturn();
+                            Shape(Type type = Type::Rectangle, sf::Vector2f size = sf::Vector2f(100, 50));
 
     ////////////////////////////////////////////////////////////
-    /// \brief Clear the output string
+    /// \brief Default destructor
     ///
     ////////////////////////////////////////////////////////////
-    void        clear();
+    virtual                 ~Shape();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the output string
+    /// \brief Set the type of the shape
     ///
-    /// \return Output string
+    /// \param type Type of the shape
+    ///
+    /// \see getType
     ///
     ////////////////////////////////////////////////////////////
-    std::string getString();
+    void                    setType(Type type);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the default shown string of the text
+    /// \brief Get the type of the shape
     ///
-    /// \param string Default string
+    /// \return The type of the shape
+    ///
+    /// \see setType
     ///
     ////////////////////////////////////////////////////////////
-    void        setDefaultString(const std::string& string);
+    Type                    getType();
 
     ////////////////////////////////////////////////////////////
-    /// Overload of operator >> to read object's output
+    /// \brief Set the size of the shape
+    ///
+    /// \param size Size of the shape
+    ///
+    /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    LineEdit&   operator >>(std::string& output);
+    void                    setSize(sf::Vector2f size);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the size of the shape
+    ///
+    /// \return The size of the shape
+    ///
+    /// \see setSize
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::Vector2f            getSize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the number of points defining the shape
+    ///
+    /// \return Number of points of the shape
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual std::size_t     getPointCount() const;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get a point of the rectangle
+    ///
+    /// The returned point is in local coordinates, that is,
+    /// the shape's transforms (position, rotation, scale) are
+    /// not taken into account.
+    /// The result is undefined if \a index is out of the valid range.
+    ///
+    /// \param index Index of the point to get
+    ///
+    /// \return index-th point of the shape
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual sf::Vector2f    getPoint(std::size_t index) const;
+
+protected:
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
-    ///
-    ////////////////////////////////////////////////////////////
-    void        update();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    void        draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape       mShape;                 ///< Underline shape
-    Shape       mBackground;            ///< Background shape
-    Shape       mCursor;                ///< Cursor shape
-    sf::Uint16  mPositionCursor = 0;    ///< Cursor position
-    Text        mLabel;                 ///< Label text
-    sf::Text    mOutput;                ///< Output text
-    std::string mString;                ///< Output string
-    std::string mDefault;               ///< Default string
-    sf::Clock   mAnimation;             ///< Cursor animation
-    bool        mOnReturn = false;      ///< On return key pressed
-    bool        mFirst = true;          ///< Not clicked yet
-
+    Type            mType;  ///< Type of the shape
+    sf::Vector2f    mSize;  ///< Size of the shape
 };
 
 } // namespace CNGui
 
-#endif // LINEEDIT_HPP
+#endif // SHAPE_HPP

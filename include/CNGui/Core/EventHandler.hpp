@@ -23,78 +23,88 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef EVENTHANDLER_HPP
+#define EVENTHANDLER_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 //CNGui
-#include <CNGui/Objects/Object.hpp>
-#include <CNGui/Tools/Shape.hpp>
-#include <CNGui/Tools/Text.hpp>
+#include <CNGui/Core/Registration.hpp>
+
+//SFML
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/Event.hpp>
+
+//Standard
+#include <map>
 
 namespace CNGui
 {
+
 ////////////////////////////////////////////////////////////
-/// \brief Class that creates a graphical button
+/// \brief Class that holds SFML events that can be useless
+/// further in the code
 ///
 ////////////////////////////////////////////////////////////
-class Button : public Object
+class EventHandler : public Core::Registrable
 {
 public:
-    using Object::Object;
+    ////////////////////////////////////////////////////////////
+    /// \brief Default constructor
+    ///
+    ////////////////////////////////////////////////////////////
+                EventHandler();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Click event
-    ///
-    /// \return Returns true on button click
+    /// \brief Default destructor
     ///
     ////////////////////////////////////////////////////////////
-    bool onClick();
+    virtual     ~EventHandler();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Release event
+    /// \brief Returns the event if the event associated to the given
+    /// EventType is active
     ///
-    /// \return Returns true on button release
+    /// \param type The EventType associated with the event
+    ///
+    /// \return nullptr if the event isn't active
     ///
     ////////////////////////////////////////////////////////////
-    bool onRelease();
+    sf::Event*  get_if(const sf::Event::EventType& type);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Hover event
+    /// \brief Insert an event to the map
     ///
-    /// \return Returns true when button hovered
+    /// \param event The event to push
     ///
     ////////////////////////////////////////////////////////////
-    bool onHover();
+    void        push(sf::Event event);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Clear the event map
+    ///
+    ////////////////////////////////////////////////////////////
+    void        clear();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Process all events
+    ///
+    /// \param window Window used to poll events
+    ///
+    ////////////////////////////////////////////////////////////
+    void        process(sf::Window& window);
+
+protected:
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
-    ///
-    ////////////////////////////////////////////////////////////
-    void update();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape           mShape;             ///< Shape of the button
-    Text            mLabel;             ///< Label of the button
-    bool            mClicked = false;   ///< Button clicked
-    bool            mReleased = false;  ///< Button released
-    bool            mHover = false;     ///< Hovering the button
+    std::map<sf::Event::EventType, sf::Event>   mEventMap;  ///< Map that holds every events
+
 };
 
 } // namespace CNGui
 
-#endif // BUTTON_HPP
+#endif // EVENTHANDLER_HPP

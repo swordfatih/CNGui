@@ -23,78 +23,61 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef UPDATABLE_HPP_INCLUDED
+#define UPDATABLE_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-//CNGui
-#include <CNGui/Objects/Object.hpp>
-#include <CNGui/Tools/Shape.hpp>
-#include <CNGui/Tools/Text.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Class that creates a graphical button
+/// \brief Base class for updatable classes, keeping a
+/// pointer on the transform of the parent container if is
+/// contained by any
 ///
 ////////////////////////////////////////////////////////////
-class Button : public Object
+class Updatable : public sf::Transformable
 {
 public:
-    using Object::Object;
+    ////////////////////////////////////////////////////////////
+    virtual ~Updatable()
+    {
+
+    }
 
     ////////////////////////////////////////////////////////////
-    /// \brief Click event
-    ///
-    /// \return Returns true on button click
-    ///
-    ////////////////////////////////////////////////////////////
-    bool onClick();
+    void setInheritance(const sf::Vector2f& position)
+    {
+        mContained = true;
+        mInPosition = position;
+        update();
+    }
 
     ////////////////////////////////////////////////////////////
-    /// \brief Release event
-    ///
-    /// \return Returns true on button release
-    ///
-    ////////////////////////////////////////////////////////////
-    bool onRelease();
+    bool isContained()
+    {
+        return mContained;
+    }
 
+protected:
     ////////////////////////////////////////////////////////////
-    /// \brief Hover event
-    ///
-    /// \return Returns true when button hovered
-    ///
-    ////////////////////////////////////////////////////////////
-    bool onHover();
+    virtual void update()
+    {
 
-private:
-    ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
-    ///
-    ////////////////////////////////////////////////////////////
-    void update();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
-    ///
-    /// \param target Render target to draw to
-    /// \param states Current render states
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    }
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape           mShape;             ///< Shape of the button
-    Text            mLabel;             ///< Label of the button
-    bool            mClicked = false;   ///< Button clicked
-    bool            mReleased = false;  ///< Button released
-    bool            mHover = false;     ///< Hovering the button
+    bool            mContained = false;     ///< Is contained
+    sf::Vector2f    mInPosition = {0, 0};  ///< Inherited position
+
 };
 
 } // namespace CNGui
 
-#endif // BUTTON_HPP
+
+#endif // UPDATABLE_HPP_INCLUDED
