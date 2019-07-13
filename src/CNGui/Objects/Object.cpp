@@ -138,7 +138,7 @@ sf::FloatRect Object::getGlobalBounds() const
 {
     if(mContained)
     {
-        return sf::FloatRect(getPosition() - mInPosition, mSize);
+        return sf::FloatRect(getPosition() + mInPosition, mSize);
     }
 
     return {getPosition(), mSize};
