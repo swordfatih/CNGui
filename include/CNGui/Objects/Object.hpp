@@ -59,7 +59,7 @@ public:
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Object(const std::string& id, const Style& style = {}, const sf::Vector2f& size = sf::Vector2f(100, 50));
+                    Object(const std::string& name = "Object", const Style& style = {}, const sf::Vector2f& size = sf::Vector2f(100, 50));
 
     ////////////////////////////////////////////////////////////
     /// \brief Default destructor
