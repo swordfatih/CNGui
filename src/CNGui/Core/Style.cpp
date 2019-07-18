@@ -29,33 +29,32 @@ namespace CNGui
 {
 ////////////////////////////////////////////////////////////
 Style::Style() :
-    shape(Shape::Rectangle),
-    charactersize(24),
-    fillcolor(200, 200, 200),
-    hovercolor(100, 100, 100),
-    clickedcolor(230, 130, 60),
-    labelcolor(255, 255, 255),
-    labelhovercolor(220, 220, 220),
-    labelclickedcolor(200, 100, 30),
     selectable(false),
+    title(true),
     outline(false),
-    outlinethickness(3),
-    outlinecolor(150, 150, 150),
-    outlinehovercolor(50, 50, 50),
-    outlineclickedcolor(150, 80, 20),
-    backgroundcolor(sf::Color::Transparent),
-    backgroundhovercolor(sf::Color::Transparent),
-    backgroundclickedcolor(sf::Color::Transparent),
-    animated(true),
-    label(true),
-    durationanimation(sf::seconds(3)),
-    outputcharactersize(16),
-    labelstyle(sf::Text::Regular),
-    outputstyle(sf::Text::Regular),
-    outputhide(' ')
+    animation(true),
+    animation_duration(sf::seconds(3)),
+
+    main_shape(Shape::Rectangle),
+    main_color({200, 200, 200}, {100, 100, 100}, {230, 130, 60}),
+
+    background_shape(Shape::Rectangle),
+    background_color(sf::Color::Transparent, sf::Color::Transparent, sf::Color::Transparent),
+
+    title_style(sf::Text::Regular),
+    title_size(24),
+    title_color({255, 255, 255}, {220, 220, 220}, {200, 100, 30}),
+
+    output_style(sf::Text::Regular),
+    output_size(16),
+    output_color({255, 255, 255}, {220, 220, 220}, {200, 100, 30}),
+    output_hide(' '),
+
+    outline_thickness(3),
+    outline_color({150, 150, 150}, {50, 50, 50}, {150, 80, 20})
 {
-    font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
-    outputfont.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
+    title_font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
+    output_font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
 }
 
 ////////////////////////////////////////////////////////////
