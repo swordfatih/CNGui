@@ -51,9 +51,9 @@ void Button::update()
     //Updating the style of the button
     if(mUpdate)
     {
-        mShape.setType(mStyle.shape);
-        mShape.setFillColor(mStyle.fillcolor);
-        mShape.setTexture(&mStyle.texturebackground);
+        mShape.setType(mStyle.main_shape);
+        mShape.setFillColor(mStyle.main_color.neutral);
+        mShape.setTexture(&mStyle.main_texture);
 
         if(!mStyle.outline)
         {
@@ -61,30 +61,30 @@ void Button::update()
         }
         else
         {
-            mShape.setSize(sf::Vector2f(mSize.x - mStyle.outlinethickness * 2, mSize.y - mStyle.outlinethickness * 2));
-            mShape.setOutlineColor(mStyle.outlinecolor);
-            mShape.setOutlineThickness(mStyle.outlinethickness);
-            mShape.setPosition(mStyle.outlinethickness, mStyle.outlinethickness);
+            mShape.setSize(sf::Vector2f(mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2));
+            mShape.setOutlineColor(mStyle.outline_color.neutral);
+            mShape.setOutlineThickness(mStyle.outline_thickness);
+            mShape.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
         }
 
-        if(mStyle.label)
+        if(mStyle.title)
         {
-            mLabel.setFont(mStyle.font);
-            mLabel.setFillColor(mStyle.labelcolor);
-            mLabel.setStyle(mStyle.labelstyle);
-            mLabel.setCharacterSize(mStyle.charactersize);
+            mLabel.setFont(mStyle.title_font);
+            mLabel.setFillColor(mStyle.title_color.neutral);
+            mLabel.setStyle(mStyle.title_style);
+            mLabel.setCharacterSize(mStyle.title_size);
             mLabel.setString(mName);
-            if(mStyle.shape == CNGui::Shape::Rectangle || mStyle.shape == CNGui::Shape::RoundedRectangle)
+            if(mStyle.main_shape == CNGui::Shape::Rectangle || mStyle.main_shape == CNGui::Shape::RoundedRectangle)
             {
                 mLabel.setSize(sf::Vector2f(mShape.getSize().x - mShape.getSize().x * 0.05, mShape.getSize().y));
                 mLabel.setPosition(mShape.getPosition().x - mLabel.getLocalBounds().left + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y - mLabel.getLocalBounds().top + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2);
             }
-            else if(mStyle.shape == CNGui::Shape::Triangle)
+            else if(mStyle.main_shape == CNGui::Shape::Triangle)
             {
                 mLabel.setSize(sf::Vector2f(mShape.getSize().x / 3, mShape.getSize().y / 3));
                 mLabel.setPosition(mShape.getPosition().x - mLabel.getLocalBounds().left + mShape.getSize().x / 2 - mLabel.getGlobalBounds().width / 2, mShape.getPosition().y - mLabel.getLocalBounds().top + mShape.getSize().y / 2 - mLabel.getGlobalBounds().height / 2);
             }
-            else if(mStyle.shape == CNGui::Shape::Circle)
+            else if(mStyle.main_shape == CNGui::Shape::Circle)
             {
                 sf::Uint16 center;
                 if(mSize.x > mSize.y)
@@ -132,16 +132,16 @@ void Button::update()
         //Button is pressed
         if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mStyle.selectable) || (event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left && mStyle.selectable))
         {
-            mShape.setFillColor(mStyle.clickedcolor);
-            mLabel.setFillColor(mStyle.labelclickedcolor);
-            mShape.setOutlineColor(mStyle.outlineclickedcolor);
+            mShape.setFillColor(mStyle.main_color.clicked);
+            mLabel.setFillColor(mStyle.title_color.clicked);
+            mShape.setOutlineColor(mStyle.outline_color.clicked);
             mReturn = true;
         }
         else if(!mStyle.selectable || (mStyle.selectable && !mReturn))
         {
-            mShape.setFillColor(mStyle.hovercolor);
-            mLabel.setFillColor(mStyle.labelhovercolor);
-            mShape.setOutlineColor(mStyle.outlinehovercolor);
+            mShape.setFillColor(mStyle.main_color.hovered);
+            mLabel.setFillColor(mStyle.title_color.hovered);
+            mShape.setOutlineColor(mStyle.outline_color.hovered);
         }
     }
     else
@@ -153,9 +153,9 @@ void Button::update()
         auto event_mouse = mHandleEvent.get_if(sf::Event::MouseButtonPressed);
         if((!mStyle.selectable) || (mStyle.selectable && !mReturn) || (mStyle.selectable && mReturn && event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left))
         {
-            mShape.setFillColor(mStyle.fillcolor);
-            mLabel.setFillColor(mStyle.labelcolor);
-            mShape.setOutlineColor(mStyle.outlinecolor);
+            mShape.setFillColor(mStyle.main_color.neutral);
+            mLabel.setFillColor(mStyle.title_color.neutral);
+            mShape.setOutlineColor(mStyle.outline_color.neutral);
 
             if(mReturn)
             {
@@ -172,7 +172,7 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     target.draw(mShape, states);
 
-    if(mStyle.label)
+    if(mStyle.title)
     {
         target.draw(mLabel, states);
     }
