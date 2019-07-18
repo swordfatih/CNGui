@@ -51,10 +51,7 @@ struct InteractiveColor
     /// \brief Default constructor
     ///
     ////////////////////////////////////////////////////////////
-    InteractiveColor()
-    {
-
-    }
+    InteractiveColor();
 
     ////////////////////////////////////////////////////////////
     /// \brief Complete constructor
@@ -64,12 +61,7 @@ struct InteractiveColor
     /// \param color_clicked Clicked color
     ///
     ////////////////////////////////////////////////////////////
-    InteractiveColor(sf::Color color_neutral, sf::Color color_hovered, sf::Color color_clicked)
-    {
-        neutral = std::move(color_neutral);
-        hovered = std::move(color_hovered);
-        clicked = std::move(color_clicked);
-    }
+    InteractiveColor(sf::Color color_neutral, sf::Color color_hovered, sf::Color color_clicked);
 
     ////////////////////////////////////////////////////////////
     /// \brief Homogeneous constructor
@@ -77,10 +69,7 @@ struct InteractiveColor
     /// \param color Color
     ///
     ////////////////////////////////////////////////////////////
-    InteractiveColor(sf::Color color)
-    {
-        homogeneous(std::move(color));
-    }
+    InteractiveColor(sf::Color color);
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the same color for all the states
@@ -88,11 +77,7 @@ struct InteractiveColor
     /// \param color Color
     ///
     ////////////////////////////////////////////////////////////
-    void homogeneous(sf::Color color)
-    {
-        neutral = std::move(color);
-        hovered = clicked = neutral;
-    }
+    void homogeneous(sf::Color color);
 };
 
 ////////////////////////////////////////////////////////////
