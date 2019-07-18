@@ -1,4 +1,4 @@
-**Many things are changing with the 1.1 version, the following text is about CNGui 1.0**
+**Many things are changing with the 1.1 version (master branch), the following text is about CNGui 1.0. This branch is not stable.**
 
 # CNGui 1.1 (in development)
 
