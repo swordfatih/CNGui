@@ -77,37 +77,37 @@ void Poster::update()
     //Updating the style of the button
     if(mUpdate)
     {
-        mSprite.setTexture(mStyle.texturebackground);
+        mSprite.setTexture(mStyle.background_texture);
         mSprite.setScale(mSize.x / mSprite.getLocalBounds().width, mSize.y / mSprite.getLocalBounds().height);
 
-        mBackground.setFillColor(mStyle.backgroundcolor);
+        mBackground.setFillColor(mStyle.background_color.neutral);
         mBackground.setSize({mSprite.getGlobalBounds().width, mSprite.getGlobalBounds().height});
 
-        mTitle.setFont(mStyle.font);
-        mTitle.setCharacterSize(mStyle.charactersize);
-        mTitle.setFillColor(mStyle.fillcolor);
+        mTitle.setFont(mStyle.title_font);
+        mTitle.setCharacterSize(mStyle.title_size);
+        mTitle.setFillColor(mStyle.main_color.neutral);
         mTitle.setString(mName);
-        mTitle.setSize(sf::Vector2f(mSprite.getGlobalBounds().width - mStyle.outlinethickness * 2, mTitle.getCharacterSize()));
+        mTitle.setSize(sf::Vector2f(mSprite.getGlobalBounds().width - mStyle.outline_thickness * 2, mTitle.getCharacterSize()));
 
-        mDate.setFont(mStyle.font);
-        mDate.setCharacterSize(mStyle.charactersize - 12);
-        mDate.setFillColor(mStyle.labelcolor);
+        mDate.setFont(mStyle.title_font);
+        mDate.setCharacterSize(mStyle.title_size - 12);
+        mDate.setFillColor(mStyle.title_color.neutral);
         mDate.setSize(sf::Vector2f(mTitle.getSize().x, mDate.getCharacterSize()));
 
-        mLine.setFillColor(mStyle.outlinecolor);
-        mLine.setSize(sf::Vector2f(mSprite.getGlobalBounds().width, mStyle.outlinethickness));
+        mLine.setFillColor(mStyle.outline_color.neutral);
+        mLine.setSize(sf::Vector2f(mSprite.getGlobalBounds().width, mStyle.outline_thickness));
 
-        mDescription.setFont(mStyle.outputfont);
-        mDescription.setCharacterSize(mStyle.outputcharactersize);
-        mDescription.setFillColor(mStyle.labelcolor);
-        mDescription.setStyle(mStyle.labelstyle);
+        mDescription.setFont(mStyle.output_font);
+        mDescription.setCharacterSize(mStyle.output_size);
+        mDescription.setFillColor(mStyle.output_color.neutral);
+        mDescription.setStyle(mStyle.output_style);
         mDescription.setSize({mTitle.getSize().x, mSprite.getGlobalBounds().height});
 
-        mTitle.setPosition(mStyle.outlinethickness - mTitle.getLocalBounds().left, mSprite.getPosition().y + mSprite.getGlobalBounds().height - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
+        mTitle.setPosition(mStyle.outline_thickness - mTitle.getLocalBounds().left, mSprite.getPosition().y + mSprite.getGlobalBounds().height - mTitle.getGlobalBounds().height * 1.25 - mDate.getGlobalBounds().height - mDate.getLocalBounds().top - mTitle.getLocalBounds().top);
         mBackground.setPosition(0, mTitle.getPosition().y);
-        mDate.setPosition(mStyle.outlinethickness - mDate.getLocalBounds().left, mTitle.getPosition().y + mTitle.getLocalBounds().top + mTitle.getGlobalBounds().height * 1.25 - mDate.getLocalBounds().top);
+        mDate.setPosition(mStyle.outline_thickness - mDate.getLocalBounds().left, mTitle.getPosition().y + mTitle.getLocalBounds().top + mTitle.getGlobalBounds().height * 1.25 - mDate.getLocalBounds().top);
         mLine.setPosition(0, mDate.getPosition().y + mDate.getLocalBounds().top + mDate.getGlobalBounds().height + mLine.getSize().y * 2);
-        mDescription.setPosition(mStyle.outlinethickness - mBackground.getLocalBounds().left, mLine.getPosition().y + mLine.getSize().y * 2 - mBackground.getLocalBounds().top);
+        mDescription.setPosition(mStyle.outline_thickness - mBackground.getLocalBounds().left, mLine.getPosition().y + mLine.getSize().y * 2 - mBackground.getLocalBounds().top);
 
         mUpdate = false;
     }
