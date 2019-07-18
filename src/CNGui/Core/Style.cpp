@@ -28,6 +28,33 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
+InteractiveColor::InteractiveColor()
+{
+
+}
+
+////////////////////////////////////////////////////////////
+InteractiveColor::InteractiveColor(sf::Color color_neutral, sf::Color color_hovered, sf::Color color_clicked)
+{
+    neutral = std::move(color_neutral);
+    hovered = std::move(color_hovered);
+    clicked = std::move(color_clicked);
+}
+
+////////////////////////////////////////////////////////////
+InteractiveColor::InteractiveColor(sf::Color color)
+{
+    homogeneous(std::move(color));
+}
+
+////////////////////////////////////////////////////////////
+void InteractiveColor::homogeneous(sf::Color color)
+{
+    neutral = std::move(color);
+    hovered = clicked = neutral;
+}
+
+////////////////////////////////////////////////////////////
 Style::Style() :
     selectable(false),
     title(true),
