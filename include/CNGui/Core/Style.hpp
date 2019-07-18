@@ -38,6 +38,64 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
+/// \brief Color struct for interactive objects
+///
+////////////////////////////////////////////////////////////
+struct InteractiveColor
+{
+    sf::Color neutral;
+    sf::Color hovered;
+    sf::Color clicked;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Default constructor
+    ///
+    ////////////////////////////////////////////////////////////
+    InteractiveColor()
+    {
+
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Complete constructor
+    ///
+    /// \param color_neutral Neutral color
+    /// \param color_hovered Hovered color
+    /// \param color_clicked Clicked color
+    ///
+    ////////////////////////////////////////////////////////////
+    InteractiveColor(sf::Color color_neutral, sf::Color color_hovered, sf::Color color_clicked)
+    {
+        neutral = std::move(color_neutral);
+        hovered = std::move(color_hovered);
+        clicked = std::move(color_clicked);
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Homogeneous constructor
+    ///
+    /// \param color Color
+    ///
+    ////////////////////////////////////////////////////////////
+    InteractiveColor(sf::Color color)
+    {
+        homogeneous(std::move(color));
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the same color for all the states
+    ///
+    /// \param color Color
+    ///
+    ////////////////////////////////////////////////////////////
+    void homogeneous(sf::Color color)
+    {
+        neutral = std::move(color);
+        hovered = clicked = neutral;
+    }
+};
+
+////////////////////////////////////////////////////////////
 /// \brief Utility struct for manipulating object styles
 ///
 ////////////////////////////////////////////////////////////
@@ -60,33 +118,41 @@ struct Style
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Shape::Type     shape;                  ///< Shape of the object
-    sf::Uint16      charactersize;          ///< Character size of the label, resized if higher than the height of the object
-    sf::Font        font;                   ///< Font of the label
-    sf::Color       fillcolor;              ///< Color of the object
-    sf::Color       hovercolor;             ///< Color of the object when hovering
-    sf::Color       clickedcolor;           ///< Color of the object on click
-    sf::Color       labelcolor;             ///< Color of the label
-    sf::Color       labelhovercolor;        ///< Color of the label when hovering
-    sf::Color       labelclickedcolor;      ///< Color of the label on click
-    bool            selectable;             ///< The object is selectable
-    bool            outline;                ///< The object has an outline
-    sf::Uint16      outlinethickness;       ///< Thickness of the outline
-    sf::Color       outlinecolor;           ///< Color of the outline
-    sf::Color       outlinehovercolor;      ///< Color of the outline when hovering
-    sf::Color       outlineclickedcolor;    ///< Color of the outline on click
-    sf::Color       backgroundcolor;        ///< Color of the background of the object
-    sf::Color       backgroundhovercolor;   ///< Color of the background of the object when hovering
-    sf::Color       backgroundclickedcolor; ///< Color of the background of the object on click
-    bool            animated;               ///< The object is animated if it is possible
-    bool            label;                  ///< The label of the object is shown
-    sf::Time        durationanimation;      ///< Duration of the object's animation
-    sf::Texture     texturebackground;      ///< Background texture of the object
-    sf::Uint16      outputcharactersize;    ///< Character size of the output text of the object
-    sf::Font        outputfont;             ///< Secondary font of the output text
-    sf::Text::Style labelstyle;             ///< Style of the label
-    sf::Text::Style outputstyle;            ///< Style of the output text
-    char            outputhide;             ///< Character to hide the output with
+
+    //Properties
+    bool                selectable;             ///< Enable selectable
+    bool                title;                  ///< Enable title label
+    bool                outline;                ///< Enable outline
+    bool                animation;              ///< Enable animation if exists
+    sf::Time            animation_duration;     ///< Duration of the animation
+
+    //Main component
+    Shape::Type         main_shape;             ///< Shape type of the main component
+    sf::Texture         main_texture;           ///< Texture of the main component
+    InteractiveColor    main_color;             ///< Color of the main component
+
+    //Background if exists
+    Shape::Type         background_shape;       ///< Shape type of the background
+    sf::Texture         background_texture;     ///< Texture of the background
+    InteractiveColor    background_color;       ///< Color of the background
+
+    //Title label
+    sf::Font            title_font;             ///< Font of the title label
+    sf::Text::Style     title_style;            ///< Style of the title label
+    sf::Uint16          title_size;             ///< Character size of the title label, resized if higher than the height of the object
+    InteractiveColor    title_color;            ///< Color of the title label
+
+    //Output label if exists
+    sf::Font            output_font;            ///< Font of the output text
+    sf::Text::Style     output_style;           ///< Style of the output text
+    sf::Uint16          output_size;            ///< Character size of the output text of the object
+    InteractiveColor    output_color;           ///< Color of the output label
+    char                output_hide;            ///< Hide character of the output
+
+    //Outline
+    sf::Uint16          outline_thickness;      ///< Thickness of the outline
+    InteractiveColor    outline_color;          ///< Color of the outline
+
 };
 
 } // namespace CNGui
