@@ -262,8 +262,15 @@ public:
     ////////////////////////////////////////////////////////////
     void            clear()
     {
+        for(auto& content: mContents)
+        {
+            if(auto updatable = dynamic_cast<Updatable*>(content.first))
+            {
+                updatable->setInheritance(false);
+            }
+        }
+
         mContents.clear();
-        update();
     }
 
 protected:
@@ -275,11 +282,11 @@ protected:
     {
         for(auto& content: mContents)
         {
-            int i = &content - &mContents[0];
+            size_t index = &content - &mContents[0];
 
             if(auto updatable = dynamic_cast<Updatable*>(content.first))
             {
-                updatable->setInheritance(mPosition + mInPosition);
+                updatable->setInheritance(true, mPosition + mInPosition);
             }
 
             auto size = mSize;
@@ -290,11 +297,11 @@ protected:
 
                 if(auto container = dynamic_cast<Container*>(content.first))
                 {
-                    container->setPosition(i * (size.x + mSpacing), 0);
+                    container->setPosition(index * (size.x + mSpacing), 0);
                 }
                 else
                 {
-                    content.first->setPosition(i * (size.x + mSpacing), 0);
+                    content.first->setPosition(index * (size.x + mSpacing), 0);
                 }
             }
             else if(mAlign == Align::Vertical)
@@ -303,11 +310,11 @@ protected:
 
                 if(auto container = dynamic_cast<Container*>(content.first))
                 {
-                    container->setPosition(0, i * (size.y + mSpacing));
+                    container->setPosition(0, index * (size.y + mSpacing));
                 }
                 else
                 {
-                    content.first->setPosition(0, i * (size.y + mSpacing));
+                    content.first->setPosition(0, index * (size.y + mSpacing));
                 }
             }
 
