@@ -35,7 +35,7 @@ set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/src")
 include_directories("${INCLUDE_PATH}")
 include_directories("${SOURCE_PATH}")
 
-add_library(cngui 
+add_library(cngui
 	"${INCLUDE_PATH}/CNGui/CNGui.hpp"
 	"${INCLUDE_PATH}/CNGui/Core/Style.hpp"
 	"${INCLUDE_PATH}/CNGui/Core/Registration.hpp"
@@ -53,6 +53,7 @@ add_library(cngui
 	"${INCLUDE_PATH}/CNGui/Tools/Font.hpp"
 	"${SOURCE_PATH}/CNGui/Core/Registration.cpp"
 	"${SOURCE_PATH}/CNGui/Core/EventHandler.cpp"
+	"${SOURCE_PATH}/CNGui/Core/Updatable.cpp"
 	"${SOURCE_PATH}/CNGui/Core/Style.cpp"
 	"${SOURCE_PATH}/CNGui/Objects/Object.cpp"
 	"${SOURCE_PATH}/CNGui/Objects/LineEdit.cpp"
