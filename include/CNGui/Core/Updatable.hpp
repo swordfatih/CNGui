@@ -29,13 +29,14 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/Vector2.hpp>
 
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-/// \brief Base class for updatable classes, keeping a
-/// pointer on the transform of the parent container if is
+/// \brief Base class for updatable classes, keeping in
+/// memory the position of the parent container if is
 /// contained by any
 ///
 ////////////////////////////////////////////////////////////
@@ -43,37 +44,43 @@ class Updatable : public sf::Transformable
 {
 public:
     ////////////////////////////////////////////////////////////
-    virtual ~Updatable()
-    {
-
-    }
+    /// \brief Default virtual destructor
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual ~Updatable();
 
     ////////////////////////////////////////////////////////////
-    void setInheritance(const sf::Vector2f& position)
-    {
-        mContained = true;
-        mInPosition = position;
-        update();
-    }
+    /// \brief Set the inheritance of the class
+    ///
+    /// \param contained If the class is contained by another
+    /// \param position Inherited position.
+    ///
+    /// \see isContained
+    ///
+    ////////////////////////////////////////////////////////////
+    void setInheritance(bool contained, const sf::Vector2f& position = {0, 0});
 
     ////////////////////////////////////////////////////////////
-    bool isContained()
-    {
-        return mContained;
-    }
+    /// \brief If the class is contained by another
+    ///
+    /// \see setInheritance
+    ///
+    ////////////////////////////////////////////////////////////
+    bool isContained();
 
 protected:
     ////////////////////////////////////////////////////////////
-    virtual void update()
-    {
-
-    }
+    /// \brief Overload this function to update internally your
+    /// class
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void update();
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
     bool            mContained = false;     ///< Is contained
-    sf::Vector2f    mInPosition = {0, 0};  ///< Inherited position
+    sf::Vector2f    mInPosition = {0, 0};   ///< Inherited position
 
 };
 
