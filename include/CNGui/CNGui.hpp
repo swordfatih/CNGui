@@ -24,6 +24,6 @@
 #include <CNGui/Objects/ProgressIndicator.hpp>
 #include <CNGui/Objects/LineEdit.hpp>
 #include <CNGui/Objects/Poster.hpp>
-#include <CNGui/Objects/Category.hpp>
+#include <CNGui/Objects/Category.hpp> 
 
 #endif // CNGUI_HPP_INCLUDED
