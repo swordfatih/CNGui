@@ -309,7 +309,7 @@ void LineEdit::draw(sf::RenderTarget& target, sf::RenderStates states) const
     auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
     auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
 
-    if(mContained)
+    if(isContained())
     {
         glScissor(scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y);
     }
