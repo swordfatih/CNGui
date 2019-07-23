@@ -44,7 +44,8 @@ namespace CNGui
 class Poster : public Object
 {
 public:
-    using Object::Object;
+    ////////////////////////////////////////////////////////////
+    using           Object::Object;
 
     ////////////////////////////////////////////////////////////
     /// \brief Hover event
@@ -52,7 +53,7 @@ public:
     /// \return Returns true when poster hovered
     ///
     ////////////////////////////////////////////////////////////
-    bool onHover();
+    bool            onHover();
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the description of the poster
@@ -62,7 +63,7 @@ public:
     /// \see getDescription
     ///
     ////////////////////////////////////////////////////////////
-    void setDescription(const std::string& description);
+    void            setDescription(const std::string& description);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the description of the poster
@@ -72,7 +73,7 @@ public:
     /// \see setDescription
     ///
     ////////////////////////////////////////////////////////////
-    std::string getDescription();
+    std::string     getDescription();
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the date of the poster
@@ -82,7 +83,7 @@ public:
     /// \see getDate
     ///
     ////////////////////////////////////////////////////////////
-    void setDate(const std::string& date);
+    void            setDate(const std::string& date);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the date of the poster
@@ -92,7 +93,7 @@ public:
     /// \see setDate
     ///
     ////////////////////////////////////////////////////////////
-    std::string getDate();
+    std::string     getDate();
 
 private:
     ////////////////////////////////////////////////////////////
@@ -101,13 +102,13 @@ private:
     /// \param t Time
     ///
     ////////////////////////////////////////////////////////////
-    float easeInOutCirc(float t);
+    float           easeInOutCirc(float t);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
+    /// \brief Update the object
     ///
     ////////////////////////////////////////////////////////////
-    void update();
+    virtual void    update();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -116,7 +117,7 @@ private:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     // Member data
