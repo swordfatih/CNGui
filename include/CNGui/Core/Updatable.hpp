@@ -35,6 +35,9 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
+class Container;
+
+////////////////////////////////////////////////////////////
 /// \brief Base class for updatable classes, keeping in
 /// memory the position of the parent container if is
 /// contained by any
@@ -52,13 +55,14 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Set the inheritance of the class
     ///
-    /// \param contained If the class is contained by another
-    /// \param position Inherited position.
+    /// \param contained If it is contained
+    /// \param parent Pointer to the parent container
+    /// \param position Inherited position
     ///
     /// \see isContained
     ///
     ////////////////////////////////////////////////////////////
-    void setInheritance(bool contained, const sf::Vector2f& position = {0, 0});
+    void setInheritance(bool contained, Container* parent = nullptr, const sf::Vector2f& position = {0, 0});
 
     ////////////////////////////////////////////////////////////
     /// \brief If the class is contained by another
@@ -66,7 +70,7 @@ public:
     /// \see setInheritance
     ///
     ////////////////////////////////////////////////////////////
-    bool isContained();
+    bool isContained() const;
 
 protected:
     ////////////////////////////////////////////////////////////
@@ -79,7 +83,8 @@ protected:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    bool            mContained = false;     ///< Is contained
+    Container*      mParent = nullptr;      ///< Parent container
+    bool            mContained = false;     ///< Contained
     sf::Vector2f    mInPosition = {0, 0};   ///< Inherited position
 
 };
