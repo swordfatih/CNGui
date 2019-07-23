@@ -34,15 +34,15 @@ Updatable::~Updatable()
 }
 
 ////////////////////////////////////////////////////////////
-void Updatable::setInheritance(bool contained, const sf::Vector2f& position)
+void Updatable::setInheritance(bool contained, Container* parent, const sf::Vector2f& position)
 {
-    mContained = contained;
+    mParent = std::move(parent);
+    mContained = std::move(contained);
     mInPosition = position;
-    update();
 }
 
 ////////////////////////////////////////////////////////////
-bool Updatable::isContained()
+bool Updatable::isContained() const
 {
     return mContained;
 }
