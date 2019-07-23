@@ -42,7 +42,8 @@ namespace CNGui
 class ProgressIndicator : public Object
 {
 public:
-    using Object::Object;
+    ////////////////////////////////////////////////////////////
+    using           Object::Object;
 
     ////////////////////////////////////////////////////////////
     /// \brief Add progression to the indicator
@@ -52,7 +53,7 @@ public:
     /// \see setProgression
     ///
     ////////////////////////////////////////////////////////////
-    void add(float progression);
+    void            add(float progression);
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the progression of the indicator
@@ -62,7 +63,7 @@ public:
     /// \see getProgression
     ///
     ////////////////////////////////////////////////////////////
-    void setProgression(float progression);
+    void            setProgression(float progression);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the progression of the indicator
@@ -72,7 +73,7 @@ public:
     /// \see setProgression
     ///
     ////////////////////////////////////////////////////////////
-    float getProgression();
+    float           getProgression();
 
 private:
     ////////////////////////////////////////////////////////////
@@ -81,13 +82,13 @@ private:
     /// \param t Time
     ///
     ////////////////////////////////////////////////////////////
-    float easeInOutCirc(float t);
+    float           easeInOutCirc(float t);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
+    /// \brief Update the object
     ///
     ////////////////////////////////////////////////////////////
-    void update();
+    virtual void    update();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -96,7 +97,7 @@ private:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     // Member data
