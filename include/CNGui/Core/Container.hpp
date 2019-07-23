@@ -79,10 +79,10 @@ public:
 } // namespace Core
 
 ////////////////////////////////////////////////////////////
-/// \brief Enumeration of the different container types
+/// \brief Enumeration for the different alignments
 ///
 ////////////////////////////////////////////////////////////
-enum Align
+enum Alignment
 {
     Free,
     Vertical,
@@ -97,10 +97,21 @@ class Container : public Updatable, public sf::Drawable, public Core::Registrabl
 {
 public:
     ////////////////////////////////////////////////////////////
+    /// \brief Enumeration for the different modes
+    ///
+    ////////////////////////////////////////////////////////////
+    enum Mode
+    {
+        Stacked,
+        Static,
+        Dynamic
+    };
+
+    ////////////////////////////////////////////////////////////
     /// \brief Constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(Align align = Align::Free, const sf::Vector2f& size = sf::Vector2f(400, 400)) : Registrable::Registrable(typeid(Container)), mSize(size), mAlign(align), mSpacing(5)
+                    Container(Alignment align = Alignment::Free, const sf::Vector2f& size = sf::Vector2f(400, 400), Mode mode = Mode::Static) : Registrable::Registrable(typeid(Container)), mSize(size), mAlign(std::move(align)), mMode(std::move(mode)), mSpacing(5)
     {
         //ctor
     }
@@ -119,14 +130,18 @@ public:
     ///
     /// \param position New position
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     /// \see getPosition
     ///
     ////////////////////////////////////////////////////////////
-    void            setPosition(const sf::Vector2f& position)
+    Container&      setPosition(const sf::Vector2f& position)
     {
         mPosition = position;
         Transformable::setPosition(position);
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -135,14 +150,18 @@ public:
     /// \param x X coordinate of the new position
     /// \param y Y coordinate of the new position
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     /// \see getPosition
     ///
     ////////////////////////////////////////////////////////////
-    void            setPosition(float x, float y)
+    Container&      setPosition(float x, float y)
     {
         mPosition = {x, y};
         Transformable::setPosition(x, y);
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -150,13 +169,17 @@ public:
     ///
     /// \param size New size
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    void            setSize(const sf::Vector2f& size)
+    Container&      setSize(const sf::Vector2f& size)
     {
         mSize = size;
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -167,7 +190,7 @@ public:
     /// \see setSize
     ///
     ////////////////////////////////////////////////////////////
-    sf::Vector2f    getSize()
+    sf::Vector2f    getSize() const
     {
         return mSize;
     }
@@ -177,13 +200,17 @@ public:
     ///
     /// \param align Align of the container
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     /// \see getAlign
     ///
     ////////////////////////////////////////////////////////////
-    void            setAlign(const Align& align)
+    Container&      setAlign(Alignment align)
     {
-        mAlign = align;
+        mAlign = std::move(align);
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -194,9 +221,40 @@ public:
     /// \see setAlign
     ///
     ////////////////////////////////////////////////////////////
-    Align           getAlign() const
+    Alignment       getAlign() const
     {
         return mAlign;
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Set the mode of the container
+    ///
+    /// \param mode Mode of the container
+    ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
+    /// \see getMode
+    ///
+    ////////////////////////////////////////////////////////////
+    Container&      setMode(Mode mode)
+    {
+        mMode = std::move(mode);
+        update();
+
+        return *this;
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the mode of the container
+    ///
+    /// \return The mode of the container
+    ///
+    /// \see setMode
+    ///
+    ////////////////////////////////////////////////////////////
+    Mode            getMode() const
+    {
+        return mMode;
     }
 
     ////////////////////////////////////////////////////////////
@@ -204,13 +262,17 @@ public:
     ///
     /// \param spacing Space between the contents
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     /// \see getSpacing
     ///
     ////////////////////////////////////////////////////////////
-    void            setSpacing(const uint32_t& spacing)
+    Container&      setSpacing(const uint32_t& spacing)
     {
         mSpacing = spacing;
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -221,7 +283,7 @@ public:
     /// \see setSpacing
     ///
     ////////////////////////////////////////////////////////////
-    uint32_t        getSpacing()
+    uint32_t        getSpacing() const
     {
         return mSpacing;
     }
@@ -237,7 +299,12 @@ public:
 
         add(&content, [&content](sf::Vector2f size)
         {
-            content.setSize(std::move(size));
+            if(size.x != 0 && size.y != 0)
+            {
+                content.setSize(std::move(size));
+            }
+
+            return content.getSize();
         });
 
         return *this;
@@ -249,11 +316,15 @@ public:
     /// \param content Pointer to the content to add
     /// \param function_size Size setter of the content
     ///
+    /// \return Returns a reference to *this, so that calls can be chained
+    ///
     ////////////////////////////////////////////////////////////
-    void            add(sf::Transformable* content, std::function<void(const sf::Vector2f&)> function_size)
+    Container&      add(sf::Transformable* content, std::function<sf::Vector2f(sf::Vector2f)> function_size)
     {
         mContents.push_back(std::make_pair(content, function_size));
         update();
+
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -273,55 +344,97 @@ public:
         mContents.clear();
     }
 
-protected:
     ////////////////////////////////////////////////////////////
     /// \brief Update the contents
     ///
     ////////////////////////////////////////////////////////////
     virtual void    update()
     {
+        size_t size_accumulated = 0;
+
         for(auto& content: mContents)
         {
             size_t index = &content - &mContents[0];
 
             if(auto updatable = dynamic_cast<Updatable*>(content.first))
             {
-                updatable->setInheritance(true, mPosition + mInPosition);
+                updatable->setInheritance(true, this, mPosition + mInPosition);
+
+                if(auto container = dynamic_cast<Container*>(updatable))
+                {
+                    container->update();
+                }
             }
 
-            auto size = mSize;
+            auto size_object = content.second({0, 0});
+            sf::Vector2f position_object = {0, 0};
 
-            if(mAlign == Align::Horizontal)
+            if(mAlign == Alignment::Horizontal)
             {
-                size.x = (mSize.x - mSpacing * (mContents.size() - 1)) / mContents.size();
-
-                if(auto container = dynamic_cast<Container*>(content.first))
+                if(mMode != Mode::Stacked)
                 {
-                    container->setPosition(index * (size.x + mSpacing), 0);
+                    size_object.y = mSize.y;
+                }
+
+                if(mMode == Mode::Static)
+                {
+                    size_object.x = (mSize.x - mSpacing * (mContents.size() - 1)) / mContents.size();
+                    position_object.x = index * (size_object.x + mSpacing);
                 }
                 else
                 {
-                    content.first->setPosition(index * (size.x + mSpacing), 0);
+                    position_object.x = size_accumulated + index * mSpacing;
+                    size_accumulated += size_object.x;
                 }
             }
-            else if(mAlign == Align::Vertical)
+            else if(mAlign == Alignment::Vertical)
             {
-                size.y = (mSize.y - mSpacing * (mContents.size() - 1)) / mContents.size();
-
-                if(auto container = dynamic_cast<Container*>(content.first))
+                if(mMode != Mode::Stacked)
                 {
-                    container->setPosition(0, index * (size.y + mSpacing));
+                    size_object.x = mSize.x;
+                }
+
+                if(mMode == Mode::Static)
+                {
+                    size_object.y = (mSize.y - mSpacing * (mContents.size() - 1)) / mContents.size();
+                    position_object.y = index * (size_object.y + mSpacing);
                 }
                 else
                 {
-                    content.first->setPosition(0, index * (size.y + mSpacing));
+                    position_object.y = size_accumulated + index * mSpacing;
+                    size_accumulated += size_object.y;
                 }
             }
 
-            content.second(size);
+            if(auto container = dynamic_cast<Container*>(content.first))
+            {
+                container->setPosition(position_object);
+            }
+            else
+            {
+                content.first->setPosition(position_object);
+            }
+
+            if(mMode != Mode::Stacked)
+            {
+                content.second(size_object);
+            }
+        }
+
+        if(mMode != Mode::Static)
+        {
+            if(mAlign == Alignment::Horizontal)
+            {
+                mSize.x = size_accumulated + (mContents.size() - 1) * mSpacing;
+            }
+            else if(mAlign == Alignment::Vertical)
+            {
+                mSize.y = size_accumulated + (mContents.size() - 1) * mSpacing;
+            }
         }
     }
 
+protected:
     ////////////////////////////////////////////////////////////
     /// \brief Draw the container to a render target
     ///
@@ -342,11 +455,12 @@ protected:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    std::vector<std::pair<sf::Transformable*, std::function<void(sf::Vector2f)>>>   mContents;  ///< All the contents
-    sf::Vector2f                                                                    mSize;      ///< Size of the container
-    sf::Vector2f                                                                    mPosition;  ///< Position of the container
-    Align                                                                           mAlign;     ///< Align of the container
-    uint32_t                                                                        mSpacing;   ///< Space between the contents
+    std::vector<std::pair<sf::Transformable*, std::function<sf::Vector2f(sf::Vector2f)>>>   mContents;  ///< All the contents
+    sf::Vector2f                                                                            mSize;      ///< Size of the container
+    sf::Vector2f                                                                            mPosition;  ///< Position of the container
+    Alignment                                                                               mAlign;     ///< Alignment of the container
+    Mode                                                                                    mMode;      ///< Mode of the container
+    uint32_t                                                                                mSpacing;   ///< Space between the contents
 
 };
 
