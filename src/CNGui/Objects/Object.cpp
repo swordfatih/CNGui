@@ -28,7 +28,7 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Object::Object(const std::string& name, const Style& style, const sf::Vector2f& size) : Registrable::Registrable(typeid(Object)), mName(name), mSize(size), mHandleEvent(*Registrable::getRegisteredInstances<EventHandler>()[0]), mStyle(style), mUpdate(true),  mReturn(false)
+Object::Object(const std::string& name, const Style& style, const sf::Vector2f& size) : Registrable::Registrable(typeid(Object)), mName(name), mSize(size), mHandleEvent(*Registrable::getRegisteredInstances<EventHandler>()[0]), mStyle(style), mUpdate(true), mReturn(false)
 {
 
 }
@@ -136,7 +136,7 @@ sf::Vector2f Object::getSize()
 ////////////////////////////////////////////////////////////
 sf::FloatRect Object::getGlobalBounds() const
 {
-    if(mContained)
+    if(isContained())
     {
         return sf::FloatRect(getPosition() + mInPosition, mSize);
     }
