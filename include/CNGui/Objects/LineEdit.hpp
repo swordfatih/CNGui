@@ -46,7 +46,8 @@ namespace CNGui
 class LineEdit : public Object
 {
 public:
-    using       Object::Object;
+    ////////////////////////////////////////////////////////////
+    using           Object::Object;
 
     ////////////////////////////////////////////////////////////
     /// \brief Return key pressed event
@@ -54,13 +55,13 @@ public:
     /// \return Returns true on return key pressed
     ///
     ////////////////////////////////////////////////////////////
-    bool        onReturn();
+    bool            onReturn();
 
     ////////////////////////////////////////////////////////////
     /// \brief Clear the output string
     ///
     ////////////////////////////////////////////////////////////
-    void        clear();
+    void            clear();
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the output string
@@ -68,7 +69,7 @@ public:
     /// \return Output string
     ///
     ////////////////////////////////////////////////////////////
-    std::string getString();
+    std::string     getString();
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the default shown string of the text
@@ -76,20 +77,20 @@ public:
     /// \param string Default string
     ///
     ////////////////////////////////////////////////////////////
-    void        setDefaultString(const std::string& string);
+    void            setDefaultString(const std::string& string);
 
     ////////////////////////////////////////////////////////////
     /// Overload of operator >> to read object's output
     ///
     ////////////////////////////////////////////////////////////
-    LineEdit&   operator >>(std::string& output);
+    LineEdit&       operator >>(std::string& output);
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
+    /// \brief Update the object
     ///
     ////////////////////////////////////////////////////////////
-    void        update();
+    virtual void    update();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -98,7 +99,7 @@ private:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    void        draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     // Member data
