@@ -43,7 +43,8 @@ namespace CNGui
 class Button : public Object
 {
 public:
-    using Object::Object;
+    ////////////////////////////////////////////////////////////
+    using           Object::Object;
 
     ////////////////////////////////////////////////////////////
     /// \brief Click event
@@ -51,7 +52,7 @@ public:
     /// \return Returns true on button click
     ///
     ////////////////////////////////////////////////////////////
-    bool onClick();
+    bool            onClick();
 
     ////////////////////////////////////////////////////////////
     /// \brief Release event
@@ -59,7 +60,7 @@ public:
     /// \return Returns true on button release
     ///
     ////////////////////////////////////////////////////////////
-    bool onRelease();
+    bool            onRelease();
 
     ////////////////////////////////////////////////////////////
     /// \brief Hover event
@@ -67,14 +68,14 @@ public:
     /// \return Returns true when button hovered
     ///
     ////////////////////////////////////////////////////////////
-    bool onHover();
+    bool            onHover();
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Updates the object
+    /// \brief Update the object
     ///
     ////////////////////////////////////////////////////////////
-    void update();
+    virtual void    update();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -83,7 +84,7 @@ private:
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     // Member data
