@@ -84,10 +84,10 @@ void Category::update()
             //Title
             mTitle.setString(mName);
             mTitle.setCharacterSize(mStyle.title_size);
-            mTitle.setSize({mBackground.getSize().x - mArrow.getPoint(2).y - 10, mBackground.getSize().y});
             mTitle.setFont(mStyle.title_font);
             mTitle.setFillColor(mStyle.title_color.neutral);
             mTitle.setStyle(mStyle.title_style);
+            mTitle.setSize({mBackground.getSize().x - mArrow.getPoint(2).y * mArrow.getScale().y - 10, mBackground.getSize().y});
             mTitle.setPosition(mBackground.getPosition().x + mArrow.getPoint(2).y * mArrow.getScale().y - mTitle.getLocalBounds().left + 10, mBackground.getSize().y / 2 - mTitle.getGlobalBounds().height / 2 - mTitle.getLocalBounds().top + mStyle.outline_thickness);
         }
         else
@@ -101,11 +101,20 @@ void Category::update()
         }
         else
         {
+            mArrow.setRotation(90);
             mContainer.setPosition(mSizeClosed.x, 0);
         }
 
         mContainer.setInheritance(true, mParent, getPosition() + mInPosition);
         mContainer.update();
+
+        for(const auto& content: mContainer.retrieve())
+        {
+            if(auto updatable = dynamic_cast<Updatable*>(content))
+            {
+                updatable->update();
+            }
+        }
 
         mUpdate = false;
     }
@@ -124,13 +133,29 @@ void Category::update()
 
             if(mReturn)
             {
-                mArrow.setRotation(90);
-                mSize.y = mSizeClosed.y + mContainer.getSize().y;
+                if(mContainer.getAlign() == Alignment::Vertical)
+                {
+                    mArrow.setRotation(90);
+                    mSize.y = mSizeClosed.y + mContainer.getSize().y;
+                }
+                else
+                {
+                    mArrow.setRotation(0);
+                    mSize.x = mSizeClosed.x + mContainer.getSize().x;
+                }
             }
             else
             {
-                mArrow.setRotation(0);
-                mSize.y = mSizeClosed.y;
+                if(mContainer.getAlign() == Alignment::Vertical)
+                {
+                    mArrow.setRotation(0);
+                    mSize.y = mSizeClosed.y;
+                }
+                else
+                {
+                    mArrow.setRotation(90);
+                    mSize.x = mSizeClosed.x;
+                }
             }
 
             if(isContained())
