@@ -37,8 +37,6 @@
 //SFML
 #include <SFML/Graphics/ConvexShape.hpp>
 
-#include <iostream>
-
 namespace CNGui
 {
 
