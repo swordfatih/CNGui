@@ -434,6 +434,25 @@ public:
         }
     }
 
+    /////////////////////////////////////////////////
+    /// \brief Retrieve all the contents
+    ///
+    /// \return A table of pointers to the contents
+    ///
+    /////////////////////////////////////////////////
+    std::vector<sf::Transformable*> retrieve() const
+    {
+        std::vector<sf::Transformable*> pointers;
+        pointers.reserve(mContents.size());
+
+        for(const auto& content: mContents)
+        {
+            pointers.push_back(content.first);
+        }
+
+        return pointers;
+    }
+
 protected:
     ////////////////////////////////////////////////////////////
     /// \brief Draw the container to a render target
