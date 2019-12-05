@@ -43,6 +43,9 @@ namespace CNGui
 {
 
 ////////////////////////////////////////////////////////////
+class Updatable;
+
+////////////////////////////////////////////////////////////
 /// \brief Class that holds SFML events that can be useless
 /// further in the code
 ///
@@ -63,8 +66,8 @@ public:
     virtual     ~EventHandler();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Returns the event if the event associated to the given
-    /// EventType is active
+    /// \brief Returns the event if the event associated to the
+    /// given EventType is active
     ///
     /// \param type The EventType associated with the event
     ///
@@ -74,7 +77,19 @@ public:
     sf::Event*  get_if(const sf::Event::EventType& type);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Insert an event to the map
+    /// \brief Check if the given event associated to the given
+    /// updatable instance is active
+    ///
+    /// \param updatable Pointer to the updatable
+    /// \param event The event to check
+    ///
+    /// \return bool Returns true if given event is active
+    ///
+    ////////////////////////////////////////////////////////////
+    bool        active(Updatable* updatable, std::string event);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Insert an SFML event
     ///
     /// \param event The event to push
     ///
@@ -82,7 +97,32 @@ public:
     void        push(sf::Event event);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Clear the event map
+    /// \brief Insert an event associated to an updatable instance
+    ///
+    /// \param updatable Pointer to the updatable
+    /// \param event The event to push
+    ///
+    ////////////////////////////////////////////////////////////
+    void        push(Updatable* updatable, std::string event);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Translate (copy) events associated to an updatable
+    /// instance to another one
+    ///
+    /// \param listener Listener instance
+    /// \param translator Translator instance
+    ///
+    ////////////////////////////////////////////////////////////
+    void        translate(Updatable* listener, Updatable* translator);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Clear an event associated to an updatable instance
+    ///
+    ////////////////////////////////////////////////////////////
+    void        clear(Updatable* updatable, std::string event);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Clear the events
     ///
     ////////////////////////////////////////////////////////////
     void        clear();
@@ -101,8 +141,8 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    std::map<sf::Event::EventType, sf::Event>   mEventMap;  ///< Map that holds every events
-
+    std::map<sf::Event::EventType, sf::Event>       mEventSf;   ///< Map that holds every events associated to a EventType
+    std::map<Updatable*, std::vector<std::string>>  mEventUp;   ///< Map that holds every events associated to an updatable instance
 };
 
 } // namespace CNGui

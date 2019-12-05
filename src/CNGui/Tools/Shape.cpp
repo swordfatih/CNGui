@@ -60,7 +60,7 @@ void Shape::setSize(sf::Vector2f size)
 }
 
 ////////////////////////////////////////////////////////////
-sf::Vector2f Shape::getSize()
+sf::Vector2f Shape::getSize() const
 {
     return mSize;
 }

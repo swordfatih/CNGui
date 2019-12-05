@@ -1,6 +1,5 @@
 #include <CNGui/CNGui.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <filesystem>
 
 ///////////////////////////////////////////////////////////
@@ -78,30 +77,52 @@ int main()
         buttons.push_back(std::move(button));
     }
 
-    //Container
-    CNGui::Container container_main(CNGui::Vertical, {100, 600});
-    container_main.setPosition(420, 50);
-    container_main.setSpacing(0);
+    //Container buttons
+    CNGui::Container container_buttons(CNGui::Vertical, {100, 600});
+    container_buttons.setSpacing(0);
 
     for(auto& button: buttons)
     {
-        container_main << button;
+        container_buttons << button;
     }
 
     //Background
     sf::ConvexShape shape_background(5);
     shape_background.setFillColor({50, 50, 50});
 
-    float left = container_main.getPosition().x;
-    float right = container_main.getPosition().x + container_main.getSize().x;
-    float top = container_main.getPosition().y - buttons[0].getSize().y / 2;
-    float bottom = container_main.getPosition().y + container_main.getSize().y;
+    float left = 0;
+    float right = container_buttons.getSize().x;
+    float top = 0;
+    float bottom = container_buttons.getSize().y;
 
     shape_background.setPoint(0, {left, top});
     shape_background.setPoint(1, {left + buttons[0].getSize().x / 2, top});
     shape_background.setPoint(2, {right, top + buttons[0].getSize().y / 2});
     shape_background.setPoint(3, {right, bottom});
     shape_background.setPoint(4, {left, bottom});
+
+    //Container main
+    CNGui::Container container_main(CNGui::Free);
+    container_main.add(&shape_background, [&shape_background](sf::Vector2f size)
+    {
+        if(size.x != 0 && size.y != 0)
+        {
+            shape_background.setScale(size.x / shape_background.getGlobalBounds().width, size.y / shape_background.getGlobalBounds().height);
+        }
+
+        return sf::Vector2f{shape_background.getGlobalBounds().width * shape_background.getScale().x, shape_background.getGlobalBounds().height * shape_background.getScale().y};
+    });
+
+    container_main << container_buttons;
+
+    CNGui::Style style_category;
+    style_category.outline = true;
+    style_category.background_color = {{50, 50, 50}, {20, 20, 20}, {45, 89, 125}};
+    style_category.title_size = 48;
+
+    CNGui::Category category("Menu", style_category, {150, 100});
+    category.internal().setAlign(CNGui::Vertical).setMode(CNGui::Container::Static).setSize({150, 600});
+    category.internal() << container_main;
 
     while(window.isOpen())
     {
@@ -112,42 +133,44 @@ int main()
             window.close();
         }
 
-        if(auto event = handleEvent.get_if(sf::Event::MouseWheelMoved))
+        if(category(window))
         {
-            size_t index = last_index;
-            if(event->mouseWheel.delta > 1)
+            if(auto event = handleEvent.get_if(sf::Event::MouseWheelMoved))
             {
-                index++;
-
-                if(index >= buttons.size())
+                size_t index = last_index;
+                if(event->mouseWheel.delta > 1)
                 {
-                    index = 0;
-                }
-            }
-            else
-            {
-                index--;
+                    index++;
 
-                if(last_index == 0)
+                    if(index >= buttons.size())
+                    {
+                        index = 0;
+                    }
+                }
+                else
                 {
-                    index = buttons.size() - 1;
+                    index--;
+
+                    if(last_index == 0)
+                    {
+                        index = buttons.size() - 1;
+                    }
                 }
+
+                switch_button(container_buttons, buttons, last_index, index);
             }
 
-            switch_button(container_main, buttons, last_index, index);
-        }
-
-        for(auto& button: buttons)
-        {
-            if(button(window) && button.onClick())
+            for(auto& button: buttons)
             {
-                switch_button(container_main, buttons, last_index, &button - &buttons[0]);
-                break;
+                if(button(window) && handleEvent.active(&button, "click"))
+                {
+                    switch_button(container_buttons, buttons, last_index, &button - &buttons[0]);
+                    break;
+                }
             }
         }
 
         window.clear();
-        window.draw(shape_background);
         CNGui::Core::draw(window);
         window.display();
     }

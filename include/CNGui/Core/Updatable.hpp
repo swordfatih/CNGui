@@ -29,14 +29,15 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+//CNGui
+#include <CNGui/Core/EventHandler.hpp>
+#include <CNGui/Core/Registration.hpp>
+
+//SFML
 #include <SFML/Graphics/Transformable.hpp>
-#include <SFML/System/Vector2.hpp>
 
 namespace CNGui
 {
-////////////////////////////////////////////////////////////
-class Container;
-
 ////////////////////////////////////////////////////////////
 /// \brief Base class for updatable classes, keeping in
 /// memory the position of the parent container if is
@@ -47,22 +48,28 @@ class Updatable : public sf::Transformable
 {
 public:
     ////////////////////////////////////////////////////////////
+    /// \brief Constructor
+    ///
+    ////////////////////////////////////////////////////////////
+                    Updatable();
+
+    ////////////////////////////////////////////////////////////
     /// \brief Default virtual destructor
     ///
     ////////////////////////////////////////////////////////////
-    virtual ~Updatable();
+    virtual         ~Updatable();
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the inheritance of the class
     ///
     /// \param contained If it is contained
-    /// \param parent Pointer to the parent container
     /// \param position Inherited position
+    /// \param parent Pointer to the parent instance
     ///
     /// \see isContained
     ///
     ////////////////////////////////////////////////////////////
-    void setInheritance(bool contained, Container* parent = nullptr, const sf::Vector2f& position = {0, 0});
+    void            setInheritance(bool contained, Updatable* parent = nullptr, const sf::Vector2f& position = {0, 0});
 
     ////////////////////////////////////////////////////////////
     /// \brief If the class is contained by another
@@ -70,22 +77,24 @@ public:
     /// \see setInheritance
     ///
     ////////////////////////////////////////////////////////////
-    bool isContained() const;
+    bool            isContained() const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Overload this function to update internally your
     /// class
     ///
     ////////////////////////////////////////////////////////////
-    virtual void update();
+    virtual void    update();
 
 protected:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Container*      mParent = nullptr;      ///< Parent container
-    bool            mContained = false;     ///< Contained
-    sf::Vector2f    mInPosition = {0, 0};   ///< Inherited position
+    Updatable*      mParent = nullptr;              ///< Parent container
+    bool            mContained = false;             ///< Contained
+    sf::Vector2f    mInPosition = {0, 0};           ///< Inherited position
+    EventHandler&   mHandleEvent;                   ///< Event handler
+    sf::FloatRect   mDisplayArea = {0, 0, 0, 0};    ///< Display area
 
 };
 

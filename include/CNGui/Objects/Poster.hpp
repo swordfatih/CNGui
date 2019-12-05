@@ -29,11 +29,15 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+//CNGui
 #include <CNGui/Objects/Object.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <CNGui/Tools/Shape.hpp>
 #include <CNGui/Tools/Text.hpp>
+#include <CNGui/Tools/Easing.hpp>
+#include <CNGui/Tools/Scissors.hpp>
+
+//SFML
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace CNGui
 {
@@ -97,18 +101,16 @@ public:
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Ease in out circle function
-    ///
-    /// \param t Time
+    /// \brief Stylize the object
     ///
     ////////////////////////////////////////////////////////////
-    float           easeInOutCirc(float t);
+    virtual void stylize();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Update the object
+    /// \brief Manage the object
     ///
     ////////////////////////////////////////////////////////////
-    virtual void    update();
+    virtual void manage();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target

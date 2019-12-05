@@ -34,94 +34,161 @@ Container& Category::internal()
 }
 
 ////////////////////////////////////////////////////////////
-void Category::update()
+bool Category::state() const
 {
-    if(mInit)
+    return mReturn;
+}
+
+////////////////////////////////////////////////////////////
+void Category::initialize()
+{
+    mSizeClosed = mSize;
+
+    for(const auto& updatable: mContainer.retrieve<Updatable>())
     {
-        mSizeClosed = mSize;
-        mInit = false;
+        updatable->update();
+    }
+}
+
+////////////////////////////////////////////////////////////
+void Category::stylize()
+{
+    //Background
+    mBackground.setType(mStyle.background_shape);
+    mBackground.setFillColor(mStyle.background_color.neutral);
+    mBackground.setTexture(&mStyle.background_texture);
+
+    if(mStyle.outline)
+    {
+        mBackground.setSize(mSizeClosed - sf::Vector2f(mStyle.outline_thickness * 2, mStyle.outline_thickness * 2));
+        mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
+        mBackground.setOutlineColor(mStyle.outline_color.neutral);
+        mBackground.setOutlineThickness(mStyle.outline_thickness);
+    }
+    else
+    {
+        mBackground.setSize(mSizeClosed);
+        mBackground.setOutlineThickness(0);
+        mBackground.setPosition(0, 0);
     }
 
-    if(mUpdate)
+    //Arrow
+    mArrow.setPointCount(4);
+    mArrow.setPoint(0, {0, 0});
+    mArrow.setPoint(1, {25, 20});
+    mArrow.setPoint(2, {0, 40});
+    mArrow.setPoint(3, {10, 20});
+
+    mArrow.setOrigin(mArrow.getPoint(3));
+    mArrow.setFillColor(mStyle.main_color.neutral);
+    mArrow.setTexture(&mStyle.main_texture);
+
+    float factor = mBackground.getSize().y / 100;
+    mArrow.setScale(factor, factor);
+
+    if(mStyle.title)
     {
-        //Background
-        mBackground.setType(mStyle.background_shape);
-        mBackground.setFillColor(mStyle.background_color.neutral);
-        mBackground.setTexture(&mStyle.background_texture);
+        mArrow.setPosition(mBackground.getPosition().x + mArrow.getPoint(2).y * mArrow.getScale().y / 2, mBackground.getPosition().y + mBackground.getSize().y / 2);
 
-        if(mStyle.outline)
-        {
-            mBackground.setSize(mSizeClosed - sf::Vector2f(mStyle.outline_thickness * 2, mStyle.outline_thickness * 2));
-            mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
-            mBackground.setOutlineColor(mStyle.outline_color.neutral);
-            mBackground.setOutlineThickness(mStyle.outline_thickness);
-        }
-        else
-        {
-            mBackground.setSize(mSizeClosed);
-            mBackground.setOutlineThickness(0);
-            mBackground.setPosition(0, 0);
-        }
+        //Title
+        mTitle.setString(mName);
+        mTitle.setCharacterSize(mStyle.title_size);
+        mTitle.setFont(mStyle.title_font);
+        mTitle.setFillColor(mStyle.title_color.neutral);
+        mTitle.setStyle(mStyle.title_style);
+        mTitle.setSize({mBackground.getSize().x - mArrow.getPoint(2).y * mArrow.getScale().y - 10, mBackground.getSize().y});
+        mTitle.setPosition(mBackground.getPosition().x + mArrow.getPoint(2).y * mArrow.getScale().y - mTitle.getLocalBounds().left + 10, mBackground.getSize().y / 2 - mTitle.getGlobalBounds().height / 2 - mTitle.getLocalBounds().top + mStyle.outline_thickness);
+    }
+    else
+    {
+        mArrow.setPosition(mBackground.getPosition().x + mBackground.getSize().x / 2, mBackground.getPosition().y + mBackground.getSize().y / 2);
+    }
 
-        //Arrow
-        mArrow.setPointCount(4);
-        mArrow.setPoint(0, {0, 0});
-        mArrow.setPoint(1, {25, 20});
-        mArrow.setPoint(2, {0, 40});
-        mArrow.setPoint(3, {10, 20});
+    if(mContainer.getAlign() == Alignment::Vertical)
+    {
+        mContainer.setPosition(0, mSizeClosed.y);
+    }
+    else
+    {
+        mArrow.setRotation(90);
+        mContainer.setPosition(mSizeClosed.x, 0);
+    }
 
-        mArrow.setOrigin(mArrow.getPoint(3));
-        mArrow.setFillColor(mStyle.main_color.neutral);
-        mArrow.setTexture(&mStyle.main_texture);
-
-        float factor = mBackground.getSize().y / 100;
-        mArrow.setScale(factor, factor);
-
-        if(mStyle.title)
-        {
-            mArrow.setPosition(mBackground.getPosition().x + mArrow.getPoint(2).y / 2 * mArrow.getScale().y, mBackground.getPosition().y + mBackground.getSize().y / 2);
-
-            //Title
-            mTitle.setString(mName);
-            mTitle.setCharacterSize(mStyle.title_size);
-            mTitle.setFont(mStyle.title_font);
-            mTitle.setFillColor(mStyle.title_color.neutral);
-            mTitle.setStyle(mStyle.title_style);
-            mTitle.setSize({mBackground.getSize().x - mArrow.getPoint(2).y * mArrow.getScale().y - 10, mBackground.getSize().y});
-            mTitle.setPosition(mBackground.getPosition().x + mArrow.getPoint(2).y * mArrow.getScale().y - mTitle.getLocalBounds().left + 10, mBackground.getSize().y / 2 - mTitle.getGlobalBounds().height / 2 - mTitle.getLocalBounds().top + mStyle.outline_thickness);
-        }
-        else
-        {
-            mArrow.setPosition(mBackground.getPosition().x + mBackground.getSize().x / 2, mBackground.getPosition().y + mBackground.getSize().y / 2);
-        }
-
+    if(mContainer.getMode() != Container::Mode::Stacked)
+    {
         if(mContainer.getAlign() == Alignment::Vertical)
         {
-            mContainer.setPosition(0, mSizeClosed.y);
+            mContainer.setSize({mSize.x, mContainer.getSize().y});
+        }
+        else if(mContainer.getAlign() == Alignment::Horizontal)
+        {
+            mContainer.setSize({mContainer.getSize().x, mSize.y});
+        }
+    }
+
+    mContainer.setInheritance(true, this, getPosition() + mInPosition);
+    mContainer.update();
+}
+
+////////////////////////////////////////////////////////////
+void Category::manage()
+{
+    //Update size
+    auto update_size = [&]()
+    {
+        if(mReturn)
+        {
+            if(mContainer.getAlign() == Alignment::Vertical)
+            {
+                mArrow.setRotation(90);
+                mSize.y = mSizeClosed.y + mContainer.getSize().y;
+
+                if(mContainer.getMode() == Container::Mode::Stacked)
+                {
+                    mSize.x = mContainer.getSize().x;
+                }
+            }
+            else if(mContainer.getAlign() == Alignment::Horizontal)
+            {
+                mArrow.setRotation(0);
+                mSize.x = mSizeClosed.x + mContainer.getSize().x;
+
+                if(mContainer.getMode() == Container::Mode::Stacked)
+                {
+                    mSize.y = mContainer.getSize().y;
+                }
+            }
         }
         else
         {
-            mArrow.setRotation(90);
-            mContainer.setPosition(mSizeClosed.x, 0);
-        }
-
-        mContainer.setInheritance(true, mParent, getPosition() + mInPosition);
-        mContainer.update();
-
-        for(const auto& content: mContainer.retrieve())
-        {
-            if(auto updatable = dynamic_cast<Updatable*>(content))
+            if(mContainer.getAlign() == Alignment::Vertical)
             {
-                updatable->update();
+                mArrow.setRotation(0);
+                mSize.y = mSizeClosed.y;
+
+                if(mContainer.getMode() == Container::Mode::Stacked)
+                {
+                    mSize.x = mSizeClosed.x;
+                }
+            }
+            else if(mContainer.getAlign() == Alignment::Horizontal)
+            {
+                mArrow.setRotation(90);
+                mSize.x = mSizeClosed.x;
+
+                if(mContainer.getMode() == Container::Mode::Stacked)
+                {
+                    mSize.y = mSizeClosed.y;
+                }
             }
         }
-
-        mUpdate = false;
-    }
+    };
 
     //Hover
     if(sf::FloatRect(getPosition().x, getPosition().y, mBackground.getGlobalBounds().width, mBackground.getGlobalBounds().height).contains(mMouse))
     {
+        mHandleEvent.push(this, "hover");
+
         mBackground.setFillColor(mStyle.background_color.hovered);
         mArrow.setFillColor(mStyle.main_color.hovered);
         mTitle.setFillColor(mStyle.title_color.hovered);
@@ -129,37 +196,15 @@ void Category::update()
         //Click
         if(auto event_mouse = mHandleEvent.get_if(sf::Event::MouseButtonPressed); event_mouse && event_mouse->mouseButton.button == sf::Mouse::Left)
         {
+            mHandleEvent.push(this, "click");
+
             mReturn = !mReturn;
 
-            if(mReturn)
-            {
-                if(mContainer.getAlign() == Alignment::Vertical)
-                {
-                    mArrow.setRotation(90);
-                    mSize.y = mSizeClosed.y + mContainer.getSize().y;
-                }
-                else
-                {
-                    mArrow.setRotation(0);
-                    mSize.x = mSizeClosed.x + mContainer.getSize().x;
-                }
-            }
-            else
-            {
-                if(mContainer.getAlign() == Alignment::Vertical)
-                {
-                    mArrow.setRotation(0);
-                    mSize.y = mSizeClosed.y;
-                }
-                else
-                {
-                    mArrow.setRotation(90);
-                    mSize.x = mSizeClosed.x;
-                }
-            }
+            update_size();
 
             if(isContained())
             {
+                mHandleEvent.push(mParent, "update_parent");
                 mParent->update();
             }
         }
@@ -175,6 +220,11 @@ void Category::update()
         mBackground.setFillColor(mStyle.background_color.neutral);
         mArrow.setFillColor(mStyle.main_color.neutral);
         mTitle.setFillColor(mStyle.title_color.neutral);
+    }
+
+    if(mHandleEvent.active(this, "update_parent"))
+    {
+        update_size();
     }
 }
 

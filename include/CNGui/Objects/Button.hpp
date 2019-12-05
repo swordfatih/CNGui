@@ -47,35 +47,25 @@ public:
     using           Object::Object;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Click event
+    /// \brief Set button's selection if it is selectable
     ///
-    /// \return Returns true on button click
-    ///
-    ////////////////////////////////////////////////////////////
-    bool            onClick();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Release event
-    ///
-    /// \return Returns true on button release
+    /// \param bool Selection
     ///
     ////////////////////////////////////////////////////////////
-    bool            onRelease();
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Hover event
-    ///
-    /// \return Returns true when button hovered
-    ///
-    ////////////////////////////////////////////////////////////
-    bool            onHover();
+    void            select(bool selection);
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Update the object
+    /// \brief Stylize the object
     ///
     ////////////////////////////////////////////////////////////
-    virtual void    update();
+    virtual void    stylize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Manage the object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void    manage();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -91,9 +81,6 @@ private:
     ////////////////////////////////////////////////////////////
     Shape           mShape;             ///< Shape of the button
     Text            mLabel;             ///< Label of the button
-    bool            mClicked = false;   ///< Button clicked
-    bool            mReleased = false;  ///< Button released
-    bool            mHover = false;     ///< Hovering the button
 };
 
 } // namespace CNGui

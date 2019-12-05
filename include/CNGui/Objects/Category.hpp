@@ -30,7 +30,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 //CNGui
-#include <CNGui/Objects/Button.hpp>
+#include <CNGui/Objects/Object.hpp>
 #include <CNGui/Tools/Shape.hpp>
 #include <CNGui/Tools/Text.hpp>
 
@@ -59,12 +59,32 @@ public:
     /////////////////////////////////////////////////
     Container&      internal();
 
+    /////////////////////////////////////////////////
+    /// \brief Get the state of the category
+    ///
+    /// \return State of the category
+    ///
+    /////////////////////////////////////////////////
+    bool            state() const;
+
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Update the object
+    /// \brief Initialize the object
     ///
     ////////////////////////////////////////////////////////////
-    virtual void    update();
+    virtual void initialize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Stylize the object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void stylize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Manage the object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void manage();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target
@@ -82,7 +102,6 @@ private:
     sf::ConvexShape mArrow;             ///< Arrow shape
     Text            mTitle;             ///< Title text
     sf::Vector2f    mSizeClosed;        ///< Size of the category when closed
-    bool            mInit = true;       ///< Initialization
     Container       mContainer;         ///< Internal container
 
 };

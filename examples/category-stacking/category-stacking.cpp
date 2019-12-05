@@ -21,7 +21,7 @@ int main()
     category_dos.internal() << button;
 
     CNGui::Category category_uno("Category Uno", style_category, {400, 200});
-    category_uno.internal().setAlign(CNGui::Horizontal).setMode(CNGui::Container::Dynamic).setSize({0, 200}).setSpacing(0);
+    category_uno.internal().setAlign(CNGui::Horizontal).setMode(CNGui::Container::Dynamic).setSpacing(0).setSize({0, 200});
     category_uno.internal() << shape_uno << category_dos << shape_dos;
 
     while(window.isOpen())

@@ -62,96 +62,94 @@ LineEdit& LineEdit::operator >>(std::string& output)
 }
 
 ////////////////////////////////////////////////////////////
-void LineEdit::update()
+void LineEdit::stylize()
 {
-    //Updating the style of the button
-    if(mUpdate)
+    //Background
+    mBackground.setType(mStyle.background_shape);
+    mBackground.setFillColor(mStyle.background_color.neutral);
+    mBackground.setTexture(&mStyle.background_texture);
+
+    if(!mStyle.outline)
     {
-        //Background
-        mBackground.setType(mStyle.background_shape);
-        mBackground.setFillColor(mStyle.background_color.neutral);
-        mBackground.setTexture(&mStyle.background_texture);
-
-        if(!mStyle.outline)
-        {
-            mBackground.setSize(mSize);
-        }
-        else
-        {
-            mBackground.setSize({mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2});
-            mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
-            mBackground.setOutlineColor(mStyle.outline_color.neutral);
-            mBackground.setOutlineThickness(mStyle.outline_thickness);
-        }
-
-        //Shape
-        mShape.setType(CNGui::Shape::Rectangle);
-        mShape.setFillColor(mStyle.main_color.neutral);
-        mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
-
-        if(!mStyle.outline)
-        {
-            mShape.setPosition(0, mBackground.getSize().y - mShape.getSize().y);
-        }
-        else
-        {
-            mShape.setPosition(mStyle.outline_thickness, mStyle.outline_thickness + mBackground.getSize().y - mShape.getSize().y);
-        }
-
-        //Texts
-        mOutput.setFont(mStyle.output_font);
-        mOutput.setFillColor(mStyle.main_color.neutral);
-
-        if(mFirst)
-        {
-            mOutput.setStyle(CNGui::Text::Italic);
-        }
-        else
-        {
-            mOutput.setStyle(CNGui::Text::Regular);
-        }
-
-        mOutput.setString("pb");
-        mOutput.setCharacterSize(mStyle.output_size);
-        mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
-
-        if(mStyle.title)
-        {
-            mLabel.setFont(mStyle.title_font);
-            mLabel.setFillColor(mStyle.title_color.neutral);
-            mLabel.setStyle(mStyle.title_style);
-            mLabel.setCharacterSize(mStyle.title_size);
-            mLabel.setString(mName);
-            mLabel.setSize(sf::Vector2f(mBackground.getSize().x, mStyle.title_size * 1.25));
-
-            if(!mStyle.outline)
-            {
-                mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
-            }
-            else
-            {
-                mLabel.setPosition(mStyle.outline_thickness - mLabel.getLocalBounds().left, mStyle.outline_thickness - mLabel.getLocalBounds().top);
-            }
-        }
-
-        //Cursor
-        mCursor.setType(CNGui::Shape::Rectangle);
-        mCursor.setFillColor(sf::Color::Transparent);
-        mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
-        mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mCursor.getSize().y / 4);
-
-        if(mFirst)
-        {
-            mOutput.setString(mDefault);
-        }
-        else
-        {
-            mStyle.output_hide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.output_hide));
-        }
-
-        mUpdate = false;
+        mBackground.setSize(mSize);
+    }
+    else
+    {
+        mBackground.setSize({mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2});
+        mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
+        mBackground.setOutlineColor(mStyle.outline_color.neutral);
+        mBackground.setOutlineThickness(mStyle.outline_thickness);
     }
 
+    //Shape
+    mShape.setType(CNGui::Shape::Rectangle);
+    mShape.setFillColor(mStyle.main_color.neutral);
+    mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
+
+    if(!mStyle.outline)
+    {
+        mShape.setPosition(0, mBackground.getSize().y - mShape.getSize().y);
+    }
+    else
+    {
+        mShape.setPosition(mStyle.outline_thickness, mStyle.outline_thickness + mBackground.getSize().y - mShape.getSize().y);
+    }
+
+    //Texts
+    mOutput.setFont(mStyle.output_font);
+    mOutput.setFillColor(mStyle.output_color.neutral);
+
+    if(mFirst)
+    {
+        mOutput.setStyle(CNGui::Text::Italic);
+    }
+    else
+    {
+        mOutput.setStyle(CNGui::Text::Regular);
+    }
+
+    mOutput.setString("pb");
+    mOutput.setCharacterSize(mStyle.output_size);
+    mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
+
+    if(mStyle.title)
+    {
+        mLabel.setFont(mStyle.title_font);
+        mLabel.setFillColor(mStyle.title_color.neutral);
+        mLabel.setStyle(mStyle.title_style);
+        mLabel.setCharacterSize(mStyle.title_size);
+        mLabel.setString(mName);
+        mLabel.setSize(sf::Vector2f(mBackground.getSize().x, mStyle.title_size * 1.25));
+
+        if(!mStyle.outline)
+        {
+            mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
+        }
+        else
+        {
+            mLabel.setPosition(mStyle.outline_thickness - mLabel.getLocalBounds().left, mStyle.outline_thickness - mLabel.getLocalBounds().top);
+        }
+    }
+
+    //Cursor
+    mCursor.setType(CNGui::Shape::Rectangle);
+    mCursor.setFillColor(sf::Color::Transparent);
+    mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
+    mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mCursor.getSize().y / 4);
+
+    if(mFirst)
+    {
+        mOutput.setString(mDefault);
+    }
+    else
+    {
+        mStyle.output_hide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.output_hide));
+    }
+}
+
+////////////////////////////////////////////////////////////
+void LineEdit::manage()
+{
     //If the line edit is hovered
     if(sf::FloatRect(getPosition().x, getPosition().y, mBackground.getGlobalBounds().width, mBackground.getGlobalBounds().height).contains(mMouse))
     {
@@ -162,7 +160,7 @@ void LineEdit::update()
             mBackground.setFillColor(mStyle.background_color.clicked);
             mBackground.setOutlineColor(mStyle.outline_color.clicked);
             mLabel.setFillColor(mStyle.title_color.clicked);
-            mOutput.setFillColor(mStyle.outline_color.clicked);
+            mOutput.setFillColor(mStyle.output_color.clicked);
             mOutput.setStyle(mStyle.output_style);
             mCursor.setFillColor(sf::Color::White);
             mShape.setSize(sf::Vector2f(mBackground.getSize().x, 3));
@@ -304,23 +302,13 @@ void LineEdit::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(mBackground, states);
     target.draw(mLabel, states);
 
-    glEnable(GL_SCISSOR_TEST);
-
     auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
     auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
 
-    if(isContained())
     {
-        glScissor(scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y);
+        CNGui::Scissors scissors({scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y});
+        target.draw(mOutput, states);
     }
-    else
-    {
-        glScissor(scissorStart.x, target.getSize().y - scissorStart.y, scissorSize.x, scissorSize.y);
-    }
-
-    target.draw(mOutput, states);
-
-    glDisable(GL_SCISSOR_TEST);
 
     target.draw(mCursor, states);
     target.draw(mShape, states);

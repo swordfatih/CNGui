@@ -42,24 +42,55 @@ EventHandler::~EventHandler()
 ////////////////////////////////////////////////////////////
 sf::Event* EventHandler::get_if(const sf::Event::EventType& type)
 {
-    if(mEventMap.find(type) != mEventMap.end())
+    if(mEventSf.find(type) != mEventSf.end())
     {
-        return &mEventMap[type];
+        return &mEventSf[type];
     }
 
     return nullptr;
 }
 
 ////////////////////////////////////////////////////////////
+bool EventHandler::active(Updatable* updatable, std::string event)
+{
+    auto&& events = mEventUp[std::move(updatable)];
+
+    return std::find(events.begin(), events.end(), std::move(event)) != events.end();
+}
+
+////////////////////////////////////////////////////////////
 void EventHandler::push(sf::Event event)
 {
-    mEventMap[event.type] = std::move(event);
+    mEventSf[event.type] = std::move(event);
+}
+
+////////////////////////////////////////////////////////////
+void EventHandler::push(Updatable* updatable, std::string event)
+{
+    mEventUp[std::move(updatable)].push_back(std::move(event));
+}
+
+////////////////////////////////////////////////////////////
+void EventHandler::translate(Updatable* listener, Updatable* translator)
+{
+    auto&& listener_events = mEventUp[std::move(listener)];
+    auto&& translator_events = mEventUp[std::move(translator)];
+
+    listener_events.insert(listener_events.end(), translator_events.begin(), translator_events.end());
+}
+
+////////////////////////////////////////////////////////////
+void EventHandler::clear(Updatable* updatable, std::string event)
+{
+    auto&& events = mEventUp[std::move(updatable)];
+    events.erase(std::find(events.begin(), events.end(), std::move(event)));
 }
 
 ////////////////////////////////////////////////////////////
 void EventHandler::clear()
 {
-    mEventMap.clear();
+    mEventSf.clear();
+    mEventUp.clear();
 }
 
 ////////////////////////////////////////////////////////////

@@ -42,6 +42,7 @@ void ProgressIndicator::add(float progression)
     {
         mNewProgression = 1;
     }
+
     mUpdate = true;
 }
 
@@ -60,6 +61,7 @@ void ProgressIndicator::setProgression(float progression)
     {
         mNewProgression = 1;
     }
+
     mUpdate = true;
 }
 
@@ -70,134 +72,107 @@ float ProgressIndicator::getProgression()
 }
 
 ////////////////////////////////////////////////////////////
-float ProgressIndicator::easeInOutCirc(float t)
+void ProgressIndicator::stylize()
 {
-    if(t < 0.5)
+    mShape.setType(mStyle.main_shape);
+    mShape.setFillColor(mStyle.main_color.neutral);
+    mShape.setTexture(&mStyle.main_texture);
+
+    mBackground.setType(mStyle.background_shape);
+    mBackground.setFillColor(mStyle.background_color.neutral);
+    mBackground.setTexture(&mStyle.background_texture);
+
+    if(mStyle.title)
     {
-        return (1 - sqrt(1 - 2 * t)) * 0.5;
-    }
-    else
-    {
-        return (1 + sqrt(2 * t - 1)) * 0.5;
-    }
-}
+        mLabel.setFont(mStyle.title_font);
+        mLabel.setFillColor(mStyle.title_color.neutral);
+        mLabel.setCharacterSize(mStyle.title_size);
+        mLabel.setString(mName);
+        mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
 
-////////////////////////////////////////////////////////////
-void ProgressIndicator::update()
-{
-    //Updating the style of the button
-    if(mUpdate)
-    {
-        mShape.setType(mStyle.main_shape);
-        mShape.setFillColor(mStyle.main_color.neutral);
-        mShape.setTexture(&mStyle.main_texture);
+        mProgression.setFont(mStyle.title_font);
+        mProgression.setFillColor(mStyle.title_color.neutral);
+        mProgression.setCharacterSize(mStyle.title_size);
+        mProgression.setString(std::to_string(int(mNewProgression * 100)) + "%");
+        mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width - mProgression.getLocalBounds().left, -mProgression.getLocalBounds().top);
 
-        mBackground.setType(mStyle.background_shape);
-        mBackground.setFillColor(mStyle.background_color.neutral);
-        mBackground.setTexture(&mStyle.background_texture);
-
-        if(mStyle.title)
-        {
-            mLabel.setFont(mStyle.title_font);
-            mLabel.setFillColor(mStyle.title_color.neutral);
-            mLabel.setCharacterSize(mStyle.title_size);
-            mLabel.setString(mName);
-            mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
-
-            mProgression.setFont(mStyle.title_font);
-            mProgression.setFillColor(mStyle.title_color.neutral);
-            mProgression.setCharacterSize(mStyle.title_size);
-            mProgression.setString(std::to_string(int(mNewProgression * 100)) + "%");
-            mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width - mProgression.getLocalBounds().left, -mProgression.getLocalBounds().top);
-
-            mLabel.setSize(sf::Vector2f(mSize.x - mProgression.getGlobalBounds().width * 1.3, mStyle.title_size * 1.25));
-
-            if(!mStyle.outline)
-            {
-                mBackground.setSize(sf::Vector2f(mSize.x, mSize.y - mLabel.getGlobalBounds().height * 1.2));
-                mBackground.setPosition(0, mLabel.getGlobalBounds().height * 1.2);
-            }
-            else
-            {
-                mBackground.setSize(sf::Vector2f(mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2 - mLabel.getGlobalBounds().height * 1.2));
-                mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness + mLabel.getGlobalBounds().height * 1.2);
-            }
-        }
-        else
-        {
-            if(!mStyle.outline)
-            {
-                mBackground.setSize({mSize.x, mSize.y});
-                mBackground.setPosition(0, 0);
-            }
-            else
-            {
-                mBackground.setSize({mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2});
-                mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
-            }
-        }
-
-        if(mStyle.animation)
-        {
-            mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
-        }
-        else
-        {
-            mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mNewProgression, mBackground.getSize().y * 0.75));
-        }
+        mLabel.setSize(sf::Vector2f(mSize.x - mProgression.getGlobalBounds().width * 1.3, mStyle.title_size * 1.25));
 
         if(!mStyle.outline)
         {
-            mShape.setPosition(mBackground.getSize().x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
+            mBackground.setSize(sf::Vector2f(mSize.x, mSize.y - mLabel.getGlobalBounds().height * 1.2));
+            mBackground.setPosition(0, mLabel.getGlobalBounds().height * 1.2);
         }
         else
         {
-            mBackground.setOutlineColor(mStyle.outline_color.neutral);
-            mBackground.setOutlineThickness(mStyle.outline_thickness);
-
-            mShape.setPosition(mSize.x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
+            mBackground.setSize(sf::Vector2f(mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2 - mLabel.getGlobalBounds().height * 1.2));
+            mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness + mLabel.getGlobalBounds().height * 1.2);
         }
-
-        if(mNewProgression >= 1)
+    }
+    else
+    {
+        if(!mStyle.outline)
         {
-            mNewProgression = 1;
-            mShape.setFillColor(mStyle.main_color.neutral);
-            mReturn = true;
+            mBackground.setSize({mSize.x, mSize.y});
+            mBackground.setPosition(0, 0);
         }
         else
         {
-            mReturn = false;
+            mBackground.setSize({mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2});
+            mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
         }
-
-        mUpdate = false;
     }
 
-    if(mStyle.animation && mOldProgression != mNewProgression)
+    if(mStyle.animation)
     {
-        if(mOldProgression < mNewProgression)
-        {
-            mActualProgression = mOldProgression + easeInOutCirc(mClock.getElapsedTime().asSeconds() / mStyle.animation_duration.asSeconds());
-            if(mActualProgression > mNewProgression)
-            {
-                mActualProgression = mNewProgression;
-                mOldProgression = mNewProgression;
-            }
-        }
-        else
-        {
-            mActualProgression = mOldProgression - easeInOutCirc(mClock.getElapsedTime().asSeconds() / mStyle.animation_duration.asSeconds());
-            if(mActualProgression < mNewProgression)
-            {
-                mActualProgression = mNewProgression;
-                mOldProgression = mNewProgression;
-            }
-        }
-
         mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mActualProgression, mBackground.getSize().y * 0.75));
     }
     else
     {
-        mClock.restart();
+        mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * mNewProgression, mBackground.getSize().y * 0.75));
+    }
+
+    if(!mStyle.outline)
+    {
+        mShape.setPosition(mBackground.getSize().x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
+    }
+    else
+    {
+        mBackground.setOutlineColor(mStyle.outline_color.neutral);
+        mBackground.setOutlineThickness(mStyle.outline_thickness);
+
+        mShape.setPosition(mSize.x / 2 - (mBackground.getSize().x * 0.95 / 2), mBackground.getPosition().y + (mBackground.getSize().y / 2) - mShape.getSize().y / 2);
+    }
+
+    if(mNewProgression >= 1)
+    {
+        mNewProgression = 1;
+        mShape.setFillColor(mStyle.main_color.neutral);
+        mReturn = true;
+    }
+    else
+    {
+        mReturn = false;
+    }
+}
+
+////////////////////////////////////////////////////////////
+void ProgressIndicator::manage()
+{
+    if(mStyle.animation)
+    {
+        auto&& value_easing = ease(power::in_out<2>, mClock, mStyle.animation_duration + sf::seconds(mNewProgression - mOldProgression), mNewProgression - mOldProgression);
+
+        mShape.setSize(sf::Vector2f(mBackground.getSize().x * 0.95 * (mOldProgression + value_easing), mBackground.getSize().y * 0.75));
+        mProgression.setString(std::to_string(int((mOldProgression + value_easing) * 100)) + "%");
+        mProgression.setPosition(mSize.x - mProgression.getGlobalBounds().width - mProgression.getLocalBounds().left, -mProgression.getLocalBounds().top);
+        mProgression.setSize({mSize.x - mLabel.getPosition().x - mLabel.getGlobalBounds().width, mProgression.getGlobalBounds().height});
+
+        if(value_easing == mNewProgression - mOldProgression)
+        {
+            mOldProgression = mNewProgression;
+            mClock.restart();
+        }
     }
 }
 

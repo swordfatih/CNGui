@@ -60,10 +60,13 @@ Style::Style() :
     title(true),
     outline(false),
     animation(true),
-    animation_duration(sf::seconds(3)),
 
     main_shape(Shape::Rectangle),
     main_color({200, 200, 200}, {100, 100, 100}, {230, 130, 60}),
+
+    secondary_shape(Shape::Rectangle),
+    secondary_color({200, 200, 200}, {100, 100, 100}, {230, 130, 60}),
+    secondary_width(8),
 
     background_shape(Shape::Rectangle),
     background_color(sf::Color::Transparent, sf::Color::Transparent, sf::Color::Transparent),
@@ -78,7 +81,9 @@ Style::Style() :
     output_hide(' '),
 
     outline_thickness(3),
-    outline_color({150, 150, 150}, {50, 50, 50}, {150, 80, 20})
+    outline_color({150, 150, 150}, {50, 50, 50}, {150, 80, 20}),
+
+    animation_duration(sf::seconds(2))
 {
     title_font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);
     output_font.loadFromMemory(Font::BebasNeue::hex, Font::BebasNeue::size);

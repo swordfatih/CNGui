@@ -109,19 +109,24 @@ struct Style
     bool                title;                  ///< Enable title label
     bool                outline;                ///< Enable outline
     bool                animation;              ///< Enable animation if exists
-    sf::Time            animation_duration;     ///< Duration of the animation
 
     //Main component
     Shape::Type         main_shape;             ///< Shape type of the main component
     sf::Texture         main_texture;           ///< Texture of the main component
     InteractiveColor    main_color;             ///< Color of the main component
 
+    //Secondary component
+    Shape::Type         secondary_shape;        ///< Shape type of the secondary component
+    sf::Texture         secondary_texture;      ///< Texture of the secondary component
+    InteractiveColor    secondary_color;        ///< Color of the secondary component
+    float               secondary_width;        ///< Width of the secondary component
+
     //Background if exists
     Shape::Type         background_shape;       ///< Shape type of the background
     sf::Texture         background_texture;     ///< Texture of the background
     InteractiveColor    background_color;       ///< Color of the background
 
-    //Title label
+    //Title label if exists
     sf::Font            title_font;             ///< Font of the title label
     sf::Text::Style     title_style;            ///< Style of the title label
     sf::Uint16          title_size;             ///< Character size of the title label, resized if higher than the height of the object
@@ -134,9 +139,12 @@ struct Style
     InteractiveColor    output_color;           ///< Color of the output label
     char                output_hide;            ///< Hide character of the output
 
-    //Outline
+    //Outline if exists
     sf::Uint16          outline_thickness;      ///< Thickness of the outline
     InteractiveColor    outline_color;          ///< Color of the outline
+
+    //Animation if exists
+    sf::Time            animation_duration;     ///< Duration of the animation
 
 };
 

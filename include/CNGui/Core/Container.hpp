@@ -31,7 +31,6 @@
 ////////////////////////////////////////////////////////////
 //CNGui
 #include <CNGui/Core/Updatable.hpp>
-#include <CNGui/Core/Registration.hpp>
 
 //SFML
 #include <SFML/Graphics/Drawable.hpp>
@@ -111,7 +110,7 @@ public:
     /// \brief Constructor
     ///
     ////////////////////////////////////////////////////////////
-                    Container(Alignment align = Alignment::Free, const sf::Vector2f& size = sf::Vector2f(400, 400), Mode mode = Mode::Static) : Registrable::Registrable(typeid(Container)), mSize(size), mAlign(std::move(align)), mMode(std::move(mode)), mSpacing(5)
+                    Container(Alignment align = Alignment::Free, const sf::Vector2f& size = sf::Vector2f(400, 400), Mode mode = Mode::Static) : Updatable(), Registrable::Registrable(typeid(Container)), mSize(size), mAlign(std::move(align)), mMode(std::move(mode)), mSpacing(5)
     {
         //ctor
     }
@@ -130,18 +129,14 @@ public:
     ///
     /// \param position New position
     ///
-    /// \return Returns a reference to *this, so that calls can be chained
-    ///
     /// \see getPosition
     ///
     ////////////////////////////////////////////////////////////
-    Container&      setPosition(const sf::Vector2f& position)
+    void            setPosition(const sf::Vector2f& position)
     {
         mPosition = position;
         Transformable::setPosition(position);
         update();
-
-        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -150,18 +145,14 @@ public:
     /// \param x X coordinate of the new position
     /// \param y Y coordinate of the new position
     ///
-    /// \return Returns a reference to *this, so that calls can be chained
-    ///
     /// \see getPosition
     ///
     ////////////////////////////////////////////////////////////
-    Container&      setPosition(float x, float y)
+    void            setPosition(float x, float y)
     {
         mPosition = {x, y};
         Transformable::setPosition(x, y);
         update();
-
-        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -169,17 +160,13 @@ public:
     ///
     /// \param size New size
     ///
-    /// \return Returns a reference to *this, so that calls can be chained
-    ///
     /// \see getSize
     ///
     ////////////////////////////////////////////////////////////
-    Container&      setSize(const sf::Vector2f& size)
+    void      setSize(const sf::Vector2f& size)
     {
         mSize = size;
         update();
-
-        return *this;
     }
 
     ////////////////////////////////////////////////////////////
@@ -351,6 +338,7 @@ public:
     virtual void    update()
     {
         size_t size_accumulated = 0;
+        size_t biggest_content = 0;
 
         for(auto& content: mContents)
         {
@@ -386,6 +374,11 @@ public:
                     position_object.x = size_accumulated + index * mSpacing;
                     size_accumulated += size_object.x;
                 }
+
+                if(size_object.y > biggest_content)
+                {
+                    biggest_content = size_object.y;
+                }
             }
             else if(mAlign == Alignment::Vertical)
             {
@@ -403,6 +396,11 @@ public:
                 {
                     position_object.y = size_accumulated + index * mSpacing;
                     size_accumulated += size_object.y;
+                }
+
+                if(size_object.x > biggest_content)
+                {
+                    biggest_content = size_object.x;
                 }
             }
 
@@ -426,11 +424,28 @@ public:
             if(mAlign == Alignment::Horizontal)
             {
                 mSize.x = size_accumulated + (mContents.size() - 1) * mSpacing;
+
+                if(mMode == Mode::Stacked)
+                {
+                    mSize.y = biggest_content;
+                }
             }
             else if(mAlign == Alignment::Vertical)
             {
                 mSize.y = size_accumulated + (mContents.size() - 1) * mSpacing;
+
+                if(mMode == Mode::Stacked)
+                {
+                    mSize.x = biggest_content;
+                }
             }
+        }
+
+        if(mParent && mHandleEvent.active(this, "update_parent"))
+        {
+            mHandleEvent.clear(this, "update_parent");
+            mHandleEvent.push(mParent, "update_parent");
+            mParent->update();
         }
     }
 
@@ -440,14 +455,18 @@ public:
     /// \return A table of pointers to the contents
     ///
     /////////////////////////////////////////////////
-    std::vector<sf::Transformable*> retrieve() const
+    template <typename Type>
+    std::vector<Type*> retrieve() const
     {
-        std::vector<sf::Transformable*> pointers;
+        std::vector<Type*> pointers;
         pointers.reserve(mContents.size());
 
-        for(const auto& content: mContents)
+        for(auto content: mContents)
         {
-            pointers.push_back(content.first);
+            if(auto same_type = dynamic_cast<Type*>(content.first))
+            {
+                pointers.push_back(same_type);
+            }
         }
 
         return pointers;

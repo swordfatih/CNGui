@@ -32,10 +32,10 @@
 // CNGui
 #include <CNGui/Objects/Object.hpp>
 #include <CNGui/Tools/Text.hpp>
+#include <CNGui/Tools/Scissors.hpp>
 
 //SFML
 #include <SFML/Window/Clipboard.hpp>
-#include <SFML/OpenGL.hpp>
 
 namespace CNGui
 {
@@ -87,10 +87,16 @@ public:
 
 private:
     ////////////////////////////////////////////////////////////
-    /// \brief Update the object
+    /// \brief Stylize the object
     ///
     ////////////////////////////////////////////////////////////
-    virtual void    update();
+    virtual void stylize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Manage the object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void manage();
 
     ////////////////////////////////////////////////////////////
     /// \brief Draw the object to a render target

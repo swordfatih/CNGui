@@ -28,13 +28,19 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
+Updatable::Updatable() : mHandleEvent(*Core::Registrable::getRegisteredInstances<EventHandler>()[0])
+{
+
+}
+
+////////////////////////////////////////////////////////////
 Updatable::~Updatable()
 {
     //dtor
 }
 
 ////////////////////////////////////////////////////////////
-void Updatable::setInheritance(bool contained, Container* parent, const sf::Vector2f& position)
+void Updatable::setInheritance(bool contained, Updatable* parent, const sf::Vector2f& position)
 {
     mParent = std::move(parent);
     mContained = std::move(contained);

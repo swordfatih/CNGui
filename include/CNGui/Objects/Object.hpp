@@ -30,7 +30,6 @@
 // Headers
 ////////////////////////////////////////////////////////////
 //CNGui
-#include <CNGui/Core/EventHandler.hpp>
 #include <CNGui/Core/Updatable.hpp>
 #include <CNGui/Core/Style.hpp>
 #include <CNGui/Core/Container.hpp>
@@ -128,12 +127,21 @@ public:
     sf::Vector2f    getSize();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the bounding rectangle of the object
+    /// \brief Get the global bounding rectangle of the object
     ///
     /// \return Bounding rectangle of the object
     ///
     ////////////////////////////////////////////////////////////
     sf::FloatRect   getGlobalBounds() const;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the local bounding rectangle of the object
+    /// Without the inherited position
+    ///
+    /// \return Bounding rectangle of the object
+    ///
+    ////////////////////////////////////////////////////////////
+    sf::FloatRect   getLocalBounds() const;
 
     ///////////////////////////////////////////////////////////
     /// Overload of operator << to change the name of the object
@@ -177,14 +185,41 @@ public:
 
 protected:
     ////////////////////////////////////////////////////////////
+    /// \brief Overload this function to initialize the object
+    /// It's thought to be called only once
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void initialize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Overload this function to update the style of the
+    /// object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void stylize();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Overload this function to update the logic of the
+    /// object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void manage();
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Update the object
+    ///
+    ////////////////////////////////////////////////////////////
+    virtual void update() final;
+
+    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
     std::string     mName;          ///< Name of the object
     sf::Vector2f    mSize;          ///< Size of the object
-    EventHandler&   mHandleEvent;   ///< Event handler
     Style           mStyle;         ///< Style of the object
     bool            mUpdate;        ///< Needs update?
     bool            mReturn;        ///< Bool conversion value
+    bool            mInitialized;   ///< If initialized
     sf::Vector2f    mMouse;         ///< Mouse position
 };
 

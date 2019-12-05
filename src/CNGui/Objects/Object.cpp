@@ -28,7 +28,7 @@
 namespace CNGui
 {
 ////////////////////////////////////////////////////////////
-Object::Object(const std::string& name, const Style& style, const sf::Vector2f& size) : Registrable::Registrable(typeid(Object)), mName(name), mSize(size), mHandleEvent(*Registrable::getRegisteredInstances<EventHandler>()[0]), mStyle(style), mUpdate(true), mReturn(false)
+Object::Object(const std::string& name, const Style& style, const sf::Vector2f& size) : Registrable::Registrable(typeid(Object)), mName(name), mSize(size), mStyle(style), mUpdate(true), mReturn(false), mInitialized(false)
 {
 
 }
@@ -142,6 +142,55 @@ sf::FloatRect Object::getGlobalBounds() const
     }
 
     return {getPosition(), mSize};
+}
+
+////////////////////////////////////////////////////////////
+sf::FloatRect Object::getLocalBounds() const
+{
+    return {getPosition(), mSize};
+}
+
+////////////////////////////////////////////////////////////
+void Object::initialize()
+{
+
+}
+
+////////////////////////////////////////////////////////////
+void Object::stylize()
+{
+
+}
+
+////////////////////////////////////////////////////////////
+void Object::manage()
+{
+
+}
+
+////////////////////////////////////////////////////////////
+void Object::update()
+{
+    if(!mInitialized)
+    {
+        initialize();
+        mInitialized = true;
+    }
+
+    if(mUpdate)
+    {
+        stylize();
+        mUpdate = false;
+    }
+
+    manage();
+
+    if(mHandleEvent.active(this, "update_parent") && mParent)
+    {
+        mHandleEvent.clear(this, "update_parent");
+        mHandleEvent.push(mParent, "update_parent");
+        mParent->update();
+    }
 }
 
 namespace Core
