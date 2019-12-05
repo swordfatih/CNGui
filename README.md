@@ -1,4 +1,4 @@
-**Many things are changing with the 1.1 version (master branch), the master branch is not stable.**
+**Many things are changing with the 1.1 version, the following text is about CNGui 1.0**
 
 # CNGui 1.1 (in development)
 
@@ -8,55 +8,56 @@ It is actually in development by Fatih#6810 (accfldekur@gmail.com) from *Moonlit
 ***
 **Example code**
 
-An example code showing how user-friendly and object-oriented CNGui is! 
+An example code showing how user-friendly and object-oriented CNGui is!
 
 ```cpp
-#include <CNGui/CNGui.hpp>
 #include <SFML/Graphics.hpp>
+#include <CNGui/CNGui.hpp>
 
-///////////////////////////////////////////////////////////
 int main()
 {
-    sf::RenderWindow window({400, 400}, "CNGui 1.1");
+    sf::RenderWindow window({300, 200}, "CNGui Example");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
 
-    CNGui::ProgressIndicator progression("Progression");
+    CNGui::Style styleButton;
+    styleButton.shape = CNGui::Shape::RoundedRectangle;
+    styleButton.outline = true;
 
-    CNGui::Button button_decrease("-");
-    CNGui::Button button_increase("+");
+    CNGui::Style styleProgression = styleButton;
+    styleProgression.fillcolor = {80, 255, 129};
+    styleProgression.charactersize = 16;
 
-    CNGui::Container container_buttons(CNGui::Horizontal);
-    container_buttons << button_decrease << button_increase;
+    CNGui::ProgressIndicator progression("Progression", handleEvent, styleProgression);
+    CNGui::Button button("Add", handleEvent, styleButton);
 
-    CNGui::Container container_main(CNGui::Vertical, {200, 200});
-    container_main.setPosition(100, 100);
-    container_main << progression << container_buttons;
+    CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 150});
+    container.setPosition(50, 20);
+
+    container << progression << button;
 
     while(window.isOpen())
     {
-        handleEvent.process(window);
+        handleEvent.clear();
 
-        if(handleEvent.get_if(sf::Event::Closed))
+        sf::Event event;
+        while(window.pollEvent(event))
         {
-            window.close();
+            if(event.type == sf::Event::Closed)
+                window.close();
+
+            handleEvent.push(event);
         }
 
-        if(button_increase(window) && handleEvent.active(&button_increase, "click"))
-        {
+        if(button(window) && button.onClick())
             progression.add(0.1);
-        }
 
-        if(button_decrease(window) && handleEvent.active(&button_decrease, "click"))
-        {
-            progression.add(-0.1);
-        }
-
-        progression();
+        if(progression())
+            progression << "Progression done";
 
         window.clear();
-        CNGui::Core::draw(window);
+        window.draw(container);
         window.display();
     }
 
@@ -64,7 +65,7 @@ int main()
 }
 ```
 
-![output](https://cdn.discordapp.com/attachments/468477582761918465/493467406740750347/progressease4.gif)
+![output](https://cdn.discordapp.com/attachments/375019222004137985/652184319657508911/cngui-getting-started.gif)
 
 ***
 Utilities | Description
@@ -85,7 +86,7 @@ Objects | Description
 `CNGui::Object` | Base class for every objects.
 `CNGui::Button` | Button object. Exists as `CNGui::Shape::Rectangle`, `CNGui::Shape::RoundedRectangle`, `CNGui::Shape::Triangle` and `CNGui::Shape::Circle`.
 `CNGui::ProgressIndicator` | Progress indicator object. Exists as `CNGui::Shape::Rectangle` and `CNGui::Shape::RoundedRectangle`, animatable.
-`CNGui::LineEdit` | Line edit object to input text, animatable. 
+`CNGui::LineEdit` | Line edit object to input text, animatable.
 `CNGui::Poster` | Poster object to add a title, date and a description to your pictures, animatable.
 
 ***
@@ -104,7 +105,7 @@ public:
 private:
     void update()
     {
-        if(mUpdate) 
+        if(mUpdate)
         {
             //Update object's appearance here
             mShape.setType(mStyle.shape);
@@ -112,14 +113,14 @@ private:
             mShape.setFillColor(mStyle.fillcolor);
             mUpdate = false;
         }
-        
+
         //Update the object here
         if(sf::FloatRect(getPosition().x, getPosition().y, mShape.getGlobalBounds().width, mShape.getGlobalBounds().height).contains(mMouse)) //If button is hovered
         {
             if(mHandleEvent.isActive(sf::Event::MouseButtonPressed)) //If button is clicked
             {
                 mShape.setFillColor(mStyle.clickedcolor);
-                mReturn = true; 
+                mReturn = true;
             }
             else //If button is only hovered
             {
@@ -132,7 +133,7 @@ private:
             mShape.setFillColor(mStyle.fillcolor);
         }
     }
-    
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         states.transform *= getTransform();
