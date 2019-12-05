@@ -1,4 +1,5 @@
-**Many things are changing with the 1.1 version, the following text is about CNGui 1.0**
+**Many things are changing with the 1.1 version (master branch), this version isn't stable.
+The following text is about CNGui 1.0.**
 
 # CNGui 1.1 (in development)
 
@@ -11,53 +12,52 @@ It is actually in development by Fatih#6810 (accfldekur@gmail.com) from *Moonlit
 An example code showing how user-friendly and object-oriented CNGui is!
 
 ```cpp
-#include <SFML/Graphics.hpp>
 #include <CNGui/CNGui.hpp>
+#include <SFML/Graphics.hpp>
 
+///////////////////////////////////////////////////////////
 int main()
 {
-    sf::RenderWindow window({300, 200}, "CNGui Example");
+    sf::RenderWindow window({400, 400}, "CNGui 1.1");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
 
-    CNGui::Style styleButton;
-    styleButton.shape = CNGui::Shape::RoundedRectangle;
-    styleButton.outline = true;
+    CNGui::ProgressIndicator progression("Progression");
 
-    CNGui::Style styleProgression = styleButton;
-    styleProgression.fillcolor = {80, 255, 129};
-    styleProgression.charactersize = 16;
+    CNGui::Button button_decrease("-");
+    CNGui::Button button_increase("+");
 
-    CNGui::ProgressIndicator progression("Progression", handleEvent, styleProgression);
-    CNGui::Button button("Add", handleEvent, styleButton);
+    CNGui::Container container_buttons(CNGui::Horizontal);
+    container_buttons << button_decrease << button_increase;
 
-    CNGui::Container<CNGui::Object> container(CNGui::Vertical, {200, 150});
-    container.setPosition(50, 20);
-
-    container << progression << button;
+    CNGui::Container container_main(CNGui::Vertical, {200, 200});
+    container_main.setPosition(100, 100);
+    container_main << progression << container_buttons;
 
     while(window.isOpen())
     {
-        handleEvent.clear();
+        handleEvent.process(window);
 
-        sf::Event event;
-        while(window.pollEvent(event))
+        if(handleEvent.get_if(sf::Event::Closed))
         {
-            if(event.type == sf::Event::Closed)
-                window.close();
-
-            handleEvent.push(event);
+            window.close();
         }
 
-        if(button(window) && button.onClick())
+        if(button_increase(window) && handleEvent.active(&button_increase, "click"))
+        {
             progression.add(0.1);
+        }
 
-        if(progression())
-            progression << "Progression done";
+        if(button_decrease(window) && handleEvent.active(&button_decrease, "click"))
+        {
+            progression.add(-0.1);
+        }
+
+        progression();
 
         window.clear();
-        window.draw(container);
+        CNGui::Core::draw(window);
         window.display();
     }
 
