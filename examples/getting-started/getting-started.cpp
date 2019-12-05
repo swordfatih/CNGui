@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////
 int main()
 {
-    sf::RenderWindow window({960, 840}, "CNGui 1.1");
+    sf::RenderWindow window({400, 400}, "CNGui 1.1");
     window.setFramerateLimit(60);
 
     CNGui::EventHandler handleEvent;
@@ -18,7 +18,7 @@ int main()
     container_buttons << button_decrease << button_increase;
 
     CNGui::Container container_main(CNGui::Vertical, {200, 200});
-    container_main.setPosition(200, 200);
+    container_main.setPosition(100, 100);
     container_main << progression << container_buttons;
 
     while(window.isOpen())
