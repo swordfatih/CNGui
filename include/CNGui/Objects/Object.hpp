@@ -124,7 +124,7 @@ public:
     /// \see setSize
     ///
     ////////////////////////////////////////////////////////////
-    sf::Vector2f    getSize();
+    sf::Vector2f    getSize() const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Get the global bounding rectangle of the object

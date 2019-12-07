@@ -128,7 +128,7 @@ void Object::setSize(const sf::Vector2f& size)
 }
 
 ////////////////////////////////////////////////////////////
-sf::Vector2f Object::getSize()
+sf::Vector2f Object::getSize() const
 {
     return mSize;
 }
