@@ -48,7 +48,7 @@ sf::Vector2f Box::crop_position(const sf::Vector2f& position)
         size.y -= mHorizontalScroll.getSize().y;
     }
 
-    if(!sf::FloatRect(getPosition() + mShape.getPosition(), size).contains(position))
+    if(!sf::FloatRect(getPosition() + mInPosition + mShape.getPosition(), size).contains(position))
     {
         return {mContainer.getPosition().x - 1, mContainer.getPosition().y - 1};
     }
