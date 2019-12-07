@@ -39,6 +39,10 @@ int main()
     poster.setDescription("blablabla");
     poster.getStyle().background_texture = texture;
 
+    CNGui::LineEdit line_edit("Line Edit", {}, {100, 40});
+    line_edit.getStyle().outline = true;
+    line_edit.getStyle().title = false;
+
     category.internal() << poster;
     box.internal() << category;
 
@@ -53,11 +57,14 @@ int main()
 
         box(window);
 
+        line_edit(window);
+
         auto cropped_mouse = box.crop_position(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 
         if(category(cropped_mouse))
         {
             poster(cropped_mouse);
+            line_edit.setDefaultString("");
         }
 
         window.clear();

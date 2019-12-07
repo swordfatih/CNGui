@@ -64,78 +64,52 @@ LineEdit& LineEdit::operator >>(std::string& output)
 ////////////////////////////////////////////////////////////
 void LineEdit::stylize()
 {
-    //Background
-    mBackground.setType(mStyle.background_shape);
-    mBackground.setFillColor(mStyle.background_color.neutral);
-    mBackground.setTexture(&mStyle.background_texture);
+    float delta_outline = 0;
+    float delta_title = 0;
 
-    if(!mStyle.outline)
+    if(mStyle.outline)
     {
-        mBackground.setSize(mSize);
-    }
-    else
-    {
-        mBackground.setSize({mSize.x - mStyle.outline_thickness * 2, mSize.y - mStyle.outline_thickness * 2});
-        mBackground.setPosition(mStyle.outline_thickness, mStyle.outline_thickness);
+        delta_outline = mStyle.outline_thickness;
+
         mBackground.setOutlineColor(mStyle.outline_color.neutral);
         mBackground.setOutlineThickness(mStyle.outline_thickness);
     }
 
-    //Shape
-    mShape.setType(CNGui::Shape::Rectangle);
-    mShape.setFillColor(mStyle.main_color.neutral);
-    mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
-
-    if(!mStyle.outline)
-    {
-        mShape.setPosition(0, mBackground.getSize().y - mShape.getSize().y);
-    }
-    else
-    {
-        mShape.setPosition(mStyle.outline_thickness, mStyle.outline_thickness + mBackground.getSize().y - mShape.getSize().y);
-    }
-
-    //Texts
-    mOutput.setFont(mStyle.output_font);
-    mOutput.setFillColor(mStyle.output_color.neutral);
-
-    if(mFirst)
-    {
-        mOutput.setStyle(CNGui::Text::Italic);
-    }
-    else
-    {
-        mOutput.setStyle(CNGui::Text::Regular);
-    }
-
-    mOutput.setString("pb");
-    mOutput.setCharacterSize(mStyle.output_size);
-    mOutput.setPosition(-mOutput.getLocalBounds().left, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
+    mBackground.setType(mStyle.background_shape);
+    mBackground.setFillColor(mStyle.background_color.neutral);
+    mBackground.setTexture(&mStyle.background_texture);
+    mBackground.setSize({mSize.x - delta_outline * 2, mSize.y - delta_outline * 2});
+    mBackground.setPosition(delta_outline, delta_outline);
 
     if(mStyle.title)
     {
-        mLabel.setFont(mStyle.title_font);
-        mLabel.setFillColor(mStyle.title_color.neutral);
-        mLabel.setStyle(mStyle.title_style);
-        mLabel.setCharacterSize(mStyle.title_size);
-        mLabel.setString(mName);
-        mLabel.setSize(sf::Vector2f(mBackground.getSize().x, mStyle.title_size * 1.25));
+        mTitle.setFont(mStyle.title_font);
+        mTitle.setFillColor(mStyle.title_color.neutral);
+        mTitle.setStyle(mStyle.title_style);
+        mTitle.setCharacterSize(mStyle.title_size);
+        mTitle.setString(mName);
+        mTitle.setSize(sf::Vector2f(mBackground.getSize().x, mStyle.title_size * 1.25));
+        mTitle.setPosition(delta_outline - mTitle.getLocalBounds().left, delta_outline - mTitle.getLocalBounds().top);
 
-        if(!mStyle.outline)
-        {
-            mLabel.setPosition(-mLabel.getLocalBounds().left, -mLabel.getLocalBounds().top);
-        }
-        else
-        {
-            mLabel.setPosition(mStyle.outline_thickness - mLabel.getLocalBounds().left, mStyle.outline_thickness - mLabel.getLocalBounds().top);
-        }
+        delta_title = mTitle.getGlobalBounds().height;
     }
+
+    mShape.setType(CNGui::Shape::Rectangle);
+    mShape.setFillColor(mStyle.main_color.neutral);
+    mShape.setSize({mBackground.getSize().x, 2});
+    mShape.setPosition(delta_outline, mBackground.getPosition().y + mBackground.getSize().y - mShape.getSize().y);
+
+    mFirst ? mOutput.setStyle(CNGui::Text::Italic) : mOutput.setStyle(CNGui::Text::Regular);
+    mOutput.setFont(mStyle.output_font);
+    mOutput.setFillColor(mStyle.output_color.neutral);
+    mOutput.setCharacterSize(mStyle.output_size);
+    mOutput.setString("pb");
+    mOutput.setPosition(-mOutput.getLocalBounds().left + delta_outline, mShape.getPosition().y - mShape.getGlobalBounds().height - mOutput.getGlobalBounds().height - mOutput.getLocalBounds().top);
 
     //Cursor
     mCursor.setType(CNGui::Shape::Rectangle);
     mCursor.setFillColor(sf::Color::Transparent);
     mCursor.setSize(sf::Vector2f(1, mOutput.getGlobalBounds().height));
-    mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mOutput.getPosition().y + mCursor.getSize().y / 4);
 
     if(mFirst)
     {
@@ -145,6 +119,16 @@ void LineEdit::stylize()
     {
         mStyle.output_hide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.output_hide));
     }
+
+    sf::Vector2f position = {-mOutput.getLocalBounds().left + delta_outline, mOutput.getPosition().y};
+
+    if(mOutput.getGlobalBounds().width > mBackground.getSize().x)
+    {
+        position.x -= mOutput.getGlobalBounds().width - mBackground.getSize().x + mCursor.getSize().x * 2;
+    }
+
+    mOutput.setPosition(position);
+    mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mShape.getPosition().y - mCursor.getSize().y * 1.25);
 }
 
 ////////////////////////////////////////////////////////////
@@ -159,7 +143,7 @@ void LineEdit::manage()
             mShape.setFillColor(mStyle.main_color.clicked);
             mBackground.setFillColor(mStyle.background_color.clicked);
             mBackground.setOutlineColor(mStyle.outline_color.clicked);
-            mLabel.setFillColor(mStyle.title_color.clicked);
+            mTitle.setFillColor(mStyle.title_color.clicked);
             mOutput.setFillColor(mStyle.output_color.clicked);
             mOutput.setStyle(mStyle.output_style);
             mCursor.setFillColor(sf::Color::White);
@@ -185,7 +169,7 @@ void LineEdit::manage()
             mShape.setFillColor(mStyle.main_color.neutral);
             mBackground.setFillColor(mStyle.background_color.neutral);
             mBackground.setOutlineColor(mStyle.outline_color.neutral);
-            mLabel.setFillColor(mStyle.title_color.neutral);
+            mTitle.setFillColor(mStyle.title_color.neutral);
             mOutput.setFillColor(mStyle.output_color.neutral);
             mCursor.setFillColor(sf::Color::Transparent);
             mShape.setSize(sf::Vector2f(mBackground.getSize().x, 2));
@@ -269,26 +253,21 @@ void LineEdit::manage()
         {
             mStyle.output_hide == ' ' ? mOutput.setString(mString.substr(0, mString.size() - mPositionCursor)) : mOutput.setString(std::string(mString.size() - mPositionCursor, mStyle.output_hide));
 
-            sf::Vector2f position = {0, mOutput.getPosition().y};
+            sf::Vector2f position = {-mOutput.getLocalBounds().left, mOutput.getPosition().y};
 
-            if(!mStyle.outline)
+            if(mStyle.outline)
             {
-                position.x = -mOutput.getLocalBounds().left;
-            }
-            else
-            {
-                position.x = -mOutput.getLocalBounds().left + mStyle.outline_thickness;
+                position.x += mStyle.outline_thickness;
             }
 
-            if(mOutput.getGlobalBounds().width > mSize.x)
+            if(mOutput.getGlobalBounds().width > mBackground.getSize().x)
             {
-                position.x -= mOutput.getGlobalBounds().width - mSize.x + mSize.x * 0.02;
+                position.x -= mOutput.getGlobalBounds().width - mBackground.getSize().x + mCursor.getSize().x * 2;
             }
 
             mCursor.setFillColor(sf::Color::White);
             mOutput.setPosition(position);
-            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mCursor.getPosition().y);
-
+            mCursor.setPosition(mOutput.getPosition().x + mOutput.getGlobalBounds().width + mCursor.getSize().x, mShape.getPosition().y - mCursor.getSize().y * 1.25);
             mStyle.output_hide == ' ' ? mOutput.setString(mString) : mOutput.setString(std::string(mString.size(), mStyle.output_hide));
         }
     }
@@ -300,10 +279,10 @@ void LineEdit::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
 
     target.draw(mBackground, states);
-    target.draw(mLabel, states);
+    target.draw(mTitle, states);
 
-    auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
-    auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
+    auto scissorStart = target.mapCoordsToPixel({getPosition().x + mBackground.getPosition().x, getPosition().y + mBackground.getPosition().y + mBackground.getSize().y});
+    auto scissorSize = target.mapCoordsToPixel({mBackground.getSize()});
 
     {
         CNGui::Scissors scissors({scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y});

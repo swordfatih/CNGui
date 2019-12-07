@@ -114,7 +114,7 @@ private:
     Shape       mBackground;            ///< Background shape
     Shape       mCursor;                ///< Cursor shape
     sf::Uint16  mPositionCursor = 0;    ///< Cursor position
-    Text        mLabel;                 ///< Label text
+    Text        mTitle;                 ///< Title text
     sf::Text    mOutput;                ///< Output text
     std::string mString;                ///< Output string
     std::string mDefault;               ///< Default string
