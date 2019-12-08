@@ -114,17 +114,20 @@ struct Style
     Shape::Type         main_shape;             ///< Shape type of the main component
     sf::Texture         main_texture;           ///< Texture of the main component
     InteractiveColor    main_color;             ///< Color of the main component
+    sf::FloatRect       main_rect;              ///< Texture rect of the main component
 
     //Secondary component
     Shape::Type         secondary_shape;        ///< Shape type of the secondary component
     sf::Texture         secondary_texture;      ///< Texture of the secondary component
     InteractiveColor    secondary_color;        ///< Color of the secondary component
     float               secondary_width;        ///< Width of the secondary component
+    sf::FloatRect       secondary_rect;         ///< Texture rect of the secondary component
 
     //Background if exists
     Shape::Type         background_shape;       ///< Shape type of the background
     sf::Texture         background_texture;     ///< Texture of the background
     InteractiveColor    background_color;       ///< Color of the background
+    sf::FloatRect       background_rect;        ///< Texture rect of the background
 
     //Title label if exists
     sf::Font            title_font;             ///< Font of the title label
