@@ -123,6 +123,7 @@ void Button::manage()
             mShape.setFillColor(mStyle.main_color.hovered);
             mLabel.setFillColor(mStyle.title_color.hovered);
             mShape.setOutlineColor(mStyle.outline_color.hovered);
+            mReturn = false;
         }
     }
     else
