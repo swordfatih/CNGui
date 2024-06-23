@@ -143,7 +143,7 @@ void Poster::draw(sf::RenderTarget& target, sf::RenderStates states) const
     auto scissorStart = target.mapCoordsToPixel({getPosition().x, getPosition().y + mSize.y});
     auto scissorSize = target.mapCoordsToPixel({mSize.x, mSize.y});
 
-    CNGui::Scissors scissors({scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y});
+    CNGui::Scissors scissors({static_cast<float>(scissorStart.x) + mInPosition.x, static_cast<float>(target.getSize().y) - static_cast<float>(scissorStart.y) - mInPosition.y, static_cast<float>(scissorSize.x), static_cast<float>(scissorSize.y)});
 
     target.draw(mSprite, states);
     target.draw(mBackground, states);

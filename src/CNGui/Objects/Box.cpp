@@ -76,7 +76,7 @@ void Box::stylize()
         mBackgroundTitle.setType(mStyle.background_shape);
         mBackgroundTitle.setFillColor(mStyle.background_color.neutral);
         mBackgroundTitle.setTexture(&mStyle.background_texture);
-        mBackgroundTitle.setSize({mSize.x, mStyle.title_size + 4});
+        mBackgroundTitle.setSize({mSize.x, static_cast<float>(mStyle.title_size) + 4.f});
 
         mTitle.setFont(mStyle.title_font);
         mTitle.setFillColor(mStyle.title_color.neutral);
@@ -292,7 +292,7 @@ void Box::draw(sf::RenderTarget& target, sf::RenderStates states) const
     auto scissorSize = target.mapCoordsToPixel({mShape.getSize().x, mShape.getSize().y});
 
     {
-        CNGui::Scissors scissors({scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y});
+        CNGui::Scissors scissors({static_cast<float>(scissorStart.x) + mInPosition.x, static_cast<float>(target.getSize().y) - static_cast<float>(scissorStart.y) - mInPosition.y, static_cast<float>(scissorSize.x), static_cast<float>(scissorSize.y)});
         target.draw(mContainer, states);
     }
 

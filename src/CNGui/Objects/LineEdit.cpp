@@ -285,7 +285,7 @@ void LineEdit::draw(sf::RenderTarget& target, sf::RenderStates states) const
     auto scissorSize = target.mapCoordsToPixel({mBackground.getSize()});
 
     {
-        CNGui::Scissors scissors({scissorStart.x + mInPosition.x, target.getSize().y - scissorStart.y - mInPosition.y, scissorSize.x, scissorSize.y});
+        CNGui::Scissors scissors({static_cast<float>(scissorStart.x) + mInPosition.x, static_cast<float>(target.getSize().y) - static_cast<float>(scissorStart.y) - mInPosition.y, static_cast<float>(scissorSize.x), static_cast<float>(scissorSize.y)});
         target.draw(mOutput, states);
     }
 

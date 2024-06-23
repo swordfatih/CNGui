@@ -39,7 +39,7 @@ Scissors::Scissors(sf::FloatRect area)
         int existing_scissors[4];
         glGetIntegerv(GL_SCISSOR_BOX, existing_scissors);
 
-        mAreaExisting = {existing_scissors[0], existing_scissors[1], existing_scissors[2], existing_scissors[3]};
+        mAreaExisting = {static_cast<float>(existing_scissors[0]), static_cast<float>(existing_scissors[1]), static_cast<float>(existing_scissors[2]), static_cast<float>(existing_scissors[3])};
 
         area.intersects(mAreaExisting, area);
     }
