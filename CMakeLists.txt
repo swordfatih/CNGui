@@ -1,82 +1,102 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.16)
+project(cngui VERSION 1.0 LANGUAGES CXX)
 
-set(CNGUI_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
+include(FetchContent)
 
+# ----------------------------
+# Options
+# ----------------------------
+option(CNGUI_SHARED_LIBS "Build shared library" OFF)
+option(CNGUI_STATIC_STD_LIBS "Use static runtime (only applies to MSVC/GCC)" OFF)
+
+# ----------------------------
+# Build Type Default
+# ----------------------------
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose build type: Debug or Release" FORCE)
 endif()
 
-project(cngui)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(cngui_VERSION_MAJOR 1)
-set(cngui_VERSION_MINOR 0)
-
+# ----------------------------
+# Fetch SFML 2.6.2
+# ----------------------------
 if(NOT CNGUI_SHARED_LIBS)
-	set(SFML_STATIC_LIBRARIES TRUE)
+  set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-set(SFML_DIR "" CACHE PATH "Folder that contains SFMLConfig.cmake (usually in lib/cmake/SFML/)")
+FetchContent_Declare(
+  sfml
+  GIT_REPOSITORY https://github.com/SFML/SFML.git
+  GIT_TAG 2.6.2
+)
+FetchContent_MakeAvailable(sfml)
 
-if(NOT SFML_DIR)
-	message(SEND_ERROR "Please provide path for the folder that contains SFMLConfig.cmake in SFML_DIR (usually SFML/lib/cmake/SFML/)")
-endif()
-
+# ----------------------------
+# Find OpenGL
+# ----------------------------
 find_package(OpenGL REQUIRED)
-find_package(SFML COMPONENTS graphics main QUIET)
 
-if(SFML_FOUND)
-	message(STATUS "Found SFML in ${SFML_DIR}")
-endif()
+# ----------------------------
+# Source Setup
+# ----------------------------
+set(CNGUI_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(CNGUI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-# Define sources
-set(INCLUDE_PATH "${CMAKE_SOURCE_DIR}/include")
-set(SOURCE_PATH "${CMAKE_SOURCE_DIR}/src")
-
-include_directories("${INCLUDE_PATH}")
-include_directories("${SOURCE_PATH}")
-
-add_library(cngui
-	"${INCLUDE_PATH}/CNGui/CNGui.hpp"
-	"${INCLUDE_PATH}/CNGui/Core/Style.hpp"
-	"${INCLUDE_PATH}/CNGui/Core/Registration.hpp"
-	"${INCLUDE_PATH}/CNGui/Core/EventHandler.hpp"
-	"${INCLUDE_PATH}/CNGui/Core/Updatable.hpp"
-	"${INCLUDE_PATH}/CNGui/Core/Container.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Object.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Button.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/ProgressIndicator.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/LineEdit.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Poster.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Category.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/KeyEdit.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Box.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/Slider.hpp"
-	"${INCLUDE_PATH}/CNGui/Objects/LineSelect.hpp"
-	"${INCLUDE_PATH}/CNGui/Tools/Text.hpp"
-	"${INCLUDE_PATH}/CNGui/Tools/Shape.hpp"
-	"${INCLUDE_PATH}/CNGui/Tools/FunctionWrapper.hpp"
-	"${INCLUDE_PATH}/CNGui/Tools/Font.hpp"
-	"${INCLUDE_PATH}/CNGui/Tools/Easing.hpp"
-    "${INCLUDE_PATH}/CNGui/Tools/Scissors.hpp"
-	"${SOURCE_PATH}/CNGui/Core/Registration.cpp"
-	"${SOURCE_PATH}/CNGui/Core/EventHandler.cpp"
-	"${SOURCE_PATH}/CNGui/Core/Updatable.cpp"
-	"${SOURCE_PATH}/CNGui/Core/Style.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Object.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/LineEdit.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Button.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/ProgressIndicator.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Poster.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Category.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/KeyEdit.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Box.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/Slider.cpp"
-	"${SOURCE_PATH}/CNGui/Objects/LineSelect.cpp"
-	"${SOURCE_PATH}/CNGui/Tools/FunctionWrapper.cpp"
-	"${SOURCE_PATH}/CNGui/Tools/Text.cpp"
-	"${SOURCE_PATH}/CNGui/Tools/Shape.cpp"
-	"${SOURCE_PATH}/CNGui/Tools/Easing.cpp"
-    "${SOURCE_PATH}/CNGui/Tools/Scissors.cpp"
+file(GLOB_RECURSE CNGUI_HEADERS CONFIGURE_DEPENDS
+  ${CNGUI_INCLUDE_DIR}/CNGui/*.hpp
 )
 
-target_link_libraries(cngui sfml-graphics sfml-main ${OPENGL_gl_LIBRARY})
+file(GLOB_RECURSE CNGUI_SOURCES CONFIGURE_DEPENDS
+  ${CNGUI_SOURCE_DIR}/CNGui/*.cpp
+)
+
+# ----------------------------
+# Target Definition
+# ----------------------------
+if(CNGUI_SHARED_LIBS)
+  add_library(cngui SHARED ${CNGUI_HEADERS} ${CNGUI_SOURCES})
+else()
+  add_library(cngui STATIC ${CNGUI_HEADERS} ${CNGUI_SOURCES})
+endif()
+
+add_library(cngui::cngui ALIAS cngui)
+
+# ----------------------------
+# Target Settings
+# ----------------------------
+target_include_directories(cngui
+  PUBLIC ${CNGUI_INCLUDE_DIR}
+)
+
+target_link_libraries(cngui
+  PUBLIC
+    sfml-graphics
+    sfml-main
+    OpenGL::GL
+)
+
+if(CNGUI_STATIC_STD_LIBS AND MSVC)
+  foreach(flag_var
+    CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+    CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+    string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+  endforeach()
+elseif(CNGUI_STATIC_STD_LIBS AND CMAKE_COMPILER_IS_GNUCXX)
+  target_compile_options(cngui PRIVATE -static-libgcc -static-libstdc++)
+endif()
+
+set_target_properties(cngui PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+  CXX_VISIBILITY_PRESET hidden
+  VISIBILITY_INLINES_HIDDEN ON
+)
+
+# ----------------------------
+# Install (optional)
+# ----------------------------
+# install(TARGETS cngui EXPORT cnguiTargets DESTINATION lib)
+# install(DIRECTORY ${CNGUI_INCLUDE_DIR}/ DESTINATION include)
+
