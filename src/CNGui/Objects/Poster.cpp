@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // CNGui 1.1 - Chats Noirs Graphical User Interface
-// Copyright (c) 2019 Fatih (accfldekur@gmail.com)
+// Copyright (c) 2019 swordfatih
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
